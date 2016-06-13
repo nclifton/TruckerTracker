@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Australia/Sydney',
 
     /*
     |--------------------------------------------------------------------------
@@ -151,15 +151,28 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        TruckerTracker\Providers\AppServiceProvider::class,
+        TruckerTracker\Providers\AuthServiceProvider::class,
+        TruckerTracker\Providers\EventServiceProvider::class,
+        TruckerTracker\Providers\RouteServiceProvider::class,
+
+        TruckerTracker\Providers\TruckerTrackerServiceProvider::class,
 
         /*
          * IDE Helper
          */
-        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+
+        /*
+         * forms and stuff
+         */
+        Collective\Html\HtmlServiceProvider::class,
+
+        /*
+         * Mongodb
+         */
+        Jenssegers\Mongodb\MongodbServiceProvider::class,
+        Jenssegers\Mongodb\Auth\PasswordResetServiceProvider::class,
 
     ],
 
@@ -206,6 +219,12 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        'Input' => Illuminate\Support\Facades\Input::class,
+
+        'Moloquent' => Jenssegers\Mongodb\Eloquent\Model::class,
+
+        'Twilio' => TruckerTracker\Twilio\Facade::class
 
     ],
 

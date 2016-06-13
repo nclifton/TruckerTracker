@@ -1,2 +1,34 @@
-// @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
+.driver-list,.vehicle-list,.message-list,.location-list{
+  width:800px;
+  list-style: none;
+  li{
+    margin: 4px 0;
+  }
+  li > span {
+    display:inline-block;
+    padding: 0 2px;
+  }
+  li > span.name , li > span.phone-number , li > span.detail1 {
+    padding:0 0 2px 0;
+    line-height: 20px;
+  }
+  li > span.name {
+    overflow: hidden;
+    & > span {
+      padding: 0 2px 0 0;
+    }
+  }
+  li:nth-child(odd) {
+    background-color: linen;
+  }
+
+}
+.message-list,.location-list {
+  width:500px;
+}
+.list-panel.scroll-panel {
+  overflow:auto;
+  height:200px;
+}

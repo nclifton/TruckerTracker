@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Providers;
+namespace TruckerTracker\Providers;
 
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use TruckerTracker\Driver;
+use TruckerTracker\Vehicle;
+use TruckerTracker\Organisation;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -14,7 +17,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = 'App\Http\Controllers';
+    protected $namespace = 'TruckerTracker\Http\Controllers';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -27,6 +30,11 @@ class RouteServiceProvider extends ServiceProvider
         //
 
         parent::boot($router);
+
+        $router->model('driver', Driver::class);
+        $router->model('vehicle', Vehicle::class);
+        $router->model('organisation', Organisation::class);
+
     }
 
     /**

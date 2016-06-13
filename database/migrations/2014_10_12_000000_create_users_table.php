@@ -1,10 +1,18 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
+use Jenssegers\Mongodb\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateUsersTable extends Migration
 {
+
+    /**
+     * The name of the database connection to use.
+     *
+     * @var string
+     */
+    protected $connection = 'mongodb';
+    
     /**
      * Run the migrations.
      *
@@ -12,13 +20,16 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+        Schema::create('users', function (Blueprint $collection) {
+            //$collection->increments('id');
+            //$collection->string('name');
+            //$collection->string('email')->unique();
+            $collection->unique('email');
+            //$collection->string('password');
+            //$collection->string('organisation_id');
+            //$collection->rememberToken();
+            //$collection->timestamps();
+            //$collection->foreign(['organisation_id']);
         });
     }
 

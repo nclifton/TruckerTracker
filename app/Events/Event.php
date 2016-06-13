@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace TruckerTracker\Events;
 
 abstract class Event
 {

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="6b6ea550-4bc0-41d6-a0c3-9d1f0d0117da" name="mcsweeneytg.com.au" url="http://mcsweeneytg.com.au">
+        <fileTransfer host="mcsweeneytg.com.au" port="22" privateKey="$USER_HOME$/.ssh/aacc.pem" rootFolder="/var/app/sms-tracker-logger" accessType="SFTP" username="ubuntu" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

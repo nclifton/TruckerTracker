@@ -22,7 +22,8 @@ Vagrant.configure(2) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 27017, host: 27170
+  config.vm.network "forwarded_port", guest: 80, host: 8080
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -64,8 +65,14 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   sudo apt-get update
-  #   sudo apt-get install -y apache2
-  # SHELL
+  config.vm.provision "shell", inline: <<-SHELL
+    /bin/bash /vagrant/mongodb.sh
+    echo "xdebug.remote_enable = 1" >> /etc/php/7.0/mods-available/xdebug.ini
+    echo "xdebug.remote_connect_back = 1" >> /etc/php/7.0/mods-available/xdebug.ini
+    echo "xdebug.remote_port = 9000" >> /etc/php/7.0/mods-available/xdebug.ini
+    echo "xdebug.scream=0" >> /etc/php/7.0/mods-available/xdebug.ini
+    echo "xdebug.cli_color=1" >> /etc/php/7.0/mods-available/xdebug.ini
+    echo "xdebug.show_local_vars=1" >> /etc/php/7.0/mods-available/xdebug.ini
+    echo "error_log = /var/log/php7.0-fpm-error.log" >> /etc/php/7.0/fpm/php.ini
+  SHELL
 end
