@@ -46,7 +46,7 @@ $(document).ready(function ($) {
     $('#btn-add-driver').click(function () {
         $('#btn-save-driver').val("add");
         $('#btn-save-driver').text('Add Driver');
-        $('#frmDriver').trigger("reset");
+        $('#driverForm').trigger("reset");
         $('#driverModal').modal('show');
     });
 
@@ -133,7 +133,7 @@ $(document).ready(function ($) {
                 $("#driver" + data._id + ' span.phpne_number').text(data.mobile_phone_number);
                 $("#driver" + data._id + ' span.detail1').text(data.drivers_licence_number);
 
-                $('#frmDriver').trigger("reset");
+                $('#driverForm').trigger("reset");
                 $('#driverModal').modal('hide');
                 setup_edit_driver();
                 setup_delete_driver();
@@ -146,9 +146,11 @@ $(document).ready(function ($) {
                     var newDoc = document.open("text/html", "replace");
                     newDoc.write(data.responseText);
                     newDoc.close();
+                } else if (data.status == 403) {
+                    window.alert('Permission denied');
                 } else if (data.status == 422) {
                     $.each(data.responseJSON, function (index, value) {
-                        var input = $('#frmDriver').find('[name="' + index + '"]');
+                        var input = $('#driverForm').find('[name="' + index + '"]');
                         input.after('<span class="help-block"><strong>' + value + '</strong></span>');
                         input.closest('div.form-group').addClass('has-error');
                     });

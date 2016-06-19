@@ -167,6 +167,7 @@ return [
          * forms and stuff
          */
         Collective\Html\HtmlServiceProvider::class,
+        Camroncade\Timezone\TimezoneServiceProvider::class,
 
         /*
          * Mongodb

@@ -5,6 +5,8 @@ namespace TruckerTracker\Providers;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use TruckerTracker\Driver;
+use TruckerTracker\Location;
+use TruckerTracker\Message;
 use TruckerTracker\Vehicle;
 use TruckerTracker\Organisation;
 
@@ -34,6 +36,8 @@ class RouteServiceProvider extends ServiceProvider
         $router->model('driver', Driver::class);
         $router->model('vehicle', Vehicle::class);
         $router->model('organisation', Organisation::class);
+        $router->model('location', Location::class);
+        $router->model('message', Message::class);
 
     }
 

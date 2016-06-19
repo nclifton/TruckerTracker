@@ -10,7 +10,7 @@ $(document).ready(function () {
         $('.open-modal-location').click(function () {
             var vehicle_id = $(this).val();
             $('#btn-save-location').val("send");
-            $('#location_id').val(vehicle_id);
+            $('#vehicle_id').val(vehicle_id);
             $('#locationModal').modal('show');
 
         });
@@ -46,7 +46,7 @@ $(document).ready(function () {
     $('#btn-add-vehicle').click(function () {
         $('#btn-save-vehicle').val("add");
         $('#btn-save-vehicle').text("Add Vehicle");
-        $('#frmVehicle').trigger("reset");
+        $('#vehicleForm').trigger("reset");
         $('#vehicleModal').modal('show');
     });
 
@@ -138,7 +138,7 @@ $(document).ready(function () {
                 $("#span_tracker_imei_number_" + data._id).text(data.tracker_imei_number);
 
 
-                $('#frmVehicle').trigger("reset");
+                $('#vehicleForm').trigger("reset");
                 $('#vehicleModal').modal('hide');
                 setup_locate_vehicle();
                 setup_edit_vehicle();
@@ -151,9 +151,11 @@ $(document).ready(function () {
                     var newDoc = document.open("text/html", "replace");
                     newDoc.write(data.responseText);
                     newDoc.close();
+                } else if (data.status == 403) {
+                    window.alert('Permission denied');
                 } else if (data.status == 422) {
                     $.each(data.responseJSON, function (index, value) {
-                        var input = $('#frmVehicle').find('[name="' + index + '"]');
+                        var input = $('#vehicleForm').find('[name="' + index + '"]');
                         input.after('<span class="help-block"><strong>' + value + '</strong></span>');
                         input.closest('div.form-group').addClass('has-error');
                     });

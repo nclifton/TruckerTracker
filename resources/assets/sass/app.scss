@@ -1,6 +1,6 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
-.driver-list,.vehicle-list,.message-list,.location-list{
+.driver-list,.vehicle-list,.message-list,.location-list,.user-list{
   width:800px;
   list-style: none;
   li{
@@ -28,7 +28,23 @@
 .message-list,.location-list {
   width:500px;
 }
+.user-list{
+  width:100%;
+  li > span.name{
+    padding: 0 2px;
+  }
+}
 .list-panel.scroll-panel {
   overflow:auto;
   height:200px;
+}
+.tab-content .tab-pane {
+  margin-top: 15px;
+}
+span.edit-btn{
+  min-width:35px;
+}
+
+#map-canvas{
+  height:400px;
 }

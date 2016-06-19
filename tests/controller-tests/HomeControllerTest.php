@@ -1,13 +1,13 @@
 <?php
-require_once __DIR__ . '/../TruckerTrackerTestTrait.php';
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+namespace TruckerTracker;
+
+require_once __DIR__ . '/../TestTrait.php';
+require_once __DIR__ . '/../TestCase.php';
 
 class HomeControllerTest extends TestCase {
 
-    use TruckerTrackerTestTrait;
+    use TestTrait;
 
     protected function getFixture()
     {
@@ -19,7 +19,7 @@ class HomeControllerTest extends TestCase {
             'drivers' => $this->driverset,
             'vehicles' => $this->vehicleset,
             'messages' => $this->messageset,
-            'locations' => $this->locationset
+            'locations' => $this->locationSet
         ];
     }
 
@@ -32,13 +32,13 @@ class HomeControllerTest extends TestCase {
     }
 
     /**
-     * A basic test example.
+     * First user login
      *
      * @return void
      *
      * @test
      */
-    public function homePagePanelsShown()
+    public function homePagePanelsShownToFirstUser()
     {
         // Arrange
         $user = $this->firstUser();
@@ -48,11 +48,77 @@ class HomeControllerTest extends TestCase {
 
         // Assert
         $this->assertResponseOk();
-        $this->seeElement('#heading_organisation_name');
-        $this->seeInElement('#heading_organisation_name',$this->orgset[0]['name']);
+        $this->seeElement('#heading_org_name');
+        $this->seeInElement('#heading_org_name',$this->orgset[0]['name']);
 
         $this->seeElement('#message'.$this->messageset[0]['_id']);
-        $this->seeElement('#location'.$this->locationset[0]['_id']);
+        $this->seeElement('#location'.$this->locationSet[0]['_id']);
 
     }
+
+    /**
+     * Ops user login
+     *
+     * @return void
+     *
+     * @test
+     */
+    public function homePagePanelsShownToOpsUser()
+    {
+        // Arrange
+        $user = $this->user();
+
+        // Act
+        $this->actingAs($user)->get('/home');
+
+        // Assert
+        $this->assertResponseOk();
+        $this->seeElement('#heading_org_name');
+        $this->seeInElement('#heading_org_name',$this->orgset[0]['name']);
+
+        $this->seeElement('#message'.$this->messageset[0]['_id']);
+        $this->seeElement('#location'.$this->locationSet[0]['_id']);
+
+    }
+    /**
+     * Twilio user login fails
+     *
+     * @return void
+     *
+     * @test
+     */
+    public function homePagePanelsShownToTwilioUser()
+    {
+        // Arrange
+        $user = $this->twilioUser();
+
+        // Act
+        $this->actingAs($user)->get('/home');
+
+        // Assert
+        $this->assertResponseStatus(403);
+
+    }
+
+    /**
+     * initial newly registered user login
+     *
+     * @return void
+     *
+     * @test
+     */
+    public function homePagePanelsShownToNewUser()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+
+        // Act
+        $this->actingAs($user)->get('/home');
+
+        // Assert
+        $this->assertResponseOk();
+        $this->seeElement('#heading_org_name');
+
+    }
+
 }

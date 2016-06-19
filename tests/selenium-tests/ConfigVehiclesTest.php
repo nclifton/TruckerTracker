@@ -8,11 +8,12 @@
  * @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  *
  **/
-include_once 'SeleniumTestLoader.php';
 
-use Zumba\PHPUnit\Extensions\Mongo\DataSet\DataSet;
+namespace TruckerTracker;
 
-class ConfigVehiclesSeleniumTest extends SeleniumTestLoader
+include_once 'IntegratedTestCase.php';
+
+class ConfigVehiclesTest extends IntegratedTestCase
 {
 
     /**
@@ -90,10 +91,10 @@ class ConfigVehiclesSeleniumTest extends SeleniumTestLoader
 
         // check added vehicle line buttons
 
-        $this->byCssSelector('#vehicle' . $id .' .open-modal-locate')->click();
+        $this->byCssSelector('#vehicle' . $id .' .open-modal-location')->click();
         sleep(3);
-        $this->assertThat($this->byId('locateModal')->displayed(), $this->isTrue());
-        $this->byCssSelector('#locateModal button.close')->click();
+        $this->assertThat($this->byId('locationModal')->displayed(), $this->isTrue());
+        $this->byCssSelector('#locationModal button.close')->click();
         sleep(3);
         $this->byCssSelector('#vehicle'.$id.' .open-modal-vehicle')->click();
         sleep(3);
@@ -106,9 +107,7 @@ class ConfigVehiclesSeleniumTest extends SeleniumTestLoader
             ->collection('vehicles')
             ->find($this->bind_vehicle($v));
         $this->assertCount(0,$cursor);
-        $this->notSeeElement(function() use ($id){
-            $this->byId('#vehicle'.$id);
-        },'vehicle line not deleted');
+        $this->notSeeId('#vehicle'.$id,'vehicle line not deleted');
 
 
     }
@@ -129,9 +128,9 @@ class ConfigVehiclesSeleniumTest extends SeleniumTestLoader
 
         // Assert
         $this->assertThat($this->byId('vehicleModalLabel')->text(), $this->equalTo('Vehicle Editor'));
-        $this->assertThat(explode(' ', $this->byCssSelector('#frmVehicle div:first-child')->attribute('class')),
+        $this->assertThat(explode(' ', $this->byCssSelector('#vehicleForm div:first-child')->attribute('class')),
             $this->contains('has-error'));
-        $this->assertThat($this->byCssSelector('#frmVehicle div:first-child span.help-block')->text(),
+        $this->assertThat($this->byCssSelector('#vehicleForm div:first-child span.help-block')->text(),
             $this->equalTo('We know the vehicles by their registration numbers'));
 
     }
@@ -174,11 +173,11 @@ class ConfigVehiclesSeleniumTest extends SeleniumTestLoader
 
         // Assert
         $this->assertThat($this->byId('vehicleModalLabel')->text(), $this->equalTo('Vehicle Editor'));
-        $attribute = $this->byXPath('//form[@id="frmVehicle"]/div[2]')->attribute('class');
+        $attribute = $this->byXPath('//form[@id="vehicleForm"]/div[2]')->attribute('class');
         $this->assertThat(explode(' ', $attribute),
             $this->contains('has-error'));
-        $this->assertThat($this->byXPath('//form[@id="frmVehicle"]/div[2]/div/span/strong')->text(),
-            $this->equalTo('That doesn\'t look like a phone number, it needs to have 10 digits and start with a 0 or start with +61 and have 11 digits'));
+        $this->assertThat($this->byXPath('//form[@id="vehicleForm"]/div[2]/div/span/strong')->text(),
+            $this->equalTo('That doesn\'t look like an australian phone number, it needs to have 10 digits and start with a 0 or start with +61 and have 11 digits'));
 
     }
     /**
@@ -197,11 +196,11 @@ class ConfigVehiclesSeleniumTest extends SeleniumTestLoader
 
         // Assert
         $this->assertThat($this->byId('vehicleModalLabel')->text(), $this->equalTo('Vehicle Editor'));
-        $attribute = $this->byXPath('//form[@id="frmVehicle"]/div[3]')->attribute('class');
+        $attribute = $this->byXPath('//form[@id="vehicleForm"]/div[3]')->attribute('class');
         $this->assertThat(explode(' ', $attribute),
             $this->contains('has-error'));
-        $this->assertThat($this->byXPath('//form[@id="frmVehicle"]/div[3]/div/span/strong')->text(),
-            $this->equalTo('That\'s not an IMEI number, they are a string of digits between 15 and 17 digits long'));
+        $this->assertThat($this->byXPath('//form[@id="vehicleForm"]/div[3]/div/span/strong')->text(),
+            $this->equalTo('That doesn\'t look like an IMEI number, please check'));
 
     }
 
@@ -223,9 +222,9 @@ class ConfigVehiclesSeleniumTest extends SeleniumTestLoader
         $this->clickOnElement('btn-add-vehicle');
         sleep(2); // wait for animation
 
-        $this->clearType($vehicle['registration_number'], '#registration_number');
-        $this->clearType($vehicle['mobile_phone_number'], '#vehicle_mobile_phone_number');
-        $this->clearType($vehicle['tracker_imei_number'], '#tracker_imei_number');
+        $this->type($vehicle['registration_number'], '#registration_number');
+        $this->type($vehicle['mobile_phone_number'], '#vehicle_mobile_phone_number');
+        $this->type($vehicle['tracker_imei_number'], '#tracker_imei_number');
         $this->clickOnElement('btn-save-vehicle');
         sleep(2); // wait for animation
         return $this;

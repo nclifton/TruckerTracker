@@ -14,11 +14,13 @@ var elixir = require('laravel-elixir');
 elixir(function (mix) {
     mix.sass('app.scss')
         .scripts([
+            'common.js',
             'driver.js',
             'vehicle.js',
             'organisation.js',
             'message.js',
-            'location.js'
+            'location.js',
+            'user.js'
         ],'public/js/home.js')
         .version(["css/app.css", "public/js/home.js"]);
 });

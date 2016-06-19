@@ -1,14 +1,13 @@
 <?php
 
-include_once 'SeleniumTestLoader.php';
+namespace TruckerTracker;
 
-use PHPUnit_Extensions_Selenium2TestCase_Keys as Keys;
-use \Zumba\PHPUnit\Extensions\Mongo\DataSet\DataSet;
+require_once __DIR__ . '/IntegratedTestCase.php';
 
-class LoginTest extends SeleniumTestLoader
+class LoginTest extends IntegratedTestCase
 {
 
-    
+
     protected function getFixture()
     {
         return [
@@ -40,7 +39,7 @@ class LoginTest extends SeleniumTestLoader
         // Act
 
         $this->visit('/');
-        $this->clickLink('http://localhost:8000/register');
+        $this->click('Register');
 
 
         // Assert
@@ -64,13 +63,12 @@ class LoginTest extends SeleniumTestLoader
         $this->registerUser($user);
 
         // Assert
-        $this->seePageIs('/home');
 
         $this->assertCount(1, $this->getMongoConnection()
             ->collection('users')
-            ->find(['name' =>  $user['username'],
-                'email' => $user['emailAddress'],
-                'organisation_id'=>['$exists'=>false]]));
+            ->find(['name' => $user['name'],
+                'email' => $user['email'],
+                'organisation_id' => ['$exists' => false]]));
 
     }
 
@@ -88,8 +86,9 @@ class LoginTest extends SeleniumTestLoader
         $this->registerUser($user);
 
         // Assert
-        $this->assertThat($this->byId('organisationModalLabel')->text(), $this->equalTo('Organisation Editor'));
-        $this->assertThat($this->byId('btn-save-organisation')->text(), $this->equalTo('Add Organisation'));
+        $this->see('Organisation Editor');
+        $this->assertThat($this->byId('orgModalLabel')->text(), $this->equalTo('Organisation Editor'));
+        $this->assertThat($this->byId('btn-save-org')->text(), $this->equalTo('Add Organisation'));
 
     }
 
@@ -102,29 +101,22 @@ class LoginTest extends SeleniumTestLoader
     {
         // Arrange
         $user = $this->loginUserSet[0];
-        
-        // Act
 
-        $this->registerUser($user);
-        $this->closeOrganisationDialog();
-        $this->logout();
-        $this->byCssSelector('ul.navbar-right > li > a')->click();
-        sleep(2);
+        // Act & Assert
 
-        // Assert
-        $this->seePageIs('/login');
+        $this->registerUser($user)->closeOrganisationDialog()->logout()->click('Login');
 
-        // Act some more
- 
-        $this->type($user['emailAddress'],'#email');
-        $this->type($user['password'],'#password');
+        //Assert
+        $this->assertTrue($this->byCssSelector('.panel-heading')->displayed());
+        $this->assertEquals('Login',$this->byCssSelector('.panel-heading')->text());
+        $this->type($user['email'], '#email');
+        $this->type($user['password'], '#password');
         $this->byCssSelector('button.btn.btn-primary[type="submit"]')->click();
-        sleep(3);
-
-        // Assert some more
-        $this->assertThat($this->byId('organisationModalLabel')->text(), $this->equalTo('Organisation Editor'));
+        sleep(2);
+        $this->assertThat($this->byId('orgModalLabel')->text(), $this->equalTo('Organisation Editor'));
 
     }
+
     /**
      * add driver and add vehicle buttons disabled if there's no organisation, also the edit organisation button
      * is replaced by an add organisation button
@@ -135,51 +127,55 @@ class LoginTest extends SeleniumTestLoader
     {
         // Arrange
         $user = $this->loginUserSet[0];
-        
+
         // Act
         $this->registerUser($user)->closeOrganisationDialog();
 
         // Assert
-        $this->assertThat($this->byId('btn-add-organisation')->displayed(), $this->isTrue());
-        $this->assertThat($this->byId('btn-edit-organisation')->displayed(), $this->isFalse());
+        $this->assertThat($this->byId('btn-add-org')->displayed(), $this->isTrue());
+        $this->assertThat($this->byId('btn-edit-org')->displayed(), $this->isFalse());
 
-        $this->assertThat($this->byId('btn-add-driver')->attribute('disabled'), $this->equalTo('true'));
-        $this->assertThat($this->byId('btn-add-vehicle')->attribute('disabled'), $this->equalTo('true'));
+        $this->assertThat($this
+            ->byId('btn-add-driver')
+            ->enabled(),$this
+            ->isFalse());
+
+        $this->assertThat($this
+            ->byId('btn-add-vehicle')
+            ->enabled(), $this
+            ->isFalse());
+
 
     }
 
     protected function registerUser($user = null)
     {
         $user = empty($user) ? $this->loginUserSet[0] : $user;
-        $this->visit('/');
-        $this->byLinkText('Register')->click();
-        sleep(1);
-        $this->byName('name')->click();
-        $this->keys($user['username']);
-        $this->keys(Keys::TAB);
-        $this->keys($user['emailAddress']);
-        $this->keys(Keys::TAB);
-        $this->keys($user['password']);
-        $this->keys(Keys::TAB);
-        $this->keys($user['password']);
-        $this->keys(Keys::TAB);
-        $this->keys(Keys::ENTER);
-        sleep(2);  
+        $this->visit('/')
+            ->click('Register')
+            ->type($user['name'], 'name')
+            ->type($user['email'], 'email')
+            ->type($user['password'], 'password')
+            ->type($user['password'], 'password_confirmation')
+            ->findByCssSelector('button[type="submit"]')
+            ->click();
+        sleep(2);
         return $this;
+
     }
 
     protected function logout()
     {
         $this->byCssSelector('ul.navbar-right > li.dropdown a.dropdown-toggle')->click();
-        sleep(2);
+        //sleep(2);
         $this->byCssSelector('ul.navbar-right > li.dropdown.open > ul.dropdown-menu > li > a')->click();
-        sleep(2);
+        //sleep(3);
         return $this;
     }
 
     protected function closeOrganisationDialog()
     {
-        $this->byCssSelector('#organisationModal > .modal-dialog > .modal-content > .modal-header > button.close')->click();
+        $this->byCssSelector('#orgModal > .modal-dialog > .modal-content > .modal-header > button.close')->click();
         sleep(2);
         return $this;
     }

@@ -8,13 +8,13 @@
  * @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  *
  **/
-include_once 'SeleniumTestLoader.php';
+
+namespace TruckerTracker;
+
+include_once 'IntegratedTestCase.php';
 
 
-use Zumba\PHPUnit\Extensions\Mongo\DataSet\DataSet;
-
-
-class ConfigDriversTest extends SeleniumTestLoader
+class ConfigDriversTest extends IntegratedTestCase
 {
 
     
@@ -56,6 +56,8 @@ class ConfigDriversTest extends SeleniumTestLoader
 
         // Assert
 
+        $this->seeInDatabase('drivers',$this->bind_driver($driver));
+
         $cursor = $this->getMongoConnection()
             ->collection('drivers')
             ->find(array_merge($this->bind_driver($driver),[
@@ -87,9 +89,7 @@ class ConfigDriversTest extends SeleniumTestLoader
             ->collection('drivers')
             ->find($this->bind_driver($driver));
         $this->assertCount(0,$cursor);
-        $this->notSeeElement(function() use ($id){
-            $this->byId('#driver'.$id);
-        },'driver line not deleted');
+        $this->notSeeId('#driver' . $id, 'driver line not deleted');
 
     }
 
@@ -109,9 +109,9 @@ class ConfigDriversTest extends SeleniumTestLoader
 
         // Assert
         $this->assertThat($this->byId('driverModalLabel')->text(), $this->equalTo('Driver Editor'));
-        $this->assertThat(explode(' ', $this->byCssSelector('#frmDriver div:first-child')->attribute('class')),
+        $this->assertThat(explode(' ', $this->byCssSelector('#driverForm div:first-child')->attribute('class')),
             $this->contains('has-error'));
-        $this->assertThat($this->byCssSelector('#frmDriver div:first-child span.help-block')->text(),
+        $this->assertThat($this->byCssSelector('#driverForm div:first-child span.help-block')->text(),
             $this->equalTo('We do need to have first names for your drivers'));
 
     }
@@ -132,13 +132,14 @@ class ConfigDriversTest extends SeleniumTestLoader
         // Act
         $this->login()->addDriver($driver);
 
-        // Assert form#frmDriver.form-horizontal div.form-group.error.has-error
-        // //form[@id="frmDriver"]/div[2]
+        // Assert form#driverForm.form-horizontal div.form-group.error.has-error
+        // //form[@id="driverForm"]/div[2]
         $this->assertThat($this->byId('driverModalLabel')->text(), $this->equalTo('Driver Editor'));
-        $attribute = $this->byXPath('//form[@id="frmDriver"]/div[2]')->attribute('class');
+        $attribute = $this->byXPath('//form[@id="driverForm"]/div[2]')->attribute('class');
         $this->assertThat(explode(' ', $attribute),
             $this->contains('has-error'));
-        $this->assertThat($this->byXPath('//form[@id="frmDriver"]/div[2]/div/span/strong')->text(),
+        // #driverForm > div.form-group.error.has-error
+        $this->assertThat($this->byXPath('//form[@id="driverForm"]/div[2]/div/span/strong')->text(),
             $this->equalTo('We do need to have last names for your drivers'));
 
     }
@@ -159,11 +160,35 @@ class ConfigDriversTest extends SeleniumTestLoader
 
         // Assert
         $this->assertThat($this->byId('driverModalLabel')->text(), $this->equalTo('Driver Editor'));
-        $attribute = $this->byXPath('//form[@id="frmDriver"]/div[3]')->attribute('class');
+        $attribute = $this->byXPath('//form[@id="driverForm"]/div[3]')->attribute('class');
         $this->assertThat(explode(' ', $attribute),
             $this->contains('has-error'));
-        $this->assertThat($this->byXPath('//form[@id="frmDriver"]/div[3]/div/span/strong')->text(),
-            $this->equalTo('That doesn\'t look like a phone number, it needs to have 10 digits and start with a 0 or start with +61 and have 11 digits'));
+        $this->assertThat($this->byXPath('//form[@id="driverForm"]/div[3]/div/span/strong')->text(),
+            $this->equalTo('That doesn\'t look like an australian phone number, it needs to have 10 digits and start with a 0 or start with +61 and have 11 digits'));
+
+    }
+
+    /**
+     * validation phone number is displayed
+     *
+     * @test
+     */
+    public function anotherPhoneNumberValidationFail()
+    {
+        // Arrange
+        $driver = $this->driverset[0];
+        $driver['mobile_phone_number'] = '298204732';
+
+        // Act
+        $this->login()->addDriver($driver);
+
+        // Assert
+        $this->assertThat($this->byId('driverModalLabel')->text(), $this->equalTo('Driver Editor'));
+        $attribute = $this->byXPath('//form[@id="driverForm"]/div[3]')->attribute('class');
+        $this->assertThat(explode(' ', $attribute),
+            $this->contains('has-error'));
+        $this->assertThat($this->byXPath('//form[@id="driverForm"]/div[3]/div/span/strong')->text(),
+            $this->equalTo('That doesn\'t look like an australian phone number, it needs to have 10 digits and start with a 0 or start with +61 and have 11 digits'));
 
     }
 
@@ -183,10 +208,10 @@ class ConfigDriversTest extends SeleniumTestLoader
 
         // Assert
         $this->assertThat($this->byId('driverModalLabel')->text(), $this->equalTo('Driver Editor'));
-        $attribute = $this->byXPath('//form[@id="frmDriver"]/div[4]')->attribute('class');
+        $attribute = $this->byXPath('//form[@id="driverForm"]/div[4]')->attribute('class');
         $this->assertThat(explode(' ', $attribute),
             $this->contains('has-error'));
-        $this->assertThat($this->byXPath('//form[@id="frmDriver"]/div[4]/div/span/strong')->text(),
+        $this->assertThat($this->byXPath('//form[@id="driverForm"]/div[4]/div/span/strong')->text(),
             $this->equalTo('That drivers licence number looks odd, please check, should be 4 to 9 alpha numeric'));
 
     }
@@ -228,7 +253,6 @@ class ConfigDriversTest extends SeleniumTestLoader
             'mobile_phone_number' => $driver2['mobile_phone_number'],
             'drivers_licence_number' => strtoupper($driver2['drivers_licence_number'])];
     }
-
 
 
 }

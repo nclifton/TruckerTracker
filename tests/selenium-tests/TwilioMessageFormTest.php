@@ -1,9 +1,11 @@
 <?php
 
-Require_once __DIR__.'/SeleniumTestLoader.php';
+namespace TruckerTracker;
+
+Require_once __DIR__.'/IntegratedTestCase.php';
 
 
-class SeleniumTestTwilioMessageForm extends SeleniumTestLoader
+class SeleniumTestTwilioMessageForm extends IntegratedTestCase
 {
 
     protected function getFixture()
@@ -32,7 +34,7 @@ class SeleniumTestTwilioMessageForm extends SeleniumTestLoader
         $this->byCssSelector('#driver'. $driver['_id'].' button.open-modal-message')->click();
         sleep(1);
         $message_text = 'Hello';
-        $this->clearType($message_text,'#message_text');
+        $this->type($message_text,'#message_text');
         $this->byId('btn-save-message')->click();
         sleep(6);
 

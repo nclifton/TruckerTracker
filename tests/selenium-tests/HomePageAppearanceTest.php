@@ -1,11 +1,12 @@
 <?php
 
-Require_once __DIR__.'/SeleniumTestLoader.php';
+namespace TruckerTracker;
 
+require_once __DIR__.'/IntegratedTestCase.php';
 
-class SeleniumTestTwilioLocateForm extends SeleniumTestLoader
+class HomePageAppearanceTest extends IntegratedTestCase
 {
-
+    
     protected function getFixture()
     {
          return [
@@ -15,7 +16,7 @@ class SeleniumTestTwilioLocateForm extends SeleniumTestLoader
             'drivers' => $this->driverset,
             'vehicles' => $this->vehicleset,
             'messages' => $this->messageset,
-            'locations' => $this->locationset
+            'locations' => $this->locationSet
         ];
     }
 
@@ -26,10 +27,8 @@ class SeleniumTestTwilioLocateForm extends SeleniumTestLoader
 
         // Arrange
 
-
         // Act
         $this->login();
-
 
         // Assert
 
@@ -43,7 +42,9 @@ class SeleniumTestTwilioLocateForm extends SeleniumTestLoader
             $id = $doc['_id'];
         }
         $this->assertNotNull($id);
-        $this->assertThat($this->byId('location'.$id)->displayed(),$this->isTrue());
+
+        
+
 
     }
 

@@ -29,7 +29,11 @@ Route::get('/home', 'HomeController@index');
 Route::get('/organisation/{organisation}', 'ConfigController@getOrganisation');
 Route::post('/organisation', 'ConfigController@addOrganisation');
 Route::put('/organisation/{organisation}', 'ConfigController@updateOrganisation');
-Route::put('/organisation/adduser/{organisation}', 'ConfigController@addOrganisationUser');
+
+Route::post('/organisation/{organisation}/user', 'ConfigController@addOrganisationUser');
+Route::put('/organisation/user/{user}', 'ConfigController@updateOrganisationUser');
+Route::delete('/organisation/user/{user}', 'ConfigController@deleteOrganisationUser');
+Route::get('/organisation/user/{user}', 'ConfigController@getOrganisationUser');
 
 Route::get('/drivers/{driver}', 'ConfigController@getDriver');
 Route::post('/drivers', 'ConfigController@addDriver');
@@ -41,8 +45,11 @@ Route::post('/vehicles', 'ConfigController@addVehicle');
 Route::put('/vehicles/{vehicle}', 'ConfigController@updateVehicle');
 Route::delete('/vehicles/{vehicle}', 'ConfigController@deleteVehicle');
 
-Route::post('/text/driver/{driver}', 'TwilioController@messageDriver');
-Route::post('/text/vehicle/{vehicle}', 'TwilioController@locateVehicle');
+Route::post('/driver/{driver}/message', 'TwilioController@messageDriver');
+Route::post('/vehicle/{vehicle}/location', 'TwilioController@locateVehicle');
+
+Route::get('/vehicle/location/{location}', 'locationController@getLocation');
+Route::delete('/vehicle/location/{location}', 'locationController@deleteLocation');
 
 
 

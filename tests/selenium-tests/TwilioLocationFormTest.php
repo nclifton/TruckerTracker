@@ -1,9 +1,10 @@
 <?php
+namespace TruckerTracker;
 
-Require_once __DIR__.'/SeleniumTestLoader.php';
+Require_once __DIR__.'/IntegratedTestCase.php';
 
 
-class SeleniumTestTwilioLocateForm extends SeleniumTestLoader
+class SeleniumTestTwilioLocationForm extends \TruckerTracker\IntegratedTestCase
 {
 
     protected function getFixture()
@@ -32,7 +33,7 @@ class SeleniumTestTwilioLocateForm extends SeleniumTestLoader
         $this->byCssSelector('#vehicle'. $vehicle['_id'].' button.open-modal-location')->click();
         sleep(1);
         $this->byId('btn-save-location')->click();
-        sleep(6);
+        sleep(1);
 
         // Assert
 

@@ -3,20 +3,37 @@
  */
 $(document).ready(function () {
 
-    var location_url = "/text/vehicle";
 
-    function timeConverter(UNIX_timestamp){
-        var a = new Date(UNIX_timestamp * 1000);
-        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        var year = a.getFullYear();
-        var month = months[a.getMonth()];
-        var date = a.getDate();
-        var hour = a.getHours();
-        var min = a.getMinutes();
-        var sec = a.getSeconds();
-        var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
-        return time;
+    //display modal form viewing a location
+    function setup_view_location() {
+        $('.open-modal-location-view').click(function () {
+            var location_id = $(this).val();
+
+            $.get('/vehicle/location/' + location_id, function (data) {
+                //success data
+                console.log(data);
+
+                $('#location_id').val(data._id);
+                $('#datetime').text(data.vehicle.datetime);
+                $('#registration_number').text(data.vehicle.registration_number);
+                $('#location-viewModal').modal('show');
+                
+                // map stuff here
+                var $maperizer = $('#map-canvas').maperizer(Maperizer.MAP_OPTIONS);
+                $maperizer.maperizer('addFocusedMarker', {
+                    lat: data.latitude,
+                    lng: data.longitude
+                });
+
+            }).fail(function(data){
+                var newDoc = document.open("text/html", "replace");
+                newDoc.write(data.responseText);
+                newDoc.close();
+            });
+        });
     }
+
+    setup_view_location();
 
     //send location request to vehicle
     $("#btn-save-location").click(function (e) {
@@ -28,26 +45,17 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        var formData = {
-            location_text: $('#location_text').val()
-        };
-
-        var type = "POST";
-        var driver_id = $('#location_id').val();
-        var my_location_url = location_url + '/' + driver_id;
-
-        console.log(formData);
+        var vehicle_id = $('#vehicle_id').val();
 
         $.ajax({
 
-            type: type,
-            url: my_location_url,
-            data: formData,
+            type: POST,
+            url: '/vehicle/'+vehicle_id+'/location',
             dataType: 'json',
             success: function (data) {
                 console.log(data);
                 
-                $('#frmLocation').trigger("reset");
+                $('#locationForm').trigger("reset");
                 $('#locationModal').modal('hide');
                 $('#location-list-panel').show();
 
@@ -60,16 +68,14 @@ $(document).ready(function () {
                 msg.find('span.location-status').text(data.status);
                 msg.show();
 
+                setup_view_location();
+
             },
             error: function (data) {
-                console.log('Error:', data);
-                if (data.status == 500) {
-                    var newDoc = document.open("text/html", "replace");
-                    newDoc.write(data.responseText);
-                    newDoc.close();
-                } else if (data.status == 422) {
+                handleAjaxError();
+                if (data.status == 422) {
                     $.each(data.responseJSON, function (index, value) {
-                        var input = $('#frmLocation').find('[name="' + index + '"]');
+                        var input = $('#location').find('[name="' + index + '"]');
                         input.after('<span class="help-block"><strong>' + value + '</strong></span>');
                         input.closest('div.form-group').addClass('has-error');
                     });

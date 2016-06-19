@@ -3,6 +3,8 @@
 namespace TruckerTracker\Http\Controllers;
 
 use Auth;
+use Gate;
+use Camroncade\Timezone\Timezone;
 use TruckerTracker\Http\Requests;
 use View;
 
@@ -26,19 +28,21 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $organisation = $user->organisation;
+        $org = $user->organisation;
 
-        $drivers = ($organisation) ? $organisation->drivers : [];
-        $vehicles = ($organisation) ? $organisation->vehicles : [];
-        $messages = ($organisation) ? $organisation->messages : [];
-        $locations = ($organisation) ? $organisation->locations : [];
+        if (Gate::denies('view-home', $org)) {
+            abort(403,'Permission Denied');
+        }
+
+        if($org)
+            $org->load('users','drivers','vehicles','messages','locations');
 
         $params = [];
-        return View::make("home")->with("organisation", $organisation)
-            ->with("drivers", $drivers)
-            ->with("vehicles", $vehicles)
-            ->with('messages', $messages)
-            ->with("locations", $locations)
+        $tz = new Timezone();
+        return View::make("home")
+            ->with("user", $user)
+            ->with("org", $org)
+            ->with("tzhelper", $tz)
             ->with("params", $params);
 
     }

@@ -1,8 +1,8 @@
 <div class="list-panel scroll-panel">
-    <ul id="{{$subject}}_list" class="{{$subject}}-list container">
+    <ul id="{{str_replace('.','-',$subject)}}_list" class="{{str_replace('.','-',$subject)}}-list container">
         @foreach($lines as $line)
-           @include('home.'.$subject.'Line',array($subject=>$line,'styleAttr'=>''))
+           @include('home.'.$subject.'.line',array($subject=>$line,'styleAttr'=>''))
         @endforeach
-        @include('home.'.$subject.'Line',array($subject=>'','styleAttr'=>'display:none'))
+        @include('home.'.$subject.'.line',array($subject=>'','styleAttr'=>'display:none'))
     </ul>
 </div>

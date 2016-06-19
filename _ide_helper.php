@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.2.35 on 2016-06-12.
+ * Generated for Laravel 5.2.38 on 2016-06-14.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -3885,11 +3885,11 @@ namespace {
          * Merge the constraints from a relation query to the current query.
          *
          * @param \Illuminate\Database\Eloquent\Builder $relation
-         * @return void 
+         * @return \Illuminate\Database\Eloquent\Builder|static 
          * @static 
          */
         public static function mergeModelDefinedRelationConstraints($relation){
-            \Illuminate\Database\Eloquent\Builder::mergeModelDefinedRelationConstraints($relation);
+            return \Illuminate\Database\Eloquent\Builder::mergeModelDefinedRelationConstraints($relation);
         }
         
         /**
@@ -12734,99 +12734,6 @@ namespace {
 
 
     class Moloquent extends \Jenssegers\Mongodb\Eloquent\Model{
-        
-    }
-
-
-    class Twilio extends \TruckerTracker\Twilio\Facade{
-        
-        /**
-         * 
-         *
-         * @param $sid
-         * @return \TruckerTracker\Twilio\TwilioInterface 
-         * @static 
-         */
-        public static function setSid($sid){
-            return \TruckerTracker\Twilio\Twilio::setSid($sid);
-        }
-        
-        /**
-         * 
-         *
-         * @param $token
-         * @return \TruckerTracker\Twilio\TwilioInterface 
-         * @static 
-         */
-        public static function setToken($token){
-            return \TruckerTracker\Twilio\Twilio::setToken($token);
-        }
-        
-        /**
-         * 
-         *
-         * @param $from
-         * @return \TruckerTracker\Twilio\TwilioInterface 
-         * @static 
-         */
-        public static function setFrom($from){
-            return \TruckerTracker\Twilio\Twilio::setFrom($from);
-        }
-        
-        /**
-         * 
-         *
-         * @param string $to
-         * @param string $message
-         * @param string $from
-         * @return \Services_Twilio_Rest_Message 
-         * @static 
-         */
-        public static function message($to, $message, $from = null){
-            //Method inherited from \Aloha\Twilio\Twilio            
-            return \TruckerTracker\Twilio\Twilio::message($to, $message, $from);
-        }
-        
-        /**
-         * 
-         *
-         * @param string $to
-         * @param string $message
-         * @param array $mediaUrls
-         * @param string $from
-         * @return \Services_Twilio_Rest_Message 
-         * @static 
-         */
-        public static function messageWithMedia($to, $message, $mediaUrls = null, $from = null){
-            //Method inherited from \Aloha\Twilio\Twilio            
-            return \TruckerTracker\Twilio\Twilio::messageWithMedia($to, $message, $mediaUrls, $from);
-        }
-        
-        /**
-         * 
-         *
-         * @param string $to
-         * @param string|callable $message
-         * @param array $options
-         * @param string $from
-         * @return \Services_Twilio_Rest_Call 
-         * @static 
-         */
-        public static function call($to, $message, $options = array(), $from = null){
-            //Method inherited from \Aloha\Twilio\Twilio            
-            return \TruckerTracker\Twilio\Twilio::call($to, $message, $options, $from);
-        }
-        
-        /**
-         * 
-         *
-         * @return \Services_Twilio 
-         * @static 
-         */
-        public static function getTwilio(){
-            //Method inherited from \Aloha\Twilio\Twilio            
-            return \TruckerTracker\Twilio\Twilio::getTwilio();
-        }
         
     }
 

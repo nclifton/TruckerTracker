@@ -23,6 +23,7 @@ use MongoDB\BSON\UTCDatetime;
  * @property float course
  * @property float speed
  * @property UTCDatetime datetime
+ * @property Organisation organisation
  */
 class Location extends Moloquent
 {
@@ -47,6 +48,12 @@ class Location extends Moloquent
     
     protected $dates = ['sent_at','queued_at', 'datetime'];
 
+    protected $hidden = [
+        'organisation_id',
+        'vehicle_id',
+        'organisation'
+    ];
+
     public function vehicle(){
         return $this->belongsTo(Vehicle::class,'vehicle_id','_id');
     }
@@ -57,6 +64,9 @@ class Location extends Moloquent
         return $this->formatDate($value,$this->organisation);
     }
     public function getQueuedAtAttribute($value){
+        return $this->formatDate($value,$this->organisation);
+    }
+    public function getDatetimeAttribute($value){
         return $this->formatDate($value,$this->organisation);
     }
 }

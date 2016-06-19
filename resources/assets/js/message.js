@@ -35,7 +35,7 @@ $(document).ready(function () {
             success: function (data) {
                 console.log(data);
                 
-                $('#frmMessage').trigger("reset");
+                $('#messageForm').trigger("reset");
                 $('#messageModal').modal('hide');
                 $('#message-list-panel').show();
 
@@ -56,9 +56,11 @@ $(document).ready(function () {
                     var newDoc = document.open("text/html", "replace");
                     newDoc.write(data.responseText);
                     newDoc.close();
+                } else if (data.status == 403) {
+                    window.alert('Permission denied');
                 } else if (data.status == 422) {
                     $.each(data.responseJSON, function (index, value) {
-                        var input = $('#frmMessage').find('[name="' + index + '"]');
+                        var input = $('#messageForm').find('[name="' + index + '"]');
                         input.after('<span class="help-block"><strong>' + value + '</strong></span>');
                         input.closest('div.form-group').addClass('has-error');
                     });

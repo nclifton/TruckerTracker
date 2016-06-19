@@ -3,6 +3,8 @@
 namespace TruckerTracker\Http\Controllers;
 
 use Gate;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Response;
@@ -15,6 +17,8 @@ use TruckerTracker\Vehicle;
 class ConfigController extends Controller
 {
 
+    use AuthenticatesAndRegistersUsers;
+    
     public $restful = true;
 
     /**
@@ -34,12 +38,14 @@ class ConfigController extends Controller
         if (Gate::denies('view-organisation', $org)) {
             abort(403);
         }
-        return Response::json($this->trimOrganisationResponse($org));
+        return Response::json($this->filterOrganisationResponse($this->loadOrg($org)));
     }
 
     /**
      *
      * create and add a new organisation
+     * - creating and adding the twilio user
+     * - making the logged in user the organisation's "first user"
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -49,36 +55,118 @@ class ConfigController extends Controller
         $this->validateOrganisation($request);
         $attributes = array_merge($request->all(), ['auto_reply' => false]);
         $this->internationalisePhoneNumbers($attributes, ['twillio_phone_number']);
-        list($oUsers, $attributes) = $this->separateUsers($attributes);
         $org = Organisation::create($attributes);
         $user = Auth::user();
         $org->users()->save($user);
         $user->firstUserOrganisation()->save($org);
         $this->addOrganisationTwilioUser($user, $org);
-        $this->updateOrganisationUsers($oUsers, $org);
 
-        return Response::json($this->trimOrganisationResponse($org));
+        return Response::json($this->filterOrganisationResponse($this->loadOrg($org)));
     }
+
+    /**
+     *
+     * create and add a new organisation user
+     *
+     * @param Organisation $org
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addOrganisationUser(Organisation $org, Request $request)
+    {
+        if (Gate::denies('edit-users', $org)) {
+            abort(403);
+        }
+        // validate user registration
+        $this->validateUserRegistration($request);
+
+        // create user
+        $user = User::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => bcrypt($request['password']),
+        ]);
+
+        // add user to organisation
+        $org->users()->save($user);
+
+        // return the public attributes of the created user
+        return Response::json($user);
+    }
+
 
     /**
      * @param Organisation $org
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateOrganisation($org, Request $request)
+    public function updateOrganisation(Organisation $org, Request $request)
     {
-        if (Gate::denies('update-organisation', $org)) {
+        if (Gate::denies('update-organisation',$org)) {
             abort(403);
         }
 
         $this->validateOrganisation($request);
         $attributes = $request->all();
         $this->internationalisePhoneNumbers($attributes, ['twillio_phone_number']);
-        list($oUsers, $attributes) = $this->separateUsers($attributes);
-        $org->update($attributes);
-        $this->updateOrganisationUsers($oUsers, $org);
 
-        return Response::json($this->trimOrganisationResponse($org));
+        $org->update($attributes);
+
+        return Response::json($this->filterOrganisationResponse($this->loadOrg($org)));
+    }
+
+
+    /**
+     * @param Organisation $org
+     * @param User $user
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateOrganisationUser(User $user, Request $request)
+    {
+        if (Gate::denies('edit-users',$user->organisation)) {
+            abort(403);
+        }
+        // validate user registration
+        $this->validateUserUpdate($request,$user);
+
+        // update user
+        $user->update([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => bcrypt($request['password']),
+        ]);
+
+        // return the public attributes of the user
+        return Response::json($user);
+    }
+
+    /**
+     * @param Organisation $org
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function deleteOrganisationUser(User $user)
+    {
+        if (Gate::denies('edit-users', $user->organisation)) {
+            abort(403);
+        }
+        $user->delete();
+        return Response::json($user);
+    }
+
+    /**
+     * @param Organisation $org
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOrganisationUser(User $user)
+    {
+        if (Gate::denies('view-organisation', $user->organisation)) {
+            abort(403);
+        }
+        return Response::json($user);
     }
 
     /**
@@ -110,6 +198,11 @@ class ConfigController extends Controller
         return Response::json($driver);
     }
 
+    /**
+     * @param $driver
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateDriver($driver, Request $request)
     {
         if (Gate::denies('update-driver', $driver->organisation)) {
@@ -121,6 +214,10 @@ class ConfigController extends Controller
         return Response::json($driver);
     }
 
+    /**
+     * @param $driver
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteDriver($driver)
     {
         if (Gate::denies('delete-driver', $driver->organisation)) {
@@ -131,6 +228,10 @@ class ConfigController extends Controller
     }
 
 
+    /**
+     * @param $vehicle
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getVehicle($vehicle)
     {
         if (Gate::denies('view-driver', $vehicle->organisation)) {
@@ -139,7 +240,11 @@ class ConfigController extends Controller
         return Response::json($vehicle);
     }
 
-    public function addvehicle(Request $request)
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addVehicle(Request $request)
     {
         $user = Auth::user();
         if (Gate::denies('add-vehicle', $user->organisation)) {
@@ -151,6 +256,11 @@ class ConfigController extends Controller
         return Response::json($vehicle);
     }
 
+    /**
+     * @param $vehicle
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateVehicle($vehicle, Request $request)
     {
         if (Gate::denies('update-vehicle', $vehicle->organisation)) {
@@ -162,6 +272,10 @@ class ConfigController extends Controller
         return Response::json($vehicle);
     }
 
+    /**
+     * @param $vehicle
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteVehicle($vehicle)
     {
         if (Gate::denies('delete-vehicle', $vehicle->organisation)) {
@@ -174,7 +288,30 @@ class ConfigController extends Controller
     /**
      * @param Request $request
      */
-    protected function validateOrganisation(Request $request)
+    private function validateUserRegistration(Request $request){
+        $this->validate($request,[
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:6|confirmed',
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param User $user
+     */
+    private function validateUserUpdate(Request $request,User $user){
+        $this->validate($request,[
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users,email,'.$user->_id.',_id',
+            'password' => 'sometimes|required|min:6|confirmed',
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     */
+    private function validateOrganisation(Request $request)
     {
         $this->validate($request,
             [
@@ -211,13 +348,13 @@ class ConfigController extends Controller
         );
     }
 
+
     /**
      * @param Request $request
-     * @param $ln
-     * @param $org_id
-     * @param $fn
+     * @param $user
+     * @param string $cid
      */
-    protected function validateDriver(Request $request, $user, $cid = 'NULL')
+    private function validateDriver(Request $request, $user, $cid = 'NULL')
     {
         $org_id = $user->organisation_id;
         $ln = $request->last_name;
@@ -261,7 +398,7 @@ class ConfigController extends Controller
      * @param Request $request
      * @param $user
      */
-    protected function validateVehicle(Request $request, $user)
+    private function validateVehicle(Request $request, $user)
     {
         $org_id = $user->organisation_id;
         $this->validate($request,
@@ -335,7 +472,7 @@ class ConfigController extends Controller
      * @param Organisation $org
      * @return User
      */
-    protected function addOrganisationTwilioUser(User $user, Organisation $org)
+    private function addOrganisationTwilioUser(User $user, Organisation $org)
     {
         list($twilioUser, $password) = $this->createTwillioUser($user);
         $org->users()->save($twilioUser);
@@ -345,145 +482,36 @@ class ConfigController extends Controller
     }
 
     /**
-     * @param Organisation $org
+     * @param array|Organisation $org
      * @return array
      */
-    private function trimOrganisationResponse($org)
+    private function filterOrganisationResponse($org)
     {
-        $org->load([
-                'firstUser',
-                'twilioUser',
-                'users' => function ($query) use ($org) {
-                    $query
-                        ->where('_id', '<>', $org->first_user_id)
-                        ->where('_id', '<>', $org->twilio_user_id);
-                }
-            ]
-        );
+        $orgArray = (is_a($org,Model::class)) ? $org->toArray() : $org;
 
-        $unsetItemKeys = [
-            'first_user' => [
-                'created_at',
-                'updated_at',
-                'organisation_id'
-            ],
-            'twilio_user' => [
-                'created_at',
-                'updated_at',
-                'organisation_id'
-            ],
-            'users' => [
-                '*' => [
-                    'created_at',
-                    'updated_at',
-                    'organisation_id'
-                ]
-            ]
+        $filterOutKeys = [
+            'first_user',
+            'twilio_user'
         ];
-        return $this->unset_array_items($org->toArray(), $unsetItemKeys);
+        return array_filter($orgArray, function ($key) use($filterOutKeys){
+            return !in_array($key,$filterOutKeys);
+        },ARRAY_FILTER_USE_KEY);
     }
+
 
     /**
-     * @param array $array
-     * @param array $unsetItemKeys
-     * @return array
+     * @param Organisation $org
+     * @return Organisation
      */
-    private function unset_array_items($array, $unsetItemKeys)
+    private function loadOrg(Organisation $org)
     {
-        foreach ($unsetItemKeys as $key => $value) {
-            if (is_array($value)) {
-                if ($key == '*') {
-                    foreach ($array as $k => $a) {
-                        $array[$k] = $this->unset_array_items($a, $value);
-                    }
-                } else {
-                    $array[$key] = $this->unset_array_items($array[$key], $value);
-                }
-            } else {
-                unset($array[$value]);
-            }
-        }
-        return $array;
-    }
-
-    /**
-     * @param array $attributes
-     * @return array
-     */
-    private function separateUsers(array $attributes)
-    {
-        $oUsers = [];
-        if (key_exists('users',$attributes)) {
-            $oUsers = $attributes['users'];
-            unset($attributes['users']);
-        }
-         return [$oUsers, $attributes];
-    }
-
-
-    private function updateOrganisationUsers($oUsers, $org)
-    {
-        foreach ($oUsers as $k => $oUser) {
-            $oUser['password'] = bcrypt($oUser['password']);
-            if (isset($oUser['_id'])) {
-                $id = $oUser['_id'];
-                unset($oUser['_id']);
-                User::where('_id',$id)->update($oUser) ;
-            } else {
-                $user = User::create($oUser);
-                $org->users()->save($user);
-                $oUsers[$k]['_id'] = $user->_id;
-            }
-        }
-        $this->deleteOrganisationUsers($oUsers,$org);
-
+        $org->load(['users' => function ($query) use ($org) {
+            $query->where('_id', '<>', $org->twilio_user_id)
+                ->where('_id', '<>', $org->first_user_id);
+        }]);
         return $org;
     }
 
-    /**
-     * 
-     * deletes operations users (users excluding first and twilio) 
-     * associated with the organisation if not in the received users list
-     * 
-     * @param $users
-     * @param $org
-     */
-    private function deleteOrganisationUsers($users, $org)
-    {
-        $id1 = $org->firstUser->_id;
-        $twilioUser = $org->twilioUser;
-        $id2 = $twilioUser->id;
-        $orgUsers = $org->users()
-            ->where('_id','<>', $id1)
-            ->where('_id','<>', $id2)
-            ->get();
-        $ids = $this->getArrayValuesForKey($users,'_id');
-        foreach ($orgUsers as $orgUser) {
-            $id = $orgUser->_id;
-            if (!in_array($id,$ids)) {
-                User::where('_id',$id)->delete();
-            }
-        }
-    }
 
-    /**
-     *
-     * from an array of arrays if the sub-array key equals specified key add value to returned new array
-     *
-     * @param array $array
-     * @param string $key
-     * @return array
-     */
-    private function getArrayValuesForKey($array, $key)
-    {
-        $values = [];
-        foreach($array as $a){
-            foreach ($a as $k => $v){
-                if ($k == $key)
-                    $values[] = $v;
-            }
-        }
-        return $values;
-    }
 
 }

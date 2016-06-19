@@ -36,6 +36,7 @@
         </ServerConfiguration>
         <ServerConfiguration>
           <option name="authenticationDatabase" value="admin" />
+          <option name="authenticationMechanism" value="SCRAM-SHA-1" />
           <option name="label" value="localhost trucker_tracker" />
           <option name="password" value="6iSgcH2eNE" />
           <option name="serverUrls">
