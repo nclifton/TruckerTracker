@@ -30,7 +30,7 @@ class TwilioController extends Controller
 {
     protected $twilio;
 
-    
+
 
     /**
      * Create a new controller instance.
@@ -39,7 +39,7 @@ class TwilioController extends Controller
     public function __construct(\TruckerTracker\Twilio\TwilioInterface $twilio)
     {
         $this->twilio = $twilio;
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     /**
