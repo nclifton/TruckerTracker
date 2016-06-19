@@ -49,6 +49,9 @@ class TwilioIncomingController extends Controller
         if (Gate::denies('add-message')) {
             abort(403);
         }
+
+        Log::info('received message');
+
         $from = $request->From;
         $twiml = new Services_Twilio_Twiml();;
         if ($driver = Driver::where('mobile_phone_number', $from)->first()) {
