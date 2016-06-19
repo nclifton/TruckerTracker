@@ -115,7 +115,7 @@ class TwilioController extends Controller
      */
     private function text($sendToNumber, $message_text, $org)
     {
-       
+        $host = $_SERVER['SERVER_NAME'];
         $this->twilio->setSid($org->twilio_account_sid);
         $this->twilio->setToken($org->twilio_auth_token);
         $this->twilio->setFrom($org->twilio_phone_number);
@@ -129,7 +129,7 @@ class TwilioController extends Controller
             'To' => $sendToNumber,
             'From' => $org->twilio_phone_number,
             'Body' => $message_text,
-            'StatusCallback' => "http://${creds}@mcsweeneytg.com.au:8000/incoming/message/status"
+            'StatusCallback' => "http://${creds}@${$host}/incoming/message/status"
         ]);
 
         // Return the message object to the browser as JSON

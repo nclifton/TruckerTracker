@@ -7,7 +7,7 @@ $sent_at = $location?$location->sent_at:'';
 <li id="location{{$id}}" class="row" style="{{$styleAttr}}">
     <span class="col-md-2 col-xs-2 col-sm-2 col-lg-2">
         @if($user->can('view-location') && ($status == 'received') )
-        <button class="btn btn-xs btn-detail open-modal-location-view" value="{{$id}}">View</button>
+        <button class="btn btn-xs btn-detail open-modal-location-view   " value="{{$id}}">View</button>
         @endif
     </span>
     <span class="registration_number col-md-3 col-xs-3 col-sm-3 col-lg-3">

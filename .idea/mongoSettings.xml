@@ -47,6 +47,19 @@
           <option name="userDatabase" value="trucker_tracker" />
           <option name="username" value="trucker_tracker" />
         </ServerConfiguration>
+        <ServerConfiguration>
+          <option name="authenticationDatabase" value="admin" />
+          <option name="authenticationMechanism" value="MONGODB-CR" />
+          <option name="label" value="mcsweeneytg.com.au" />
+          <option name="password" value="6iSgcH2eNE" />
+          <option name="serverUrls">
+            <list>
+              <option value="mcsweeneytg.com.au:27017" />
+            </list>
+          </option>
+          <option name="userDatabase" value="trucker_tracker" />
+          <option name="username" value="root" />
+        </ServerConfiguration>
       </list>
     </option>
     <option name="shellPath" value="/usr/local/bin/mongo" />

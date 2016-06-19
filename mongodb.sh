@@ -33,15 +33,12 @@ do
    [[ "${LOGLINE}" == *"[initandlisten] waiting for connections on port 27017"* ]] && pkill -P $$ tail
 done
 
-#user admin
-#mongo --eval 'db.createUser({user:"root",pwd:"64cXeTETiB",roles:[{role:"root",db:"admin"}]})' admin
-
 #setup the trucker.tracker mongo database
 mongo admin /vagrant/trucker.tracker.js
 
 # add authentication now
-#echo "security:" >> /etc/mongod.conf
-#echo "  authorization: enabled" >> /etc/mongod.conf
+sudo echo "security:" >> /etc/mongod.conf
+sudo echo "  authorization: enabled" >> /etc/mongod.conf
 
 #restart mongoDB
 service mongod restart

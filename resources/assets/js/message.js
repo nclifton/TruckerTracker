@@ -3,9 +3,6 @@
  */
 $(document).ready(function () {
 
-    var message_url = "/text/driver";
-
-
     //send message to driver
     $("#btn-save-message").click(function (e) {
         $.ajaxSetup({
@@ -22,14 +19,13 @@ $(document).ready(function () {
 
         var type = "POST";
         var driver_id = $('#message_id').val();
-        var my_message_url = message_url + '/' + driver_id;
 
         console.log(formData);
 
         $.ajax({
 
             type: type,
-            url: my_message_url,
+            url: '/driver/' + driver_id + '/message/',
             data: formData,
             dataType: 'json',
             success: function (data) {
