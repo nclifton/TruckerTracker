@@ -45,7 +45,7 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        var vehicle_id = $('#vehicle_id').val();
+        var vehicle_id = $('#location_vehicle_id').val();
 
         $.ajax({
 

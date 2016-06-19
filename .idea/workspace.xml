@@ -3,13 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="675fe1e5-5159-4819-aa48-859a173a67c3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/TwilioController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/TwilioController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/assets/js/driver.js" afterPath="$PROJECT_DIR$/resources/assets/js/driver.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/assets/js/location.js" afterPath="$PROJECT_DIR$/resources/assets/js/location.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/assets/js/message.js" afterPath="$PROJECT_DIR$/resources/assets/js/message.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/assets/js/organisation.js" afterPath="$PROJECT_DIR$/resources/assets/js/organisation.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/assets/js/vehicle.js" afterPath="$PROJECT_DIR$/resources/assets/js/vehicle.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/selenium-tests/TwilioLocationFormTest.php" afterPath="$PROJECT_DIR$/tests/selenium-tests/TwilioLocationFormTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/home/location/body.blade.php" afterPath="$PROJECT_DIR$/resources/views/home/location/body.blade.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/selenium-tests/ConfigVehiclesTest.php" afterPath="$PROJECT_DIR$/tests/selenium-tests/ConfigVehiclesTest.php" />
     </list>
     <ignored path="sms-tracker-logger.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -54,31 +51,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="organisation.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/assets/js/organisation.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="458">
-              <caret line="97" column="16" selection-start-line="97" selection-start-column="16" selection-end-line="97" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="driver.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/assets/js/driver.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="653">
-              <caret line="143" column="36" selection-start-line="143" selection-start-column="32" selection-end-line="143" selection-end-column="36" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="vehicle.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="vehicle.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/resources/assets/js/vehicle.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="711">
-              <caret line="158" column="102" selection-start-line="158" selection-start-column="102" selection-end-line="158" selection-end-column="102" />
+            <state relative-caret-position="321">
+              <caret line="132" column="74" selection-start-line="132" selection-start-column="74" selection-end-line="132" selection-end-column="74" />
               <folding />
             </state>
           </provider>
@@ -94,11 +71,61 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TwilioLocationFormTest.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="TwilioLocationFormTest.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/selenium-tests/TwilioLocationFormTest.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="99">
-              <caret line="35" column="15" selection-start-line="35" selection-start-column="15" selection-end-line="35" selection-end-column="15" />
+            <state relative-caret-position="174">
+              <caret line="25" column="31" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="41" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ConfigVehiclesTest.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/selenium-tests/ConfigVehiclesTest.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="155">
+              <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="body.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/home/location/body.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="3" column="21" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="body.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/home/vehicle/body.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="listPanel.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/home/listPanel.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="90" selection-start-line="1" selection-start-column="90" selection-end-line="1" selection-end-column="90" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="modal.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/home/modal.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="9" column="75" selection-start-line="9" selection-start-column="75" selection-end-line="9" selection-end-column="75" />
               <folding />
             </state>
           </provider>
@@ -114,41 +141,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="message.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/assets/js/message.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="25" column="20" selection-start-line="25" selection-start-column="18" selection-end-line="25" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TwilioController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/TwilioController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
-              <caret line="117" column="69" selection-start-line="117" selection-start-column="69" selection-end-line="117" selection-end-column="69" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name=".env" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.env">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="20" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="location.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/assets/js/location.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="338">
-              <caret line="51" column="24" selection-start-line="51" selection-start-column="24" selection-end-line="51" selection-end-column="24" />
+            <state relative-caret-position="375">
+              <caret line="47" column="38" selection-start-line="47" selection-start-column="38" selection-end-line="47" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -202,7 +199,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/tests/controller-tests/TwilioControllerTestCase.php" />
         <option value="$PROJECT_DIR$/tests/controller-tests/TwilioControllerViewLocationTest.php" />
         <option value="$PROJECT_DIR$/tests/controller-tests/twilio/TwilioControllerTestCase.php" />
         <option value="$PROJECT_DIR$/tests/controller-tests/twilio/TwilioControllerLocationTest.php" />
@@ -228,7 +224,6 @@
         <option value="$PROJECT_DIR$/resources/views/home/org/tabs.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/home/org/form.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/home/locationView/body.blade.php" />
-        <option value="$PROJECT_DIR$/resources/views/home/location/body.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/home/vehicle/line.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/home.blade.php" />
         <option value="$PROJECT_DIR$/tests/selenium-tests/LocationViewTest.php" />
@@ -247,12 +242,14 @@
         <option value="$PROJECT_DIR$/storage/logs/laravel.log" />
         <option value="$PROJECT_DIR$/resources/assets/js/driver.js" />
         <option value="$PROJECT_DIR$/resources/assets/js/organisation.js" />
-        <option value="$PROJECT_DIR$/resources/assets/js/vehicle.js" />
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/TwilioController.php" />
-        <option value="$PROJECT_DIR$/resources/assets/js/location.js" />
         <option value="$PROJECT_DIR$/resources/assets/js/message.js" />
         <option value="$PROJECT_DIR$/tests/selenium-tests/TwilioLocationFormTest.php" />
+        <option value="$PROJECT_DIR$/resources/assets/js/location.js" />
+        <option value="$PROJECT_DIR$/resources/views/home/location/body.blade.php" />
+        <option value="$PROJECT_DIR$/tests/selenium-tests/ConfigVehiclesTest.php" />
+        <option value="$PROJECT_DIR$/resources/assets/js/vehicle.js" />
       </list>
     </option>
   </component>
@@ -627,6 +624,104 @@
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="tests" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TruckerTracker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TruckerTracker" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tests" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="selenium-tests" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TruckerTracker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TruckerTracker" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TruckerTracker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TruckerTracker" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="home" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TruckerTracker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TruckerTracker" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="home" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vehicle" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TruckerTracker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TruckerTracker" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
@@ -810,13 +905,9 @@
       <recent name="$PROJECT_DIR$/resources/views/home" />
     </key>
   </component>
-  <component name="RunManager" selected="PHPUnit.SeleniumTestTwilioLocationForm.queuesLocationRequest">
+  <component name="RunManager" selected="PHPUnit.ConfigVehiclesTest.testAddsVehicle">
     <configuration default="false" name="selenium-tests" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
       <TestRunner directory="$PROJECT_DIR$/tests/selenium-tests" />
-      <method />
-    </configuration>
-    <configuration default="false" name="HomeControllerTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
-      <TestRunner class="TruckerTracker\HomeControllerTest" file="$PROJECT_DIR$/tests/controller-tests/HomeControllerTest.php" scope="Class" />
       <method />
     </configuration>
     <configuration default="false" name="ConfigDriversTest.testBlankFirstNameValidationFail" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
@@ -829,6 +920,10 @@
     </configuration>
     <configuration default="false" name="SeleniumTestTwilioLocationForm.queuesLocationRequest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
       <TestRunner class="TruckerTracker\SeleniumTestTwilioLocationForm" directory="$PROJECT_DIR$/tests/selenium-tests" file="$PROJECT_DIR$/tests/selenium-tests/TwilioLocationFormTest.php" method="queuesLocationRequest" scope="Method" />
+      <method />
+    </configuration>
+    <configuration default="false" name="ConfigVehiclesTest.testAddsVehicle" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <TestRunner class="TruckerTracker\ConfigVehiclesTest" file="$PROJECT_DIR$/tests/selenium-tests/ConfigVehiclesTest.php" method="testAddsVehicle" scope="Method" />
       <method />
     </configuration>
     <configuration default="true" type="AppEnginePhpConfigurationType" factoryName="App Engine for PHP">
@@ -984,18 +1079,18 @@
       <item index="2" class="java.lang.String" itemvalue="PHP Built-in Web Server.web server" />
       <item index="3" class="java.lang.String" itemvalue="PHPUnit.TestConfig.testAddEmptyOrganisationValidationFail" />
       <item index="4" class="java.lang.String" itemvalue="PHPUnit.selenium-tests" />
-      <item index="5" class="java.lang.String" itemvalue="PHPUnit.HomeControllerTest" />
-      <item index="6" class="java.lang.String" itemvalue="PHPUnit.ConfigDriversTest.testBlankFirstNameValidationFail" />
-      <item index="7" class="java.lang.String" itemvalue="PHPUnit.LoginTest.testRegistrationAvailable" />
-      <item index="8" class="java.lang.String" itemvalue="PHPUnit.SeleniumTestTwilioLocationForm.queuesLocationRequest" />
+      <item index="5" class="java.lang.String" itemvalue="PHPUnit.ConfigDriversTest.testBlankFirstNameValidationFail" />
+      <item index="6" class="java.lang.String" itemvalue="PHPUnit.LoginTest.testRegistrationAvailable" />
+      <item index="7" class="java.lang.String" itemvalue="PHPUnit.SeleniumTestTwilioLocationForm.queuesLocationRequest" />
+      <item index="8" class="java.lang.String" itemvalue="PHPUnit.ConfigVehiclesTest.testAddsVehicle" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="PHPUnit.SeleniumTestTwilioLocationForm.queuesLocationRequest" />
-        <item index="1" class="java.lang.String" itemvalue="PHPUnit.selenium-tests" />
-        <item index="2" class="java.lang.String" itemvalue="PHPUnit.LoginTest.testRegistrationAvailable" />
-        <item index="3" class="java.lang.String" itemvalue="PHPUnit.ConfigDriversTest.testBlankFirstNameValidationFail" />
-        <item index="4" class="java.lang.String" itemvalue="PHPUnit.HomeControllerTest" />
+        <item index="0" class="java.lang.String" itemvalue="PHPUnit.ConfigVehiclesTest.testAddsVehicle" />
+        <item index="1" class="java.lang.String" itemvalue="PHPUnit.SeleniumTestTwilioLocationForm.queuesLocationRequest" />
+        <item index="2" class="java.lang.String" itemvalue="PHPUnit.selenium-tests" />
+        <item index="3" class="java.lang.String" itemvalue="PHPUnit.LoginTest.testRegistrationAvailable" />
+        <item index="4" class="java.lang.String" itemvalue="PHPUnit.ConfigDriversTest.testBlankFirstNameValidationFail" />
       </list>
     </recent_temporary>
   </component>
@@ -1060,7 +1155,7 @@
       <workItem from="1466083967900" duration="113504000" />
       <workItem from="1466342360129" duration="362000" />
       <workItem from="1466343145990" duration="2436000" />
-      <workItem from="1466345962820" duration="2755000" />
+      <workItem from="1466345962820" duration="5114000" />
     </task>
     <task id="LOCAL-00002" summary="controller tests added for organisation configuration beyond name , drivers and vehicles - twilio properties - adding users">
       <created>1465845145868</created>
@@ -1111,44 +1206,51 @@
       <option name="project" value="LOCAL" />
       <updated>1466344707274</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="probs with ajax error handling imacting location request and messaging&#10;">
+      <created>1466349392014</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1466349392014</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="SeleniumTestTwilioLocationForm_queuesLocationRequest - 2016.06.20 at 00h 53m 27s.xml">
-      <configuration name="SeleniumTestTwilioLocationForm.queuesLocationRequest" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ConfigVehiclesTest_testAddsVehicle - 2016.06.20 at 01h 29m 21s.xml">
+      <configuration name="ConfigVehiclesTest.testAddsVehicle" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="SeleniumTestTwilioLocationForm_queuesLocationRequest - 2016.06.20 at 00h 57m 02s.xml">
-      <configuration name="SeleniumTestTwilioLocationForm.queuesLocationRequest" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ConfigVehiclesTest_testAddsVehicle - 2016.06.20 at 01h 30m 24s.xml">
+      <configuration name="ConfigVehiclesTest.testAddsVehicle" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="SeleniumTestTwilioLocationForm_queuesLocationRequest - 2016.06.20 at 00h 57m 22s.xml">
-      <configuration name="SeleniumTestTwilioLocationForm.queuesLocationRequest" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ConfigVehiclesTest_testAddsVehicle - 2016.06.20 at 01h 32m 06s.xml">
+      <configuration name="ConfigVehiclesTest.testAddsVehicle" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="SeleniumTestTwilioLocationForm_queuesLocationRequest - 2016.06.20 at 00h 59m 03s.xml">
-      <configuration name="SeleniumTestTwilioLocationForm.queuesLocationRequest" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ConfigVehiclesTest_testAddsVehicle - 2016.06.20 at 01h 41m 09s.xml">
+      <configuration name="ConfigVehiclesTest.testAddsVehicle" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="SeleniumTestTwilioLocationForm_queuesLocationRequest - 2016.06.20 at 00h 59m 51s.xml">
-      <configuration name="SeleniumTestTwilioLocationForm.queuesLocationRequest" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ConfigVehiclesTest_testAddsVehicle - 2016.06.20 at 01h 42m 26s.xml">
+      <configuration name="ConfigVehiclesTest.testAddsVehicle" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="SeleniumTestTwilioLocationForm_queuesLocationRequest - 2016.06.20 at 01h 00m 09s.xml">
-      <configuration name="SeleniumTestTwilioLocationForm.queuesLocationRequest" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ConfigVehiclesTest_testAddsVehicle - 2016.06.20 at 01h 46m 37s.xml">
+      <configuration name="ConfigVehiclesTest.testAddsVehicle" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="SeleniumTestTwilioLocationForm_queuesLocationRequest - 2016.06.20 at 01h 00m 40s.xml">
-      <configuration name="SeleniumTestTwilioLocationForm.queuesLocationRequest" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ConfigVehiclesTest_testAddsVehicle - 2016.06.20 at 01h 47m 38s.xml">
+      <configuration name="ConfigVehiclesTest.testAddsVehicle" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="SeleniumTestTwilioLocationForm_queuesLocationRequest - 2016.06.20 at 01h 01m 05s.xml">
-      <configuration name="SeleniumTestTwilioLocationForm.queuesLocationRequest" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ConfigVehiclesTest_testAddsVehicle - 2016.06.20 at 01h 53m 59s.xml">
+      <configuration name="ConfigVehiclesTest.testAddsVehicle" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="SeleniumTestTwilioLocationForm_queuesLocationRequest - 2016.06.20 at 01h 15m 15s.xml">
-      <configuration name="SeleniumTestTwilioLocationForm.queuesLocationRequest" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="ConfigVehiclesTest_testAddsVehicle - 2016.06.20 at 01h 54m 36s.xml">
+      <configuration name="ConfigVehiclesTest.testAddsVehicle" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
-    <history-entry file="selenium-tests - 2016.06.20 at 01h 14m 17s.xml">
-      <configuration name="selenium-tests" configurationId="PHPUnitRunConfigurationType" />
+    <history-entry file="SeleniumTestTwilioLocationForm_queuesLocationRequest - 2016.06.20 at 01h 20m 19s.xml">
+      <configuration name="SeleniumTestTwilioLocationForm.queuesLocationRequest" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
     <option name="enabled" value="true" />
-    <option name="totallyTimeSpent" value="931709000" />
+    <option name="totallyTimeSpent" value="934068000" />
     <option name="autoMode" value="false" />
   </component>
   <component name="ToolWindowManager">
@@ -1167,6 +1269,7 @@
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960597" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22310969" sideWeight="0.4692443" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960597" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32848233" sideWeight="0.4914803" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24973376" sideWeight="0.4613936" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Time Tracking" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15388711" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -1181,7 +1284,6 @@
       <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32848233" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="REST Client" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19861555" sideWeight="0.5141243" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32848233" sideWeight="0.4914803" order="2" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1230,7 +1332,8 @@
     <MESSAGE value="driver message bug fixed - not using correct route.&#10;discovered during deployment testing (so doing deployment, yup)" />
     <MESSAGE value="seems Organisation.php missed getting added to the repo..." />
     <MESSAGE value="just making sure everythis ins sync'd&#10;- problem with registration_number element id not being unique on the home page due to use on the location view modal panel" />
-    <option name="LAST_COMMIT_MESSAGE" value="just making sure everythis ins sync'd&#10;- problem with registration_number element id not being unique on the home page due to use on the location view modal panel" />
+    <MESSAGE value="probs with ajax error handling imacting location request and messaging&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="probs with ajax error handling imacting location request and messaging&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1250,29 +1353,20 @@
           <line>85</line>
           <option name="timeStamp" value="611" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/tests/selenium-tests/ConfigVehiclesTest.php</url>
+          <line>98</line>
+          <option name="timeStamp" value="613" />
+        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="612" />
+      <option name="time" value="614" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/resources/views/home/message/body.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/home/org/body.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="6" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Providers/AuthServiceProvider.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
@@ -1287,31 +1381,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/home/modal.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="75" selection-start-line="9" selection-start-column="75" selection-end-line="9" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/home/listPanel.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="90" selection-start-line="1" selection-start-column="90" selection-end-line="1" selection-end-column="90" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/home/listPanelWithAddButton.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="41" selection-start-line="0" selection-start-column="41" selection-end-line="0" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/home/vehicle/body.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1393,13 +1466,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/home/location/body.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="56" />
         </state>
       </provider>
     </entry>
@@ -1575,14 +1641,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/assets/js/location.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="51" column="24" selection-start-line="51" selection-start-column="24" selection-end-line="51" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/assets/js/message.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="248">
@@ -1607,14 +1665,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/assets/js/vehicle.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="711">
-          <caret line="158" column="102" selection-start-line="158" selection-start-column="102" selection-end-line="158" selection-end-column="102" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vendor/phpunit/phpunit/src/Framework/TestCase.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="163">
@@ -1623,10 +1673,74 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources/assets/js/location.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="47" column="38" selection-start-line="47" selection-start-column="38" selection-end-line="47" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tests/selenium-tests/TwilioLocationFormTest.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="99">
-          <caret line="35" column="15" selection-start-line="35" selection-start-column="15" selection-end-line="35" selection-end-column="15" />
+        <state relative-caret-position="174">
+          <caret line="25" column="31" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/storage/framework/views/dfaf15dc6dc62344a83355a11478387c72c3241b.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="21" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/home/location/body.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="21" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/home/vehicle/body.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/home/listPanel.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="90" selection-start-line="1" selection-start-column="90" selection-end-line="1" selection-end-column="90" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/home/modal.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="75" selection-start-line="9" selection-start-column="75" selection-end-line="9" selection-end-column="75" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/selenium-tests/ConfigVehiclesTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/assets/js/vehicle.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="132" column="74" selection-start-line="132" selection-start-column="74" selection-end-line="132" selection-end-column="74" />
           <folding />
         </state>
       </provider>

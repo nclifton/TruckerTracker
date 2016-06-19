@@ -15,7 +15,7 @@ $(document).ready(function () {
         $('.open-modal-location').click(function () {
             var vehicle_id = $(this).val();
             $('#btn-save-location').val("send");
-            $('#vehicle_id').val(vehicle_id);
+            $('#location_vehicle_id').val(vehicle_id);
             $('#locationModal').modal('show');
 
         });
@@ -130,7 +130,7 @@ $(document).ready(function () {
                 if (state == "add") { //if user added a new record
                     $('#btn-save-vehicle').text("Save Changes");
                     $('#vehicle').clone(false).prependTo('#vehicle_list').attr("id", "vehicle" + data._id);
-                    $("#vehicle" + data._id + ' button.open-modal-locate').val(data._id);
+                    $("#vehicle" + data._id + ' button.open-modal-location').val(data._id);
                     $("#vehicle" + data._id + ' button.open-modal-vehicle').val(data._id);
                     $("#vehicle" + data._id + ' button.delete-vehicle').val(data._id);
                     $("#vehicle" + data._id + ' #span_registration_number_').attr("id", "span_registration_number_" + data._id);

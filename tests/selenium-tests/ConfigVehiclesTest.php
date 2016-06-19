@@ -40,11 +40,11 @@ class ConfigVehiclesTest extends IntegratedTestCase
     }
 
     /**
-     * Diver Dialog displayed to add driver
+     * Diver Dialog displayed to add vehicle
      *
      * @return void
      */
-    public function testAddDriverDialogDisplayed()
+    public function testAddVehicleDialogDisplayed()
     {
         // Arrange
 
@@ -74,6 +74,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
 
         // Assert
 
+
         $cursor = $this->getMongoConnection()
             ->collection('vehicles')
             ->find($this->bind_vehicle($v));
@@ -86,6 +87,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
         $this->assertEquals(1, $cnt);
         $this->assertNotNull($id);
 
+
         $this->assertThat($this->byId('vehicleModalLabel')->displayed(), $this->isFalse());
         $this->assertThat($this->byId('vehicle'.$id)->displayed(), $this->isTrue());
 
@@ -94,12 +96,15 @@ class ConfigVehiclesTest extends IntegratedTestCase
         $this->byCssSelector('#vehicle' . $id .' .open-modal-location')->click();
         sleep(3);
         $this->assertThat($this->byId('locationModal')->displayed(), $this->isTrue());
+        $this->assertThat($this->byId('location_vehicle_id')->attribute('value'),$this->equalTo(''.$id));
         $this->byCssSelector('#locationModal button.close')->click();
         sleep(3);
         $this->byCssSelector('#vehicle'.$id.' .open-modal-vehicle')->click();
         sleep(3);
         $this->assertThat($this->byId('vehicleModal')->displayed(), $this->isTrue());
         $this->byCssSelector('#vehicleModal button.close')->click();
+
+
         sleep(1);
         $this->byCssSelector('#vehicle'.$id.' .delete-vehicle')->click();
         sleep(3);
