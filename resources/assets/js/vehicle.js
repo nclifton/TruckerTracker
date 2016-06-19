@@ -5,6 +5,11 @@ $(document).ready(function () {
 
     var vehicles_url = "/vehicles";
 
+    $('#registration_number').keyup(function(){
+        this.value = this.value.toUpperCase();
+    });
+
+
     //display modal form for sending locate request message to vehicle
     function setup_locate_vehicle() {
         $('.open-modal-location').click(function () {
@@ -94,7 +99,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         var formData = {
-            registration_number: $('#registration_number').val().toUpperCase(),
+            registration_number: $('#registration_number').val(),
             mobile_phone_number: $('#vehicle_mobile_phone_number').val(),
             tracker_imei_number: $('#tracker_imei_number').val()
         };
@@ -146,14 +151,9 @@ $(document).ready(function () {
 
             },
             error: function (data) {
-                console.log('Error:', data);
-                if (data.status == 500) {
-                    var newDoc = document.open("text/html", "replace");
-                    newDoc.write(data.responseText);
-                    newDoc.close();
-                } else if (data.status == 403) {
-                    window.alert('Permission denied');
-                } else if (data.status == 422) {
+                handleAjaxError();
+                if (data.status == 422) {
+                    $('#orgForm span.help-block').remove();
                     $.each(data.responseJSON, function (index, value) {
                         var input = $('#vehicleForm').find('[name="' + index + '"]');
                         input.after('<span class="help-block"><strong>' + value + '</strong></span>');

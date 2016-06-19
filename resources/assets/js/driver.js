@@ -141,14 +141,9 @@ $(document).ready(function ($) {
 
             },
             error: function (data) {
-                console.log('Error:', data);
-                if (data.status == 500) {
-                    var newDoc = document.open("text/html", "replace");
-                    newDoc.write(data.responseText);
-                    newDoc.close();
-                } else if (data.status == 403) {
-                    window.alert('Permission denied');
-                } else if (data.status == 422) {
+                handleAjaxError();
+                if (data.status == 422) {
+                    $('#orgForm span.help-block').remove();
                     $.each(data.responseJSON, function (index, value) {
                         var input = $('#driverForm').find('[name="' + index + '"]');
                         input.after('<span class="help-block"><strong>' + value + '</strong></span>');
