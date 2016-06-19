@@ -50,9 +50,9 @@ class TwilioController extends Controller
      */
     public function messageDriver(Driver $driver, Request $request)
     {
-        if (Gate::denies('send-message',$driver->organisation)){
-            abort(403);
-        }
+//        if (Gate::denies('send-message',$driver->organisation)){
+//            abort(403);
+//        }
         $message = Message::create($request->all());
         $org = $driver->organisation;
         $org->messages()->save($message);
@@ -84,9 +84,9 @@ class TwilioController extends Controller
      */
     function locateVehicle(Vehicle $vehicle, Request $request)
     {
-        if (Gate::denies('send-location',$vehicle->organisation)){
-            abort(403);
-        }
+//        if (Gate::denies('send-location',$vehicle->organisation)){
+//            abort(403);
+//        }
         $location = Location::create($request->all());
         $org = $vehicle->organisation;
         $org->locations()->save($location);
