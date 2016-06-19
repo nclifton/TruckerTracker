@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-echo ">>> Installing MongoDB"
+echo ">>> Installing MongoDB etc"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Get key and add to sources
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
@@ -12,6 +14,9 @@ sudo add-apt-repository ppa:ondrej/php
 # Update
 sudo apt-get update
 
+# will need the unzip command later
+sudo apt-get install unzip
+
 # Install MongoDB
 # -qq implies -y --force-yes
 sudo apt-get install -y mongodb-org
@@ -21,7 +26,7 @@ sudo mkdir -p /data/db
 sudo chown mongodb:mongodb /data/db
 
 echo 'provide new mongo.conf'
-cp /vagrant/mongod.conf /etc/mongod.conf
+cp ${DIR}/mongod.conf /etc/mongod.conf
 
 #start mongoDB
 service mongod restart
@@ -34,7 +39,7 @@ do
 done
 
 #setup the trucker.tracker mongo database
-mongo admin /vagrant/trucker.tracker.js
+mongo admin ${DIR}/trucker.tracker.js
 
 # add authentication now
 sudo echo "security:" >> /etc/mongod.conf
