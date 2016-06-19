@@ -27,6 +27,7 @@ class SeleniumTestTwilioLocationForm extends \TruckerTracker\IntegratedTestCase
 
         // Arrange
         $vehicle = $this->vehicleset[0];
+        $_SERVER['SERVER_NAME'] = 'localhost';
 
         // Act
         $this->login();

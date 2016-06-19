@@ -30,6 +30,7 @@ class TwilioController extends Controller
 {
     protected $twilio;
 
+    
 
     /**
      * Create a new controller instance.
@@ -58,7 +59,7 @@ class TwilioController extends Controller
         $driver->messages()->save($message);
         try {
 
-            $response = $this->text($driver->mobile_phone_number, $message->message_text, $org);
+            $response = $this->text($driver->mobile_phone_number, $message->message_text, $org, $request->root());
             $message->queued_at = Carbon::now(); // new \DateTime(); //$this->getUTCDatetimeNow();
             $message->status = $response->status;
             $message->sid = $response->sid;
@@ -91,7 +92,10 @@ class TwilioController extends Controller
         $org->locations()->save($location);
         $vehicle->locations()->save($location);
         try {
-            $response = $this->text($vehicle->mobile_phone_number, $this->requestLocationMessage($vehicle), $org);
+            $response = $this->text($vehicle->mobile_phone_number,
+                $this->requestLocationMessage($vehicle),
+                $org,
+                $request->root());
             $location->queued_at = Carbon::now(); // new \DateTime();// $this->getUTCDatetimeNow();
             $location->status = $response->status;
             $location->update();
@@ -113,9 +117,11 @@ class TwilioController extends Controller
      * @return \Services_Twilio_Rest_Message
      * @internal param $message
      */
-    private function text($sendToNumber, $message_text, $org)
+    private function text($sendToNumber, $message_text, $org, $rootUrl)
     {
-        $host = env('CALLBACK_SERVER_NAME', $_SERVER['SERVER_NAME']);
+        $url = parse_url($rootUrl);
+        $host = env('CALLBACK_SERVER_NAME',$url['host']);
+
         $this->twilio->setSid($org->twilio_account_sid);
         $this->twilio->setToken($org->twilio_auth_token);
         $this->twilio->setFrom($org->twilio_phone_number);
@@ -129,7 +135,7 @@ class TwilioController extends Controller
             'To' => $sendToNumber,
             'From' => $org->twilio_phone_number,
             'Body' => $message_text,
-            'StatusCallback' => "http://${creds}@${host}/incoming/message/status"
+            'StatusCallback' => $url['scheme'].'://'.$creds.'@'.$host."/incoming/message/status"
         ]);
 
         // Return the message object to the browser as JSON
