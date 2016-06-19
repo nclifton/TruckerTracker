@@ -129,7 +129,7 @@ class TwilioController extends Controller
             'To' => $sendToNumber,
             'From' => $org->twilio_phone_number,
             'Body' => $message_text,
-            'StatusCallback' => "http://${creds}@${$host}/incoming/message/status"
+            'StatusCallback' => "http://${creds}@${host}/incoming/message/status"
         ]);
 
         // Return the message object to the browser as JSON
