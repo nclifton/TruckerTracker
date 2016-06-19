@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="675fe1e5-5159-4819-aa48-859a173a67c3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Middleware/VerifyCsrfToken.php" afterPath="$PROJECT_DIR$/app/Http/Middleware/VerifyCsrfToken.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Kernel.php" afterPath="$PROJECT_DIR$/app/Http/Kernel.php" />
     </list>
     <ignored path="sms-tracker-logger.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -88,11 +88,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="VerifyCsrfToken.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="VerifyCsrfToken.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Middleware/VerifyCsrfToken.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="210">
               <caret line="14" column="67" selection-start-line="14" selection-start-column="67" selection-end-line="14" selection-end-column="67" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Kernel.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="292">
+              <caret line="30" column="14" selection-start-line="30" selection-start-column="14" selection-end-line="30" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -133,16 +143,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="90">
               <caret line="42" column="32" selection-start-line="42" selection-start-column="20" selection-end-line="42" selection-end-column="53" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="modal.blade.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/views/home/modal.blade.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="75" selection-start-line="9" selection-start-column="75" selection-end-line="9" selection-end-column="75" />
               <folding />
             </state>
           </provider>
@@ -196,7 +196,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/tests/controller-tests/twilio/TwilioControllerLocationTest.php" />
         <option value="$PROJECT_DIR$/tests/controller-tests/twilio/TwilioControllerMessageTest.php" />
         <option value="$PROJECT_DIR$/tests/controller-tests/config/ConfigControllerUsersTest.php" />
         <option value="$PROJECT_DIR$/tests/controller-tests/config/ConfigControllerTestCase.php" />
@@ -247,6 +246,7 @@
         <option value="$PROJECT_DIR$/tests/controller-tests/twilio/TwilioControllerIncomingTest.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/TwilioController.php" />
         <option value="$PROJECT_DIR$/app/Http/Middleware/VerifyCsrfToken.php" />
+        <option value="$PROJECT_DIR$/app/Http/Kernel.php" />
       </list>
     </option>
   </component>
@@ -1214,7 +1214,7 @@
       <workItem from="1466083967900" duration="113504000" />
       <workItem from="1466342360129" duration="362000" />
       <workItem from="1466343145990" duration="2436000" />
-      <workItem from="1466345962820" duration="9837000" />
+      <workItem from="1466345962820" duration="9908000" />
     </task>
     <task id="LOCAL-00002" summary="controller tests added for organisation configuration beyond name , drivers and vehicles - twilio properties - adding users">
       <created>1465845145868</created>
@@ -1286,17 +1286,24 @@
       <option name="project" value="LOCAL" />
       <updated>1466355908689</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="allowing twilio post to site without having csrf token - what I though would work does not appear to work&#10;">
+      <created>1466356547390</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1466356547390</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="SeleniumTestTwilioLocationForm_queuesLocationRequest - 2016.06.20 at 01h 57m 53s.xml">
-      <configuration name="SeleniumTestTwilioLocationForm.queuesLocationRequest" configurationId="PHPUnitRunConfigurationType" />
-    </history-entry>
     <history-entry file="TwilioControllerIncomingTest_acceptsMessageWithAutoReply - 2016.06.20 at 02h 37m 42s.xml">
       <configuration name="TwilioControllerIncomingTest.acceptsMessageWithAutoReply" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
     <history-entry file="TwilioControllerIncomingTest_acceptsMessageWithAutoReply - 2016.06.20 at 03h 05m 22s.xml">
+      <configuration name="TwilioControllerIncomingTest.acceptsMessageWithAutoReply" configurationId="PHPUnitRunConfigurationType" />
+    </history-entry>
+    <history-entry file="TwilioControllerIncomingTest_acceptsMessageWithAutoReply - 2016.06.20 at 03h 16m 37s.xml">
       <configuration name="TwilioControllerIncomingTest.acceptsMessageWithAutoReply" configurationId="PHPUnitRunConfigurationType" />
     </history-entry>
     <history-entry file="TwilioControllerLocationTest_postLocationFirstUserRouteSuccess - 2016.06.20 at 02h 10m 53s.xml">
@@ -1323,7 +1330,7 @@
   </component>
   <component name="TimeTrackingManager">
     <option name="enabled" value="true" />
-    <option name="totallyTimeSpent" value="938791000" />
+    <option name="totallyTimeSpent" value="938862000" />
     <option name="autoMode" value="false" />
   </component>
   <component name="ToolWindowManager">
@@ -1340,7 +1347,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.09355509" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22310969" sideWeight="0.5307557" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960597" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22310969" sideWeight="0.4692443" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22310969" sideWeight="0.4692443" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960597" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32848233" sideWeight="0.4914803" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24973376" sideWeight="0.4613936" order="8" side_tool="false" content_ui="tabs" />
@@ -1442,7 +1449,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/resources/assets/js/maperizer/.gitignore" />
     <entry file="file://$PROJECT_DIR$/resources/assets/js/maperizer/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="FIRST">
@@ -1821,6 +1827,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="14" column="67" selection-start-line="14" selection-start-column="67" selection-end-line="14" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="292">
+          <caret line="30" column="14" selection-start-line="30" selection-start-column="14" selection-end-line="30" selection-end-column="14" />
           <folding />
         </state>
       </provider>
