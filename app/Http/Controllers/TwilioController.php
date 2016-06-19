@@ -115,7 +115,7 @@ class TwilioController extends Controller
      */
     private function text($sendToNumber, $message_text, $org)
     {
-        $host = $_SERVER['SERVER_NAME'];
+        $host = env('CALLBACK_SERVER_NAME', $_SERVER['SERVER_NAME']);
         $this->twilio->setSid($org->twilio_account_sid);
         $this->twilio->setToken($org->twilio_auth_token);
         $this->twilio->setFrom($org->twilio_phone_number);

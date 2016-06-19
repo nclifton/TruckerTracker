@@ -17,14 +17,13 @@ $(document).ready(function () {
             message_text: $('#message_text').val()
         };
 
-        var type = "POST";
         var driver_id = $('#message_id').val();
 
         console.log(formData);
 
         $.ajax({
 
-            type: type,
+            type: "POST",
             url: '/driver/' + driver_id + '/message/',
             data: formData,
             dataType: 'json',
@@ -47,14 +46,9 @@ $(document).ready(function () {
 
             },
             error: function (data) {
-                console.log('Error:', data);
-                if (data.status == 500) {
-                    var newDoc = document.open("text/html", "replace");
-                    newDoc.write(data.responseText);
-                    newDoc.close();
-                } else if (data.status == 403) {
-                    window.alert('Permission denied');
-                } else if (data.status == 422) {
+                handleAjaxError(data);
+                if (data.status == 422) {
+                    $('#messageForm span.help-block').remove();
                     $.each(data.responseJSON, function (index, value) {
                         var input = $('#messageForm').find('[name="' + index + '"]');
                         input.after('<span class="help-block"><strong>' + value + '</strong></span>');

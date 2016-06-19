@@ -141,9 +141,9 @@ $(document).ready(function ($) {
 
             },
             error: function (data) {
-                handleAjaxError();
+                handleAjaxError(data);
                 if (data.status == 422) {
-                    $('#orgForm span.help-block').remove();
+                    $('#driverForm span.help-block').remove();
                     $.each(data.responseJSON, function (index, value) {
                         var input = $('#driverForm').find('[name="' + index + '"]');
                         input.after('<span class="help-block"><strong>' + value + '</strong></span>');

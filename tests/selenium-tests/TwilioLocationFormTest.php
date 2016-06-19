@@ -33,7 +33,7 @@ class SeleniumTestTwilioLocationForm extends \TruckerTracker\IntegratedTestCase
         $this->byCssSelector('#vehicle'. $vehicle['_id'].' button.open-modal-location')->click();
         sleep(1);
         $this->byId('btn-save-location')->click();
-        sleep(1);
+        sleep(3);
 
         // Assert
 

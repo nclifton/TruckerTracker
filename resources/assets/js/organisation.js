@@ -95,7 +95,7 @@ $(document).ready(function ($) {
                 $("#btn-save-org").html('Save Changes');
             },
             error: function (data) {
-                 handleAjaxError(data);
+                handleAjaxError(data);
                 if (data.status == 422) {
                     $('#orgForm span.help-block').remove();
                     $.each(data.responseJSON, function (index, value) {

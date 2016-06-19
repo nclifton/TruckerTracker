@@ -49,7 +49,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            type: POST,
+            type: 'POST',
             url: '/vehicle/'+vehicle_id+'/location',
             dataType: 'json',
             success: function (data) {
@@ -72,7 +72,7 @@ $(document).ready(function () {
 
             },
             error: function (data) {
-                handleAjaxError();
+                handleAjaxError(data);
                 if (data.status == 422) {
                     $.each(data.responseJSON, function (index, value) {
                         var input = $('#location').find('[name="' + index + '"]');
