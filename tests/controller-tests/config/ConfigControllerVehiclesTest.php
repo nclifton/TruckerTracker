@@ -37,11 +37,12 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     }
 
     /**
-     * test post driver as first user
+     * test post vehicle as first user
+     * - back-end adds the tracker password
      *
      * @test
      */
-    public function postVehicleFirstUserAdds()
+    public function addVehicleAddsVehicle()
     {
         // Arrange
         $user = $this->firstUser();
@@ -49,12 +50,14 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         // Act
 
         $v = $this->vehicleset[0];
-        $this->actingAs($user)->json('post', '/vehicles', $this->bind_vehicle($v));
+        $submitedVehicle = $this->bind_vehicle($v);
+        unset($submitedVehicle['tracker_password']);
+        $this->actingAs($user)->json('post', '/vehicles', $submitedVehicle);
 
         // Assert
         $this->assertResponseOk();
-        $this->seeJson($this->bind_vehicle($v));
-        $this->seeJsonStructure(['_id','created_at','registration_number','mobile_phone_number','tracker_imei_number','organisation_id','updated_at']);
+        $this->seeJson($submitedVehicle);
+        $this->seeJsonStructure(['_id','registration_number','mobile_phone_number','tracker_imei_number']);
         $this->seeInDatabase('vehicles', $this->bind_vehicle_Org_id($v));
 
         return $user;
@@ -64,7 +67,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
      *
      * @test
      */
-    public function postVehicleTwilioUserFailsUnauthorised()
+    public function asTwilioUserAddFailsUnauthorised()
     {
         // Arrange
         $user = $this->twilioUser();
@@ -82,7 +85,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
      *
      * @test
      */
-    public function postVehicleOpsUserFailsUnauthorised()
+    public function asOpsUserAddVehicleFailsUnauthorised()
     {
         // Arrange
         $user = $this->user();
@@ -105,16 +108,18 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     {
         // Arrange
         $v2 = $this->vehicleset[1];
+        $submitedVehicle = $this->bind_vehicle($v2);
+        unset($submitedVehicle['tracker_password']);
 
         // Act
-        $user = $this->postVehicleFirstUserAdds();
+        $user = $this->addVehicleAddsVehicle();
         $data = json_decode($this->response->getContent(), true);
-        $this->actingAs($user)->json('put', '/vehicles/'.$data['_id'], $this->bind_vehicle($v2));
+        $this->actingAs($user)->json('put', '/vehicles/'.$data['_id'], $submitedVehicle);
 
         // Assert
         $this->assertResponseOk();
-        $this->seeJson($this->bind_vehicle($v2));
-        $this->seeJsonStructure(['_id','created_at','registration_number','mobile_phone_number','tracker_imei_number','organisation_id','updated_at']);
+        $this->seeJson($submitedVehicle);
+        $this->seeJsonStructure(['_id','registration_number','mobile_phone_number','tracker_imei_number']);
         $this->seeInDatabase('vehicles',$this->bind_vehicle_Org_id($v2));
     }
 
@@ -127,13 +132,14 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     {
         // Arrange
         $v2 = $this->vehicleset[1];
-        
+        $submitedVehicle = $this->bind_vehicle($v2);
+        unset($submitedVehicle['tracker_password']);
 
         // Act
-        $this->postVehicleFirstUserAdds();
+        $this->addVehicleAddsVehicle();
         $user = $this->twilioUser();
         $data = json_decode($this->response->getContent(), true);
-        $this->actingAs($user)->json('put', '/vehicles/'.$data['_id'], $this->bind_vehicle($v2));
+        $this->actingAs($user)->json('put', '/vehicles/'.$data['_id'], $submitedVehicle);
 
         // Assert
         $this->assertResponseStatus(403);
@@ -149,11 +155,13 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         // Arrange
         $v2 = $this->vehicleset[1];
         $user = $this->user();
-
+        $submitedVehicle = $this->bind_vehicle($v2);
+        unset($submitedVehicle['tracker_password']);
+        
         // Act
-        $this->postVehicleFirstUserAdds();
+        $this->addVehicleAddsVehicle();
         $data = json_decode($this->response->getContent(), true);
-        $this->actingAs($user)->json('put', '/vehicles/'.$data['_id'], $this->bind_vehicle($v2));
+        $this->actingAs($user)->json('put', '/vehicles/'.$data['_id'], $submitedVehicle);
 
         // Assert
         $this->assertResponseStatus(403);
@@ -168,16 +176,18 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     {
         // Arrange
         $v = $this->vehicleset[0];
- 
+        $vehicle = $this->bind_vehicle($v);
+        unset($vehicle['tracker_password']);
+
         // Act
-        $user = $this->postVehicleFirstUserAdds();
+        $user = $this->addVehicleAddsVehicle();
         $data = json_decode($this->response->getContent(), true);
         $this->actingAs($user)->json('get', '/vehicles/' . $data['_id']);
 
         // Assert
         $this->assertResponseOk();
-        $this->seeJson(array_merge(['_id' => $data['_id']],$this->bind_vehicle($v)));
-        $this->seeJsonStructure(['_id','created_at','registration_number','mobile_phone_number','tracker_imei_number','organisation_id','updated_at']);
+        $this->seeJson(array_merge(['_id' => $data['_id']], $vehicle));
+        $this->seeJsonStructure(['_id','registration_number','mobile_phone_number','tracker_imei_number']);
     }
 
     /**
@@ -191,7 +201,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         
 
         // Act
-        $this->postVehicleFirstUserAdds();
+        $this->addVehicleAddsVehicle();
         $user = $this->twilioUser();
         $data = json_decode($this->response->getContent(), true);
 
@@ -210,17 +220,19 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     {
         // Arrange
         $v = $this->vehicleset[0];
+        $vehicle = $this->bind_vehicle($v);
+        unset($vehicle['tracker_password']);
 
         // Act
-        $this->postVehicleFirstUserAdds();
+        $this->addVehicleAddsVehicle();
         $user = $this->user();
         $data = json_decode($this->response->getContent(), true);
         $this->actingAs($user)->json('get', '/vehicles/' . $data['_id']);
 
         // Assert
         $this->assertResponseOk();
-        $this->seeJson(array_merge(['_id' => $data['_id']],$this->bind_vehicle($v)));
-        $this->seeJsonStructure(['_id','created_at','registration_number','mobile_phone_number','tracker_imei_number','organisation_id','updated_at']);
+        $this->seeJson(array_merge(['_id' => $data['_id']], $vehicle));
+        $this->seeJsonStructure(['_id','registration_number','mobile_phone_number','tracker_imei_number']);
     }
     /**
      * validation vehicle rego number and Phone number are provided
@@ -256,7 +268,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function testRequiredValidationFail_put()
     {
         // Arrange
-        $firstUser = $this->postVehicleFirstUserAdds();
+        $firstUser = $this->addVehicleAddsVehicle();
         $v = $this->vehicleset[0];
         $v['registration_number'] = '';
         $v['mobile_phone_number'] = '';
@@ -286,14 +298,16 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         // Arrange
         $v = $this->vehicleset[0];
         $v['tracker_imei_number'] = '';
+        $vehicle = $this->bind_vehicle($v);
+        unset($vehicle['tracker_password']);
 
         // Act
-        $this->actingAs($this->firstUser())->json('post', '/vehicles', $this->bind_vehicle($v));
+        $this->actingAs($this->firstUser())->json('post', '/vehicles', $vehicle);
 
         // Assert
         $this->assertResponseOk();
-        $this->seeJson($this->bind_vehicle($v));
-        $this->seeJsonStructure(['_id','created_at','registration_number','mobile_phone_number','tracker_imei_number','organisation_id','updated_at']);
+        $this->seeJson($vehicle);
+        $this->seeJsonStructure(['_id','registration_number','mobile_phone_number','tracker_imei_number']);
         $this->seeInDatabase('vehicles',
             array_merge($this->bind_vehicle($v),['organisation_id'=>$this->orgset[0]['_id']]));
 
@@ -336,15 +350,17 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         $org2 = Organisation::where('_id',$this->orgset[1]['_id'])->firstOrFail();
         $user2 = $this->firstUser($org2);
         $v = $this->vehicleset[0];
+        $vehicle = $this->bind_vehicle($v);
+        unset($vehicle['tracker_password']);
 
         // Act
-        $this->actingAs($user1)->json('post', '/vehicles', $this->bind_vehicle($v));
-        $this->actingAs($user2)->json('post', '/vehicles', $this->bind_vehicle($v));
+        $this->actingAs($user1)->json('post', '/vehicles', $vehicle);
+        $this->actingAs($user2)->json('post', '/vehicles', $vehicle);
 
         // Assert
         $this->assertResponseOk();
-        $this->seeJson($this->bind_vehicle($v));
-        $this->seeJsonStructure(['_id','created_at','registration_number','mobile_phone_number','tracker_imei_number','organisation_id','updated_at']);
+        $this->seeJson($vehicle);
+        $this->seeJsonStructure(['_id','registration_number','mobile_phone_number','tracker_imei_number']);
         $this->seeInDatabase('vehicles',array_merge($this->bind_vehicle($v),['organisation_id'=>$this->orgset[0]['_id']]));
 
     }
@@ -599,7 +615,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         $v = $this->vehicleset[0];
         
         // Act
-        $this->postVehicleFirstUserAdds();
+        $this->addVehicleAddsVehicle();
         $user = $this->twilioUser();
         $data = json_decode($this->response->getContent(), true);
         $this->actingAs($user)->json('delete', '/vehicles/'.$data['_id']);
@@ -618,7 +634,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         $v = $this->vehicleset[0];
 
         // Act
-        $this->postVehicleFirstUserAdds();
+        $this->addVehicleAddsVehicle();
         $user=$this->user();
         $data = json_decode($this->response->getContent(), true);
         $this->actingAs($user)->json('delete', '/vehicles/'.$data['_id']);
@@ -637,7 +653,8 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         return [
             'registration_number' => $v['registration_number'],
             'mobile_phone_number' => $v['mobile_phone_number'],
-            'tracker_imei_number' => $v['tracker_imei_number']
+            'tracker_imei_number' => $v['tracker_imei_number'],
+            'tracker_password' => $v['tracker_password']
         ];
     }
 

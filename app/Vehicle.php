@@ -19,6 +19,14 @@ class Vehicle extends Moloquent
             'organisation_id'
         ];
 
+    protected $hidden =
+        [
+            'organisation_id',
+            'created_at',
+            'changed_at',
+            'tracker_password'
+    ];
+
     public function organisation(){
         return $this->belongsTo(Organisation::class,'organisation_id','_id');
     }

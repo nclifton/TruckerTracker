@@ -20,6 +20,7 @@ use MongoDB\BSON\ObjectID;
  * @property string name
  * @property string email
  * @property Organisation organisation
+ * @property string username
  */
 
 class User extends Moloquent implements

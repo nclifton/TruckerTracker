@@ -1,6 +1,6 @@
 <?php
 $id = $location?$location->_id:'';
-$registration_number = $location?$location->vehicle->registration_number:'';
+$registration_number = $location && $location->vehicle && $location->vehicle->registration_number ?$location->vehicle->registration_number:'';
 $status = $location?$location->status:'';
 $sent_at = $location?$location->sent_at:'';
 ?>

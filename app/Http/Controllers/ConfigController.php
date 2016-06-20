@@ -11,6 +11,7 @@ use Response;
 use TruckerTracker\Driver;
 use TruckerTracker\Http\Requests;
 use TruckerTracker\Organisation;
+use TruckerTracker\Twilio\TwilioHelper;
 use TruckerTracker\User;
 use TruckerTracker\Vehicle;
 
@@ -38,7 +39,9 @@ class ConfigController extends Controller
         if (Gate::denies('view-organisation', $org)) {
             abort(403);
         }
-        return Response::json($this->filterOrganisationResponse($this->loadOrg($org)));
+        return Response::json($this
+            ->prepareOrganisationResponse($this
+                ->loadOrg($org)));
     }
 
     /**
@@ -61,7 +64,9 @@ class ConfigController extends Controller
         $user->firstUserOrganisation()->save($org);
         $this->addOrganisationTwilioUser($user, $org);
 
-        return Response::json($this->filterOrganisationResponse($this->loadOrg($org)));
+        return Response::json($this
+            ->prepareOrganisationResponse($this
+                ->loadOrg($org)));
     }
 
     /**
@@ -112,7 +117,9 @@ class ConfigController extends Controller
 
         $org->update($attributes);
 
-        return Response::json($this->filterOrganisationResponse($this->loadOrg($org)));
+        return Response::json($this
+            ->prepareOrganisationResponse($this
+                ->loadOrg($org)));
     }
 
 
@@ -250,6 +257,7 @@ class ConfigController extends Controller
         if (Gate::denies('add-vehicle', $user->organisation)) {
             abort(403);
         }
+        $request->merge(['tracker_password'=>env('DEFAULT_TRACKER_PASSWORD')]);
         $this->validateVehicle($request, $user);
         $vehicle = Vehicle::create($request->all());
         $user->organisation->vehicles()->save($vehicle);
@@ -419,7 +427,11 @@ class ConfigController extends Controller
                     [
                         'imei',
                         'unique:vehicles,tracker_imei_number,NULL,_id,organisation_id,' . $org_id
-                    ]
+                    ],
+                'tracker_password' =>
+                [
+                    'regex:/\d{6}/'
+                ]
             ], [
                 'registration_number.required' => 'We know the vehicles by their registration numbers',
                 'registration_number.regex' => 'That doesn\'t look like a normal vehicle registration plate number',
@@ -428,7 +440,8 @@ class ConfigController extends Controller
                 'mobile_phone_number.ausphone' => "That doesn't look like an australian phone number, it needs to have 10 digits and start with a 0 or start with +61 and have 11 digits",
                 'mobile_phone_number.unique' => 'Another vehicle already has that phone number',
                 'tracker_imei_number.imei' => 'That doesn\'t look like an IMEI number, please check',
-                'tracker_imei_number.unique' => "IMEI numbers are always unique but this one is being used on one of your other vehicles"
+                'tracker_imei_number.unique' => "IMEI numbers are always unique but this one is being used on one of your other vehicles",
+                'tracker_password' => 'That\' not a valid tracker password. It needs to be 6 digits.'
             ]
         );
     }
@@ -458,9 +471,11 @@ class ConfigController extends Controller
         $name = 'twiliouser';
         $email = preg_replace('/^[^@]*(.*)/', $name . '$1', $user->email);
         $password = bin2hex(random_bytes(16));
+        $username = bin2hex(random_bytes(16));
         $user = User::create([
             'name' => $name,
             'email' => $email,
+            'username' => $username,
             'password' => bcrypt($password)
         ]);
         return [$user, $password];
@@ -485,17 +500,14 @@ class ConfigController extends Controller
      * @param array|Organisation $org
      * @return array
      */
-    private function filterOrganisationResponse($org)
+    private function prepareOrganisationResponse($org)
     {
         $orgArray = (is_a($org,Model::class)) ? $org->toArray() : $org;
+        unset($orgArray['first_user']);
+        return array_merge($orgArray,[
+            'twilio_inbound_message_request_url'=>TwilioHelper::MessageRequestUrl($org),
+            'twilio_outbound_message_status_callback_url'=>TwilioHelper::MessageStatusCallbackUrl($org)]);
 
-        $filterOutKeys = [
-            'first_user',
-            'twilio_user'
-        ];
-        return array_filter($orgArray, function ($key) use($filterOutKeys){
-            return !in_array($key,$filterOutKeys);
-        },ARRAY_FILTER_USE_KEY);
     }
 
 

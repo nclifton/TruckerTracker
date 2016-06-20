@@ -35,7 +35,7 @@ class TwilioControllerMessageTest extends TwilioControllerTestCase
         $expectedMessageText = 'hello';
         $driver = $this->driverset[0];
         $expectedStatus = 'queued';
-        $this->injectMockTwilio($org, $driver['mobile_phone_number'], $twilioUser->email, $expectedMessageText, $expectedStatus);
+        $this->injectMockTwilio($org, $driver['mobile_phone_number'], $twilioUser->username, $expectedMessageText, $expectedStatus);
 
         // Act
         // Assert
@@ -60,7 +60,7 @@ class TwilioControllerMessageTest extends TwilioControllerTestCase
         $driver = $this->driverset[0];
         $expectedMessageText = 'hello';
         $expectedStatus = 'queued';
-        $this->injectMockTwilio($org, $driver['mobile_phone_number'], $twilioUser->email, $expectedMessageText, $expectedStatus);
+        $this->injectMockTwilio($org, $driver['mobile_phone_number'], $twilioUser->username, $expectedMessageText, $expectedStatus);
 
         // Act
         // Assert

@@ -27,15 +27,15 @@ class TwilioIncomingController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth.basic');
     }
 
 
     function voice()
     {
-//        if (Gate::denies('voice')) {
-//            abort(403);
-//        }
+        if (Gate::denies('voice')) {
+            abort(403);
+        }
         $twiml = new Services_Twilio_Twiml();
         $twiml->say('Hello, McSweeney Transport Group, Trucker Tracker speaking. I have a message for you.', array('voice' => 'alice'));
         $response = Response::make($twiml, 200);
@@ -46,9 +46,9 @@ class TwilioIncomingController extends Controller
 
     function message(Request $request)
     {
-//        if (Gate::denies('add-message')) {
-//            abort(403);
-//        }
+        if (Gate::denies('add-message')) {
+            abort(403);
+        }
 
         Log::info('received message');
 
@@ -72,9 +72,9 @@ class TwilioIncomingController extends Controller
 
     function messageStatus(Request $request)
     {
-//        if (Gate::denies('update-message')) {
-//            abort(403);
-//        }
+        if (Gate::denies('update-message')) {
+            abort(403);
+        }
         $sid = $request->MessageSid;
         $status = $request->MessageStatus;
         $account_sid = $request->AccountSid;

@@ -23,6 +23,8 @@ $(document).ready(function ($) {
             //success data
             console.log(data);
             $('#orgForm').trigger("reset");
+            $('#org-users-tab-link').parent().removeClass('disabled');
+            $('#org-users-tab-link').attr('data-toggle','tab');
 
             for (var i in data) {
                 if (i == "users") {

@@ -83,11 +83,6 @@ class ConfigDriversTest extends IntegratedTestCase
         $this->byCssSelector('#driver'.$id.' .open-modal-driver')->click();
         sleep(3);
         $this->assertThat($this->byId('driverModal')->displayed(), $this->isTrue());
-        
-        $this->byId('test-message-from-driver-button')->click();
-        sleep(3);
-        $this->assertThat($this->byId('simulated-message-success-alert')->displayed(), $this->isTrue());;
-        
         $this->byCssSelector('#driverModal button.close')->click();
         sleep(1);
         $this->byCssSelector('#driver'.$id.' .delete-driver')->click();

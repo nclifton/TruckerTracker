@@ -3,6 +3,7 @@
 namespace TruckerTracker\Http\Controllers;
 
 use Carbon\Carbon;
+use TruckerTracker\Twilio\TwilioHelper;
 use TruckerTracker\Twilio\TwilioInterface;
 use Twilio;
 use App;
@@ -100,11 +101,9 @@ class TwilioController extends Controller
             $location->status = $response->status;
             $location->update();
 
-            $array = array_merge(
-                $location->toArray(),
-                ['vehicle' => $vehicle->toArray()]
-            );
-            return Response::json($array);
+            $location->load('vehicle');
+
+            return Response::json($location);
         } catch (Services_Twilio_RestException $e) {
             Throw $e;
         }
@@ -119,24 +118,23 @@ class TwilioController extends Controller
      */
     private function text($sendToNumber, $message_text, $org, $rootUrl)
     {
-        $url = parse_url($rootUrl);
-        $host = env('CALLBACK_SERVER_NAME',$url['host']);
 
         $this->twilio->setSid($org->twilio_account_sid);
         $this->twilio->setToken($org->twilio_auth_token);
         $this->twilio->setFrom($org->twilio_phone_number);
         $client = $this->twilio->getTwilio();
 
-        $twilioUser = $org->twilioUser;
+        $from = $org->twilio_phone_number;
+        $statusCallbackUrl = TwilioHelper::MessageStatusCallbackUrl($org);
 
-        $creds = rawurlencode($twilioUser->email) . ':' . rawurlencode($org->twilio_user_password);
-
-        $m = $client->account->messages->create([
+        $message = [
             'To' => $sendToNumber,
-            'From' => $org->twilio_phone_number,
+            'From' => $from,
             'Body' => $message_text,
-            'StatusCallback' => $url['scheme'].'://'.$creds.'@'.$host."/incoming/message/status"
-        ]);
+            'StatusCallback' => $statusCallbackUrl
+        ];
+
+        $m = $client->account->messages->create($message);
 
         // Return the message object to the browser as JSON
         return $m;

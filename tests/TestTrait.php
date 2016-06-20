@@ -64,6 +64,7 @@ Trait TestTrait
         [
             '_id' => '101',
             'name' => 'twilioUser',
+            'username' => 'twiliouser',
             'email' => 'test2@cliftonwebfoundry.com.au',
             'password' => '$2y$10$NkvhsSZvHX57Bm993h0ddeXdCrHwQ/X4idWV.pojZU9j3hDMmx2RG',
             'organisation_id' => '10001'
@@ -225,37 +226,56 @@ Trait TestTrait
 
     abstract protected function getFixture();
 
-    protected function twilioUser($org = null){
+    /**
+     * @param Organisation $org
+     * @return mixed
+     */
+    protected function twilioUser(Organisation $org = null){
+
         if (is_null($this->twilioUser)) {
             $this->twilioUser = $this->user($org);
+            $this->twilioUser->username = bin2hex(random_bytes(16));
+            $this->orgset[0]['twilio_user_password'] = bin2hex(random_bytes(16));
+            $this->twilioUser->password = bcrypt($this->orgset[0]['twilio_user_password']);
+            $this->twilioUser->save();
             try{
-                $org = $this->twilioUser->organisation;;
+                $org = $this->twilioUser->organisation;
                 $this->twilioUser->twilioUserOrganisation()->save($org);
+                $org->twilio_user_password = $this->orgset[0]['twilio_user_password'];
+                $org->save();
             } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             }
          }
         return $this->twilioUser;
     }
 
-    protected function firstUser($org = null){
+    /**
+     * @param Organisation $org
+     * @return mixed
+     */
+    protected function firstUser(Organisation $org = null){
 
         $user = $this->user($org);
         try{
-            $org = $user->organisation;
-            $user->firstUserOrganisation()->save($org);
+            $uorg = $user->organisation;
+            $user->firstUserOrganisation()->save($uorg);
           } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
         }
         $this->twilioUser = $this->twilioUser($org);
         return $user;
     }
 
-    protected function user($org = null)
+    /**
+     * @param Organisation $org
+     * @return mixed
+     */
+    protected function user(Organisation $org = null)
     {
         $this->getMongoDataSet();
         $user = factory(User::class)->create();
         try{
-            $org = $org?:Organisation::where('_id',$this->orgset[0]['_id'])->firstOrFail();
-            $org->users()->save($user);
+            $uorg = $org?:Organisation::where('_id',$this->orgset[0]['_id'])->firstOrFail();
+            $uorg->users()->save($user);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
         }
         return $user;

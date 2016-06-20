@@ -61,6 +61,8 @@ class LocationControllerViewLocationTest extends LocationControllerTestCase
         $user = $this->firstUser();
         $loc = $this->viewLocationSet[0];
         $expectedLoc = $loc;
+        unset($expectedLoc['organisation_id']);
+        unset($expectedLoc['vehicle_id']);
         $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format('H:i:s d/m/y');
         $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format('H:i:s d/m/y');
         $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format('H:i:s d/m/y');

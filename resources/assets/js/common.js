@@ -27,6 +27,9 @@ function handleStatusCode500(data) {
 function handleStatusCode403() {
     window.alert('Permission denied');
 }
+function handleStatusCode401() {
+    window.alert('Permission denied');
+}
 function handleAjaxError(data) {
     console.log('Error:', data);
     if (data.status == 500) {

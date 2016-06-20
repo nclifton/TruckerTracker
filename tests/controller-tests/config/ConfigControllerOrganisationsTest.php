@@ -40,7 +40,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $this->twilioUser();
+        $tUser = $this->twilioUser();
         $this->user();
         $org = $this->orgset[0];
 
@@ -49,10 +49,6 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
 
         // Assert
         $this->assertResponseOk();
-        $this->seeJson([
-            '_id' => $org['_id'],
-            'name' => $org['name'],
-        ]);
         $data = json_decode($this->response->getContent(), true);
         $this->seeJsonStructure([
             '_id',
@@ -63,6 +59,8 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
             'twilio_auth_token',
             'twilio_phone_number',
             'twilio_user_password',
+            'twilio_inbound_message_request_url',
+            'twilio_outbound_message_status_callback_url',
             'auto_reply',
             'users' => [
                 [
@@ -72,7 +70,15 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
                 ]
             ]
         ]);
-
+        $host = env('SERVER_DOMAIN_NAME','example.com');
+        $this->seeJson([
+            '_id' => $org['_id'],
+            'name' => $org['name'],
+            'twilio_inbound_message_request_url' => 
+                'http://'.$tUser->username.':'.$org['twilio_user_password']. '@' . $host . '/incoming/message',
+            'twilio_outbound_message_status_callback_url' =>
+                'http://'.$tUser->username.':'.$org['twilio_user_password'].'@' . $host . '/incoming/message/status',
+        ]);
 
     }
 

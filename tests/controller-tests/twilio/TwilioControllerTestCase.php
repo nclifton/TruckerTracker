@@ -13,10 +13,13 @@ namespace TruckerTracker;
 
 require_once __DIR__ . '/../../TestTrait.php';
 
+use \Mockery as m;
+
 class TwilioControllerTestCase extends TestCase
 {
     use TestTrait;
     protected $user;
+    protected $subset;
 
 
     /**
@@ -51,6 +54,14 @@ class TwilioControllerTestCase extends TestCase
     }
 
     /**
+     * @after
+     */
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
+    /**
      * @param $org
      * @param $to
      * @param $twilioUsername
@@ -61,33 +72,50 @@ class TwilioControllerTestCase extends TestCase
      */
     protected function mockTwilio($org, $to, $twilioUsername, $message_text, $expectedStatus)
     {
-        $mockTwilioService = \Mockery::mock(Services_Twilio::class);
-        $mockTwilio = \Mockery::mock(\TruckerTracker\Twilio\TwilioInterface::class);
+        $mockTwilioService = m::mock(\Services_Twilio::class);
+
+        $mockTwilio = m::mock(\TruckerTracker\Twilio\TwilioInterface::class);
         $mockTwilio->shouldReceive('setSid')->with($org['twilio_account_sid'])->once();
         $mockTwilio->shouldReceive('setToken')->with($org['twilio_auth_token'])->once();
         $mockTwilio->shouldReceive('setFrom')->with($org['twilio_phone_number'])->once();
         $mockTwilio->shouldReceive('getTwilio')->andReturn($mockTwilioService)->once();
+
         $mockTwilioService->account = $mockTwilioService;
-        $mockServicesTwilioRestMessages = \Mockery::mock(Services_Twilio_Rest_Messages::class);
+
+        $mockServicesTwilioRestMessages = m::mock(\Services_Twilio_Rest_Messages::class);
+
         $mockTwilioService->account->messages = $mockServicesTwilioRestMessages;
-        $mockServicesTwilioRestMessage = \Mockery::mock(Services_Twilio_Rest_Message::class);
+
+        $mockServicesTwilioRestMessage = m::mock(\Services_Twilio_Rest_Message::class);
+
         $mockServicesTwilioRestMessage->status = $expectedStatus;
         $mockServicesTwilioRestMessage->sid = $this->messageset[0]['sid'];
         $mockServicesTwilioRestMessage->account_sid = $org['twilio_account_sid'];
+
         $creds = rawurlencode($twilioUsername) . ':' . rawurldecode($org['twilio_user_password']);
-        $mockServicesTwilioRestMessages->shouldReceive('create')->once()->with(
+        $host=env('SERVER_DOMAIN_NAME','example.com');
+
+        $from = $org['twilio_phone_number'];
+        $statusCallBack = "http://${creds}@${host}/incoming/message/status";
+
+        $this->subset = m::subset(
             [
                 'To' => $to,
-                'From' => $org['twilio_phone_number'],
+                'From' => $from,
                 'Body' => $message_text,
-                'StatusCallback' => "http://${creds}@mcsweeneytg.com.au:8000/incoming/message/status"
-            ])->andReturn($mockServicesTwilioRestMessage);
+                'StatusCallback' => $statusCallBack
+            ]);
+
+        $mockServicesTwilioRestMessages
+            ->shouldReceive('create')
+            ->with($this->subset)->once()
+            ->andReturn($mockServicesTwilioRestMessage);
         return $mockTwilio;
     }
 
     protected function mockTwilioNeverUsed()
     {
-        $mockTwilio = \Mockery::mock(\TruckerTracker\Twilio\TwilioInterface::class);
+        $mockTwilio = m::mock(\TruckerTracker\Twilio\TwilioInterface::class);
         $mockTwilio->shouldReceive('setSid')->never();
         return $mockTwilio;
     }

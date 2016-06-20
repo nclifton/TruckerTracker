@@ -51,7 +51,9 @@ class Location extends Moloquent
     protected $hidden = [
         'organisation_id',
         'vehicle_id',
-        'organisation'
+        'organisation',
+        'created_at',
+        'changed_at'
     ];
 
     public function vehicle(){
