@@ -22,6 +22,8 @@ $(document).ready(function ($) {
         $('.open-modal-driver').click(function () {
             var driver_id = $(this).val();
 
+            $('#test-message-from-driver-button').show();
+
             $.get(driver_url + '/' + driver_id, function (data) {
                 //success data
                 console.log(data);
@@ -79,6 +81,43 @@ $(document).ready(function ($) {
     }
 
     setup_delete_driver();
+
+    $("#test-message-from-driver-button").click(function (e){
+        e.preventDefault();
+
+        $('#test-incoming-message-form input[name="From"]').val(
+            $('#driver_mobile_phone_number').val()
+        )
+        
+        var formData = $('#test-incoming-message-form').serialize();
+        
+        $.ajax({
+
+            type: 'POST',
+            url: '/incoming/message',
+            data: formData,
+            dataType: 'xml',
+            success: function (data) {
+                $('#simulated-message-success-alert').show();
+            },
+            statusCode: {
+                500: function(data){
+                    handleStatusCode500(data);
+                },
+                403: function() {
+                    handleStatusCode403();
+                },
+                200: function (){
+                    $('#simulated-message-success-alert').show();
+                }
+            },
+            error: function (data) {
+                handleAjaxError(data);
+            }
+        });
+
+    });
+
 
     //create new driver / update existing driver
     $("#btn-save-driver").click(function (e) {

@@ -19,14 +19,20 @@
         return o;
     };
 })(jQuery);
+function handleStatusCode500(data) {
+    var newDoc = document.open("text/html", "replace");
+    newDoc.write(data.responseText);
+    newDoc.close();
+}
+function handleStatusCode403() {
+    window.alert('Permission denied');
+}
 function handleAjaxError(data) {
     console.log('Error:', data);
     if (data.status == 500) {
-        var newDoc = document.open("text/html", "replace");
-        newDoc.write(data.responseText);
-        newDoc.close();
+        handleStatusCode500(data);
     } else if (data.status == 403) {
-        window.alert('Permission denied');
+        handleStatusCode403();
     }
 }
 function timeConverter(UNIX_timestamp){

@@ -146,7 +146,8 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         ];
 
         // Act
-        $this->actingAs($user)->json('POST','/incoming/message',$message);
+        //$this->actingAs($user)->json('POST','/incoming/message',$message);
+        $this->json('POST','/incoming/message',$message);
 
         // Assert
         $this->assertResponseOk();

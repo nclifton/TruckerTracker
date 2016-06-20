@@ -34,3 +34,20 @@
         </div>
     </div>
 </form>
+<form id="test-incoming-message-form">
+
+    <input id="test-message-from-driver-button" type="submit" value="test" style="display:none">
+    <input type="hidden" name="MessageSid" value="{{bin2hex(random_bytes(17))}}">
+    <input type="hidden" name="AccountSid" value="{{$org->twilio_account_sid}}">
+    <input type="hidden" name="MessagingServiceSid" value="MG{{bin2hex(random_bytes(16))}}">
+    <input type="hidden" name="From" value="">
+    <input type="hidden" name="To" value="{{$org->twilio_phone_number}}">
+    <input type="hidden" name="Body" value="test">
+    <input type="hidden" name="NumMedia" value="0">
+
+
+</form>
+<div id="simulated-message-success-alert" class="alert alert-success" style="display:none">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Success!</strong> Server accepted simulated message.
+</div>
