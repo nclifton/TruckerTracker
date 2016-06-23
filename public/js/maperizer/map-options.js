@@ -1,13 +1,13 @@
 (function(window, google, maperizer) {
 
     maperizer.MAP_OPTIONS = {
-        geolocation: false,
+        geolocation: true,
         center: {
-            lat: -34.1164035,
-            lng: 150.6345903
+            lat: 0,
+            lng: 0
         },
-        zoom: 12,
-        searchbox: false,
+        zoom: 7,
+        searchbox: true,
         cluster: true,
         geocoder: true
     }

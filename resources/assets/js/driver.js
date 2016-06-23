@@ -132,8 +132,6 @@ $(document).ready(function ($) {
                 }
                 $("#driver" + data._id + ' span.first_name').text(data.first_name);
                 $("#driver" + data._id + ' span.last_name').text(data.last_name);
-                $("#driver" + data._id + ' span.phpne_number').text(data.mobile_phone_number);
-                $("#driver" + data._id + ' span.detail1').text(data.drivers_licence_number);
 
                 $('#driverForm').trigger("reset");
                 $('#driverModal').modal('hide');

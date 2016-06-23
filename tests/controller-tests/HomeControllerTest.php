@@ -18,7 +18,7 @@ class HomeControllerTest extends TestCase {
             'organisations' => $this->orgset,
             'drivers' => $this->driverset,
             'vehicles' => $this->vehicleset,
-            'messages' => $this->messageset,
+            'messages' => $this->messageSet,
             'locations' => $this->locationSet
         ];
     }
@@ -52,7 +52,7 @@ class HomeControllerTest extends TestCase {
         $this->seeElement('#heading_org_name');
         $this->seeInElement('#heading_org_name',$this->orgset[0]['name']);
 
-        $this->seeElement('#message'.$this->messageset[0]['_id']);
+        $this->seeElement('#message'.$this->messageSet[0]['_id']);
         $this->seeElement('#location'.$this->locationSet[0]['_id']);
 
     }
@@ -78,7 +78,7 @@ class HomeControllerTest extends TestCase {
         $this->seeElement('#heading_org_name');
         $this->seeInElement('#heading_org_name',$this->orgset[0]['name']);
 
-        $this->seeElement('#message'.$this->messageset[0]['_id']);
+        $this->seeElement('#message'.$this->messageSet[0]['_id']);
         $this->seeElement('#location'.$this->locationSet[0]['_id']);
 
     }

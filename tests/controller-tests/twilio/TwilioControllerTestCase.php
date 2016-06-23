@@ -89,7 +89,7 @@ class TwilioControllerTestCase extends TestCase
         $mockServicesTwilioRestMessage = m::mock(\Services_Twilio_Rest_Message::class);
 
         $mockServicesTwilioRestMessage->status = $expectedStatus;
-        $mockServicesTwilioRestMessage->sid = $this->messageset[0]['sid'];
+        $mockServicesTwilioRestMessage->sid = $this->messageSet[0]['sid'];
         $mockServicesTwilioRestMessage->account_sid = $org['twilio_account_sid'];
 
         $creds = rawurlencode($twilioUsername) . ':' . rawurldecode($org['twilio_user_password']);

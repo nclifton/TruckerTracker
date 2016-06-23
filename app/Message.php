@@ -34,6 +34,9 @@ class Message extends Moloquent
             'account_sid',
             'received_at'
         ];
+
+    protected $hidden = ['organisation'];
+
     protected $dates = ['sent_at','queued_at', 'received_at'];
 
     public function driver(){

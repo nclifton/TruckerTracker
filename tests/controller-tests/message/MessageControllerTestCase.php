@@ -13,7 +13,7 @@ namespace TruckerTracker;
 
 require_once __DIR__ . '/../../TestTrait.php';
 
-class LocationControllerTestCase extends TestCase
+class MessageControllerTestCase extends TestCase
 {
     use TestTrait;
     protected $user;
@@ -37,10 +37,10 @@ class LocationControllerTestCase extends TestCase
             'users' => [],
             'password_resets' => [],
             'organisations' => $this->orgset,
-            'drivers' => [],
-            'vehicles' => $this->vehicleset,
-            'messages' => [],
-            'locations' => $this->viewLocationSet
+            'drivers' => $this->driverset,
+            'vehicles' => [],
+            'messages' => $this->messageSet,
+            'locations' => []
         ];
     }
 

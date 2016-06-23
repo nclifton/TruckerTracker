@@ -87,7 +87,7 @@ Trait TestTrait
             'name' => 'McSweeney Transport Group',
             'timezone' => 'Australia/Sydney',
             'datetime_format' => 'H:i:s d/m/y',
-            'twilio_account_sid' => 'AC392e8d8bc564eb45ea67cc0f3a8ebf3c',
+            'twilio_account_sid' =>   'AC392e8d8bc564eb45ea67cc0f3a8ebf3c',
             'twilio_auth_token' =>    '36c8ee5499df1e116aa53b1ee05ca5fa',
             'twilio_phone_number' => '+15005550006',
             'twilio_user_password' => 'mstgpwd1',
@@ -145,7 +145,7 @@ Trait TestTrait
         ]
     ];
 
-    protected $messageset = [
+    protected $messageSet = [
         [
             '_id' => '200001',
             'organisation_id' => '10001',
@@ -331,6 +331,26 @@ Trait TestTrait
 
         $this->assertGreaterThan(0, $count, sprintf(
             'Unable to find row in database table [%s] that matched attributes [%s].', $table, json_encode($data)
+        ));
+
+        return $this;
+    }
+
+    /**
+     * Assert that a given where condition does not exist in the database.
+     *
+     * @param  string  $table
+     * @param  array  $data
+     * @param  string  $connection
+     * @return $this
+     */
+    public function notSeeInDatabase($table, array $data, $connection = null)
+    {
+
+        $count = DB::collection($table)->where($data)->count();
+
+        $this->assertEquals(0, $count, sprintf(
+            'Was able to find row in database table [%s] that matched attributes [%s].', $table, json_encode($data)
         ));
 
         return $this;

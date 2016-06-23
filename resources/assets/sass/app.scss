@@ -1,24 +1,26 @@
 @import '../bower/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 
 .driver-list,.vehicle-list,.message-list,.location-list,.user-list{
-  width:800px;
+  width:100%;
   list-style: none;
   li{
     margin: 4px 0;
-  }
-  li > span {
-    display:inline-block;
-    padding: 0 2px;
-  }
-  li > span.name , li > span.phone-number , li > span.detail1 {
-    padding:0 0 2px 0;
-    line-height: 20px;
-  }
-  li > span.name {
-    overflow: hidden;
-    & > span {
-      padding: 0 2px 0 0;
+    span {
+      line-height: 20px;
+      display: inline-block;
+      padding: 0 5px 0 0;
+        &:last-child{
+        padding: 0;
+      }
     }
+
+    span.message-button, span.locate-button{
+
+    }
+    span.edit-delete-button{
+
+    }
+
   }
   li:nth-child(odd) {
     background-color: linen;
@@ -26,7 +28,7 @@
 
 }
 .message-list,.location-list {
-  width:500px;
+  width:100%;
 }
 .user-list{
   width:100%;

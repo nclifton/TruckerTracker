@@ -31,7 +31,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             'organisations' => $this->orgset,
             'drivers' => $this->driverset,
             'vehicles' => $this->vehicleset,
-            'messages' => $this->messageset,
+            'messages' => $this->messageSet,
             'locations' => $this->locationSet
         ];
     }
@@ -63,7 +63,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
 
         // Arrange
         $user= $this->twilioUser();
-        $message = $this->messageset[0];
+        $message = $this->messageSet[0];
         $driver = $this->driverset[0];
         $org = $this->orgset[0];
 
@@ -96,7 +96,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
 
         // Arrange
         $user= $this->twilioUser();
-        $message = $this->messageset[0];
+        $message = $this->messageSet[0];
         $driver = $this->driverset[0];
         $org = $this->orgset[1];
 

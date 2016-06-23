@@ -16,7 +16,7 @@ class LoginPermissionsTest extends IntegratedTestCase
             'drivers' => $this->driverset,
             'organisations' => $this->orgset,
             'vehicles' => $this->vehicleset,
-            'messages' => $this->messageset,
+            'messages' => $this->messageSet,
             'locations' => $this->locationSet
         ];
     }

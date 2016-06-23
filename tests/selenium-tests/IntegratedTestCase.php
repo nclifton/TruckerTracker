@@ -238,7 +238,7 @@ abstract class IntegratedTestCase extends \Laracasts\Integrated\Extensions\Selen
      * @param $id
      * @param $message
      */
-    protected function notSeeId($id, $message)
+    protected function notSeeId($id, $message='Element not exists')
     {
         $this->notSeeElement(function () use ($id) {
             $this->byId($id);
@@ -249,7 +249,7 @@ abstract class IntegratedTestCase extends \Laracasts\Integrated\Extensions\Selen
      * @param $cssSelector
      * @param $message
      */
-    protected function notSeeCssSelector($cssSelector, $message)
+    protected function notSeeCssSelector($cssSelector, $message='Element not exists')
     {
         $this->notSeeElement(function () use ($cssSelector) {
             $this->byCssSelector($cssSelector);

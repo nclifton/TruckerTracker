@@ -3,27 +3,39 @@ $id = $message?$message->_id:'';
 $first_name = ($message && $message->driver)?$message->driver->first_name:'';
 $last_name = ($message && $message->driver)?$message->driver->last_name:'';
 $status = $message?$message->status:'';
-$sent_at = $message?$message->sent_at:'';
+$sent_at = $message
+        ?($message->sent_at
+                ?$message->sent_at
+                :($message->queued_at
+                        ?$message->queued_at
+                        :''
+                )
+        )
+        :'';
+$queued_at = $message?$message->queued_at:'';
+$message_text_title = $message?' title='.$message->message_text.'':'';
 ?>
-<li id="message{{$id}}" class="row" style="{{$styleAttr}}">
-    <span class="col-md-2 col-xs-2 col-sm-2 col-lg-2">
+<li id="message{{$id}}" class="row" style="{{$styleAttr}}"{{$message_text_title}}>
+    <span class="view-button pull-left">
         <button class="btn btn-xs btn-detail open-modal-view-message" value="{{$id}}">View</button>
     </span>
-    <span class="name col-md-3 col-xs-3 col-sm-3 col-lg-3">
-        <span class="first_name">
-            {{$first_name}}
+    <span class="">
+        <span class="name">
+            <span class="first_name">
+                {{$first_name}}
+            </span>
+            <span class="last_name">
+                {{$last_name}}
+            </span>
         </span>
-        <span class="last_name">
-            {{$last_name}}
+        <span class="status" >
+            {{$status}}
+        </span>
+        <span class="sent_at">
+            {{$sent_at}}
         </span>
     </span>
-    <span class="message-status col-md-1 col-xs-1 col-sm-1 col-lg-1" >
-        {{$status}}
-    </span>
-    <span class="message-sent_at col-md-4 col-xs-4 col-sm-4 col-lg-4">
-        {{$sent_at}}
-    </span>
-    <span class="col-md-2 col-xs-2 col-sm-2 col-lg-2">
+    <span class="delete-button pull-right">
         <button class="btn btn-danger btn-xs btn-delete delete-message pull-right" value="{{$id}}">
             Delete
         </button>

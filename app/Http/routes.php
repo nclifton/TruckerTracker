@@ -28,30 +28,32 @@ Route::auth();
 
 Route::get('/home', 'HomeController@index');
 
-Route::get('/organisation/{organisation}', 'ConfigController@getOrganisation');
-Route::post('/organisation', 'ConfigController@addOrganisation');
-Route::put('/organisation/{organisation}', 'ConfigController@updateOrganisation');
+Route::get('/organisation/{organisation}',      'ConfigController@getOrganisation');
+Route::post('/organisation',                    'ConfigController@addOrganisation');
+Route::put('/organisation/{organisation}',      'ConfigController@updateOrganisation');
 
-Route::post('/organisation/{organisation}/user', 'ConfigController@addOrganisationUser');
-Route::put('/organisation/user/{user}', 'ConfigController@updateOrganisationUser');
-Route::delete('/organisation/user/{user}', 'ConfigController@deleteOrganisationUser');
-Route::get('/organisation/user/{user}', 'ConfigController@getOrganisationUser');
+Route::post('/organisation/{organisation}/user','ConfigController@addOrganisationUser');
+Route::put('/organisation/user/{user}',         'ConfigController@updateOrganisationUser');
+Route::delete('/organisation/user/{user}',      'ConfigController@deleteOrganisationUser');
+Route::get('/organisation/user/{user}',         'ConfigController@getOrganisationUser');
 
-Route::get('/drivers/{driver}', 'ConfigController@getDriver');
-Route::post('/drivers', 'ConfigController@addDriver');
-Route::put('/drivers/{driver}', 'ConfigController@updateDriver');
-Route::delete('/drivers/{driver}','ConfigController@deleteDriver');
+Route::get('/drivers/{driver}',                 'ConfigController@getDriver');
+Route::post('/drivers',                         'ConfigController@addDriver');
+Route::put('/drivers/{driver}',                 'ConfigController@updateDriver');
+Route::delete('/drivers/{driver}',              'ConfigController@deleteDriver');
 
-Route::get('/vehicles/{vehicle}', 'ConfigController@getVehicle');
-Route::post('/vehicles', 'ConfigController@addVehicle');
-Route::put('/vehicles/{vehicle}', 'ConfigController@updateVehicle');
-Route::delete('/vehicles/{vehicle}', 'ConfigController@deleteVehicle');
+Route::get('/vehicles/{vehicle}',               'ConfigController@getVehicle');
+Route::post('/vehicles',                        'ConfigController@addVehicle');
+Route::put('/vehicles/{vehicle}',               'ConfigController@updateVehicle');
+Route::delete('/vehicles/{vehicle}',            'ConfigController@deleteVehicle');
 
-Route::post('/driver/{driver}/message', 'TwilioController@messageDriver');
-Route::post('/vehicle/{vehicle}/location', 'TwilioController@locateVehicle');
+Route::post('/driver/{driver}/message',         'TwilioController@messageDriver');
+Route::post('/vehicle/{vehicle}/location',      'TwilioController@locateVehicle');
 
-Route::get('/vehicle/location/{location}', 'locationController@getLocation');
-Route::delete('/vehicle/location/{location}', 'locationController@deleteLocation');
+Route::get('/vehicle/location/{location}',      'LocationController@getLocation');
+Route::delete('/vehicle/location/{location}',   'LocationController@deleteLocation');
 
+Route::get('/driver/message/{message}',         'MessageController@getMessage');
+Route::delete('/driver/message/{message}',      'MessageController@deleteMessage');
 
 

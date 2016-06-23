@@ -73,8 +73,19 @@ class ConfigDriversTest extends IntegratedTestCase
         $this->assertThat($this->byId('driverModalLabel')->displayed(), $this->isFalse());
         $this->assertThat($this->byId('driver'.$id)->displayed(), $this->isTrue());
 
-        // check added driver line buttons
+        // check driver info displayed
+        $this
+            ->assertThat($this
+                ->byCssSelector('#driver'.$id.' .first_name')
+                ->text(),$this
+                ->equalTo($driver['first_name']));
+        $this
+            ->assertThat($this
+                ->byCssSelector('#driver'.$id.' .last_name')
+                ->text(),$this
+                ->equalTo($driver['last_name']));
 
+        // check added driver line buttons
         $this->byCssSelector('#driver' . $id .' .open-modal-message')->click();
         sleep(3);
         $this->assertThat($this->byId('messageModal')->displayed(), $this->isTrue());

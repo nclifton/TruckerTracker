@@ -20,7 +20,7 @@ class LocationViewTest extends IntegratedTestCase
             'organisations' => $this->orgset,
             'drivers' => $this->driverset,
             'vehicles' => $this->vehicleset,
-            'messages' => $this->messageset,
+            'messages' => $this->messageSet,
             'locations' => $this->viewLocationSet
         ];
     }

@@ -133,15 +133,9 @@ $(document).ready(function () {
                     $("#vehicle" + data._id + ' button.open-modal-location').val(data._id);
                     $("#vehicle" + data._id + ' button.open-modal-vehicle').val(data._id);
                     $("#vehicle" + data._id + ' button.delete-vehicle').val(data._id);
-                    $("#vehicle" + data._id + ' #span_registration_number_').attr("id", "span_registration_number_" + data._id);
-                    $("#vehicle" + data._id + ' #span_vehicle_mobile_phone_number_').attr("id", "span_vehicle_mobile_phone_number_" + data._id);
-                    $("#vehicle" + data._id + ' #span_tracker_imei_number_').attr("id", "span_tracker_imei_number_" + data._id);
                     $("#vehicle" + data._id).css('display', '');
                 }
-                $("#span_registration_number_" + data._id).text(data.registration_number);
-                $("#span_vehicle_mobile_phone_number_" + data._id).text(data.mobile_phone_number);
-                $("#span_tracker_imei_number_" + data._id).text(data.tracker_imei_number);
-
+                $("#vehicle" + data._id + " .registration_number").text(data.registration_number);
 
                 $('#vehicleForm').trigger("reset");
                 $('#vehicleModal').modal('hide');

@@ -35,6 +35,35 @@ $(document).ready(function () {
 
     setup_view_location();
 
+    //delete location and remove it from list
+    function setup_delete_location() {
+        $('button.delete-location').click(function (e) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+
+            e.preventDefault();
+
+            var location_id = $(this).val();
+
+            $.ajax({
+
+                type: "DELETE",
+                url: '/vehicle/location/' + location_id,
+                success: function (data) {
+                    console.log(data);
+                    $("#location" + location_id).remove();
+                },
+                error: function (data) {
+                    handleAjaxError(data);
+                }
+            });
+        });
+    }
+    setup_delete_location();
+
     //send location request to vehicle
     $("#btn-save-location").click(function (e) {
         $.ajaxSetup({
@@ -60,15 +89,16 @@ $(document).ready(function () {
                 $('#location-list-panel').show();
 
                 var msg;
-                msg = $('#location').clone(false).prependTo('#location_list').attr("id", "location" + data._id);
+                msg = $('#location').clone(false).appendTo('#location_list').attr("id", "location" + data._id);
                 msg.find('button.open-modal-view-location').val(data._id);
                 msg.find('button.delete-location').val(data._id);
                 msg.find('span.registration_number').text(data.vehicle.registration_number);
-                msg.find('span.location-sent_at').text(data.sent_at);
-                msg.find('span.location-status').text(data.status);
+                msg.find('span.sent_at').text(data.sent_at);
+                msg.find('span.status').text(data.status);
                 msg.show();
 
                 setup_view_location();
+                setup_delete_location();
 
             },
             error: function (data) {

@@ -67,17 +67,17 @@ class ConfigVehiclesTest extends IntegratedTestCase
     public function testAddsVehicle()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $vehicle = $this->vehicleset[0];
 
         // Act
-        $this->login()->addVehicle($v);
+        $this->login()->addVehicle($vehicle);
 
         // Assert
 
 
         $cursor = $this->getMongoConnection()
             ->collection('vehicles')
-            ->find($this->bind_vehicle($v));
+            ->find($this->bind_vehicle($vehicle));
         $id = null;
         $cnt = 0;
         foreach ($cursor as $doc){
@@ -90,6 +90,14 @@ class ConfigVehiclesTest extends IntegratedTestCase
 
         $this->assertThat($this->byId('vehicleModalLabel')->displayed(), $this->isFalse());
         $this->assertThat($this->byId('vehicle'.$id)->displayed(), $this->isTrue());
+
+        // check vehicle info displayed
+        $this
+            ->assertThat($this
+                ->byCssSelector('#vehicle'.$id.' .registration_number')
+                ->text(),$this
+                ->equalTo($vehicle['registration_number']));
+
 
         // check added vehicle line buttons
 
@@ -110,7 +118,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
         sleep(3);
         $cursor = $this->getMongoConnection()
             ->collection('vehicles')
-            ->find($this->bind_vehicle($v));
+            ->find($this->bind_vehicle($vehicle));
         $this->assertCount(0,$cursor);
         $this->notSeeId('#vehicle'.$id,'vehicle line not deleted');
 
