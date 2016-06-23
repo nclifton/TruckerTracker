@@ -1,7 +1,7 @@
 <?php
 $id = $message?$message->_id:'';
-$first_name = $message?$message->driver->first_name:'';
-$last_name = $message?$message->driver->last_name:'';
+$first_name = ($message && $message->driver)?$message->driver->first_name:'';
+$last_name = ($message && $message->driver)?$message->driver->last_name:'';
 $status = $message?$message->status:'';
 $sent_at = $message?$message->sent_at:'';
 ?>

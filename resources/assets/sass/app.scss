@@ -1,4 +1,4 @@
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import '../bower/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 
 .driver-list,.vehicle-list,.message-list,.location-list,.user-list{
   width:800px;
@@ -48,3 +48,26 @@ span.edit-btn{
 #map-canvas{
   height:400px;
 }
+.input-group{
+  display:table;
+  input {
+    display: table-cell;
+    position: relative;
+    width: 100%;
+    &:first-child{
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+}
+.input-group-button{
+  width: 1%;
+  vertical-align: middle;
+  display: table-cell;
+  &:last-child .btn{
+    margin-left:-1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
+

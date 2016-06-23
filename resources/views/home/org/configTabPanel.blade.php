@@ -1,4 +1,4 @@
-<form id="orgForm" name="orgForm" class="form-horizontal" novalidate="">
+<form id="orgConfigForm" name="orgConfigForm" class="form-horizontal" novalidate="">
     <div class="form-group">
         <label for="input_name" class="col-sm-5 control-label">Organisation Name</label>
         <div class="col-sm-7">
@@ -7,30 +7,7 @@
                    placeholder="required" value="">
         </div>
     </div>
-    <div class="form-group">
-        <label for="input_twilio_account_sid" class="col-sm-5 control-label">Twilio Account SID</label>
-        <div class="col-sm-7">
-            <input type="text" class="form-control"
-                   id="twilio_account_sid" name="twilio_account_sid"
-                   value="">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="input_twilio_auth_token" class="col-sm-5 control-label">Twilio Authentication Token</label>
-        <div class="col-sm-7">
-            <input type="text" class="form-control"
-                   id="twilio_auth_token" name="twilio_auth_token"
-                   value="">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="input_twilio_phone_number" class="col-sm-5 control-label">Twilio Phone Number</label>
-        <div class="col-sm-7">
-            <input type="text" class="form-control"
-                   id="twilio_phone_number" name="twilio_phone_number"
-                   value="">
-        </div>
-    </div>
+
     <div class="form-group">
         <label for="input_timezone" class="col-sm-5 control-label">Timezone</label>
         <div class="col-sm-7">

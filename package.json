@@ -9,5 +9,8 @@
     "laravel-elixir": "^5.0.0",
     "bootstrap-sass": "^3.0.0",
     "selenium-webdriver": "^2.53.2"
+  },
+  "dependencies": {
+    "clipboard": "^1.5.12"
   }
 }

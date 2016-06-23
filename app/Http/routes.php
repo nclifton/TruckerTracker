@@ -11,12 +11,14 @@
 |
 */
 
-Route::get('/incoming', 'TwilioIncomingController@voice');
-Route::post('/incoming', 'TwilioIncomingController@voice');
-Route::post('/incoming/message/status', 'TwilioIncomingController@messageStatus');
-Route::get('/incoming/message/status', 'TwilioIncomingController@messageStatus');
-Route::post('/incoming/message', 'TwilioIncomingController@message');
-Route::get('/incoming/message', 'TwilioIncomingController@message');
+Route::group(['middleware'=> ['api']], function () {
+    Route::get('/incoming', 'TwilioIncomingController@voice');
+    Route::post('/incoming', 'TwilioIncomingController@voice');
+    Route::post('/incoming/message/status', 'TwilioIncomingController@messageStatus');
+    Route::get('/incoming/message/status', 'TwilioIncomingController@messageStatus');
+    Route::post('/incoming/message', 'TwilioIncomingController@message');
+    Route::get('/incoming/message', 'TwilioIncomingController@message');
+});
 
 Route::get('/', function () {
     return view('welcome');

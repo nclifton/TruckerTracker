@@ -10,7 +10,8 @@ $(document).ready(function ($) {
     $('#btn-add-org').click(function () {
         $('#btn-save-org').val("add");
         $('#btn-save-org').text('Add Organisation');
-        $('#orgForm').trigger("reset");
+        $('#orgConfigForm').trigger("reset");
+        $('#orgTwilioForm').trigger("reset");
         $('#orgModal').modal('show');
     });
 
@@ -22,9 +23,10 @@ $(document).ready(function ($) {
         $.get(org_url + '/' + org_id, function (data) {
             //success data
             console.log(data);
-            $('#orgForm').trigger("reset");
+            $('#orgConfigForm').trigger("reset");
+            $('#orgTwilioForm').trigger("reset");
             $('#org-users-tab-link').parent().removeClass('disabled');
-            $('#org-users-tab-link').attr('data-toggle','tab');
+            $('#org-users-tab-link').attr('data-toggle', 'tab');
 
             for (var i in data) {
                 if (i == "users") {
@@ -44,7 +46,8 @@ $(document).ready(function ($) {
                 } else if (i == "_id") {
                     $('#org_id').val(data[i]);
                 } else {
-                    $('#orgForm [name="' + i + '"]').val(data[i]);
+                    $('#orgConfigForm [name="' + i + '"]').val(data[i]);
+                    $('#orgTwilioForm [name="' + i + '"]').val(data[i]);
                 }
             }
 
@@ -67,7 +70,11 @@ $(document).ready(function ($) {
             }
         });
         e.preventDefault();
-        var formData = $('#orgForm').serializeFormJSON();
+        var formData = $('#orgConfigForm').serializeFormJSON();
+        var twilioFormData = $('#orgTwilioForm').serializeFormJSON();
+        for (var key in twilioFormData) {
+            formData[key] = twilioFormData[key];
+        }
         //used to determine the http verb to use [add=POST], [update=PUT]
         var state = $('#btn-save-org').val();
         var type = "POST"; //for creating new resource
@@ -99,23 +106,29 @@ $(document).ready(function ($) {
             error: function (data) {
                 handleAjaxError(data);
                 if (data.status == 422) {
-                    $('#orgForm span.help-block').remove();
+                    $('#orgConfigForm span.help-block').remove();
+                    $('#orgTwilioForm span.help-block').remove();
                     $.each(data.responseJSON, function (index, value) {
-                        var input = $('#orgForm').find('[name="' + index + '"]');
-                        input.after('<span class="help-block"><strong>' + value + '</strong></span>');
-                        input.closest('div.form-group').addClass('has-error');
-                        var panelId = input.closest('div[role="tabpanel"]').attr('id');
-                        $('a[href="#'+panelId+'"][aria-expanded="false"]').click();
+                        var input = $('#orgConfigForm').find('[name="' + index + '"]');
+                        if (!input.length)
+                            input = $('#orgTwilioForm').find('[name="' + index + '"]');
+                        if (input){
+                            input.after('<span class="help-block"><strong>' + value + '</strong></span>');
+                            input.closest('div.form-group').addClass('has-error');
+                            var panelId = input.closest('div[role="tabpanel"]').attr('id');
+                            $('a[href="#' + panelId + '"][aria-expanded="false"]').click();
+                        }
                     });
                 }
             }
         });
     });
-    
+
     // force display modal form for creating a new organisation
     if (!$("#org_id").val()) {
         $('#btn-save-org').val("add");
-        $('#orgForm').trigger("reset");
+        $('#orgConfigForm').trigger("reset");
+        $('#orgTwilioForm').trigger("reset");
         $('#orgModal').modal('show');
     }
 

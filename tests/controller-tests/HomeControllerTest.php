@@ -42,6 +42,7 @@ class HomeControllerTest extends TestCase {
     {
         // Arrange
         $user = $this->firstUser();
+        $tuser = $this->twilioUser();
 
         // Act
         $this->actingAs($user)->get('/home');
@@ -67,6 +68,7 @@ class HomeControllerTest extends TestCase {
     {
         // Arrange
         $user = $this->user();
+        $this->twilioUser();
 
         // Act
         $this->actingAs($user)->get('/home');

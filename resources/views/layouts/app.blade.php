@@ -10,6 +10,7 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">
+    <link rel="stylesheet" href="{{ asset('/css/jquery-ui.css') }}">
 
     <!-- Styles -->
     <link href="{{ elixir('css/app.css') }}" rel="stylesheet">
@@ -24,15 +25,15 @@
         }
     </style>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="{{ asset('/js/jquery.js') }}"></script>
+    <script src="{{ asset('/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('/js/jquery-ui.js') }}"></script>
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBPDj8tgIxOYgafbLRbFE_wonogRcFF4XY&signed_in=true&libraries=geometry,places"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js"></script>
     <script src="{{asset('js/maperizer/List.js')}}"></script>
     <script src="{{asset('js/maperizer/Maperizer.js')}}"></script>
     <script src="{{asset('js/maperizer/map-options.js')}}"></script>
     <script src="{{asset('js/maperizer/jqueryui.maperizer.js')}}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
 
 
 </head>

@@ -3,6 +3,7 @@
 namespace TruckerTracker;
 
 use DB;
+use TruckerTracker\Twilio\TwilioHelper;
 
 require_once __DIR__ . '/ConfigControllerTestCase.php';
 
@@ -211,8 +212,18 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->user();
-        $twilioUserName = 'twiliouser';
-        $twilioEmail = preg_replace('/^[^@]*(.*)/', $twilioUserName . '$1', $user->email);
+        $twilioPassword = bin2hex(random_bytes(16));
+        $twilioUsername = bin2hex(random_bytes(16));
+        $twilioName = 'twiliouser';
+        $twilioEmail = preg_replace('/^[^@]*(.*)/', $twilioName . '$1', $user->email);
+        $twilio_inbound_message_request_url = env('URL_SCHEME', 'http') . '://'
+            . $twilioUsername . ':' . $twilioPassword . '@'
+            . env('SERVER_DOMAIN_NAME', 'example.com')
+            . '/incoming/message';
+        $twilio_outbound_message_status_callback_url = env('URL_SCHEME', 'http') . '://'
+            . $twilioUsername . ':' . $twilioPassword . '@'
+            . env('SERVER_DOMAIN_NAME', 'example.com')
+            .'/incoming/message/status';
 
         $org = $this->orgset[0];
         $this->getMongoConnection()->collection('organisations')
@@ -221,31 +232,42 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         // Act
 
         $this->actingAs($user)->json('post', '/organisation', [
-            'name' => $org['name']
+            'name' => $org['name'],
+            'twilio_username' => $twilioUsername,
+            'twilio_user_password' => $twilioPassword
         ]);
 
         // Assert
         $this->assertResponseOk();
-
-        $this->seeJson([
-            'name' => $org['name'],
-            'auto_reply' => false,
-        ]);
         $data = json_decode($this->response->getContent(), true);
         $this->seeJsonStructure(
             [
                 '_id',
                 'name',
-                'twilio_user_password'
+                'twilio_inbound_message_request_url',
+                'twilio_outbound_message_status_callback_url',
+                'auto_reply'
             ]);
+        $this->seeJson([
+            'name' => $org['name'],
+            'twilio_inbound_message_request_url' => $twilio_inbound_message_request_url,
+            'twilio_outbound_message_status_callback_url' => $twilio_outbound_message_status_callback_url,
+            'auto_reply' => false,
+        ]);
+
         $this->seeInDatabase('organisations',
             [
                 ['name', $org['name']],
                 ['first_user_id', $user->_id],
                 ['twilio_user_id', '<>', null]
             ]);
-        $this->seeInDatabase('users', ['_id' => $user->_id, 'organisation_id' => $data['_id']]);
-        $this->seeInDatabase('users', ['email' => $twilioEmail, 'organisation_id' => $data['_id']]);
+        $this->seeInDatabase('users', [
+            '_id' => $user->_id,
+            'organisation_id' => $data['_id']]);
+        $this->seeInDatabase('users', [
+            'email' => $twilioEmail,
+            'username'=>$twilioUsername,
+            'organisation_id' => $data['_id']]);
 
     }
 
@@ -311,12 +333,16 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         // Arrange
         $user = $this->firstUser();
         $org = $this->orgset[0];
+        $twilioPassword = bin2hex(random_bytes(16));
+        $twilioUsername = bin2hex(random_bytes(16));
 
         // Act
 
         $noName = '';
         $this->actingAs($user)->json('post', '/organisation', [
-            'name' => $org['name']
+            'name' => $org['name'],
+            'twilio_username' => $twilioUsername,
+            'twilio_user_password' => $twilioPassword
         ]);
 
         // Assert
@@ -653,12 +679,16 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         $storedValue = $storedValue ?: $value;
         $this->getMongoConnection()->collection('organisations')
             ->remove(['_id' => $org['_id']]);
-
+        $twilioPassword = bin2hex(random_bytes(16));
+        $twilioUsername = bin2hex(random_bytes(16));
+        
         // Act
 
         $this->actingAs($user)->json('post', '/organisation', [
             'name' => $org['name'],
-            $propertyName => $value
+            $propertyName => $value,
+            'twilio_username' => $twilioUsername,
+            'twilio_user_password' => $twilioPassword
         ]);
 
         // Assert

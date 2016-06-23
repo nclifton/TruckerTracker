@@ -112,7 +112,7 @@ class LoginTest extends IntegratedTestCase
         $this->type($user['email'], '#email');
         $this->type($user['password'], '#password');
         $this->byCssSelector('button.btn.btn-primary[type="submit"]')->click();
-        sleep(2);
+        $this->wait(4000);
         $this->assertThat($this->byId('orgModalLabel')->text(), $this->equalTo('Organisation Editor'));
 
     }

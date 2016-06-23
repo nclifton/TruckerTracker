@@ -277,11 +277,16 @@ abstract class IntegratedTestCase extends \Laracasts\Integrated\Extensions\Selen
     /**
      * @param $text
      * @param $nameOrId
+     * @return $this
      */
     protected function clearType($text, $nameOrId)
     {
-        $this->findByNameOrId($nameOrId)->clear();
-        $this->type($text, $nameOrId);
+        $this
+            ->findByNameOrId($nameOrId)
+            ->clear();
+        $this
+            ->type($text, $nameOrId);
+        return $this;
     }
 
     /**

@@ -27,7 +27,7 @@ class TwilioIncomingController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth.basic');
+        $this->middleware('api');
     }
 
 
@@ -90,11 +90,18 @@ class TwilioIncomingController extends Controller
 
         try {
             $org = Organisation::where('twilio_account_sid', $account_sid)
-                ->firstOrFail();;
-            $message = $org->messages()
-                ->where('sid', $sid)
                 ->firstOrFail();
-            $message->update(['status' => $status]);
+
+            if ($message = $org->messages()
+                ->where('sid', $sid)
+                ->first()){
+                Log::info("message: ".$sid);
+                $message->update(['status' => $status]);
+            } elseif ($location = $org->locations()
+                ->where('sid', $sid)){
+                Log::info("location: ".$sid);
+                $location->update(['status' => $status]);
+            }
 
         } catch (ModelNotFoundException $e) {
             Log::info("received a message status update for a message we didn't send");

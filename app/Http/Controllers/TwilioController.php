@@ -60,11 +60,12 @@ class TwilioController extends Controller
         $driver->messages()->save($message);
         try {
 
-            $response = $this->text($driver->mobile_phone_number, $message->message_text, $org, $request->root());
+            $response = $this->text($driver->mobile_phone_number,
+                $message->message_text,
+                $org);
             $message->queued_at = Carbon::now(); // new \DateTime(); //$this->getUTCDatetimeNow();
             $message->status = $response->status;
             $message->sid = $response->sid;
-            $message->account_sid = $response->account_sid;
             $message->update();
             $array = array_merge(
                 $message->toArray(),
@@ -95,18 +96,16 @@ class TwilioController extends Controller
         try {
             $response = $this->text($vehicle->mobile_phone_number,
                 $this->requestLocationMessage($vehicle),
-                $org,
-                $request->root());
+                $org);
             $location->queued_at = Carbon::now(); // new \DateTime();// $this->getUTCDatetimeNow();
             $location->status = $response->status;
+            $location->sid = $response->sid;
             $location->update();
-
             $location->load('vehicle');
-
             return Response::json($location);
         } catch (Services_Twilio_RestException $e) {
-            Throw $e;
-        }
+    Throw $e;
+}
     }
 
     /**
@@ -116,7 +115,7 @@ class TwilioController extends Controller
      * @return \Services_Twilio_Rest_Message
      * @internal param $message
      */
-    private function text($sendToNumber, $message_text, $org, $rootUrl)
+    private function text($sendToNumber, $message_text, $org)
     {
 
         $this->twilio->setSid($org->twilio_account_sid);

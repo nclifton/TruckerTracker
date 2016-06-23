@@ -20,13 +20,22 @@ class AuthServiceProvider extends ServiceProvider
     private static function isOrganisationUser(User $user, $org = null)
     {
         $org = (is_null($org))?$user->organisation:$org;
-        return (!empty($org) && (!empty($user->organisation)) && $user->organisation->_id === $org->_id);
+        return (!empty($org) && (!empty($user->organisation)) && $user->organisation->_id == $org->_id);
     }
 
     private static function isTwilioUser(User $user, $org = null)
     {
         $org = (is_null($org))?$user->organisation:$org;
-        return (!empty($org) && !empty($org->twilioUser) && $org->twilioUser->_id === $user->_id);
+        if (!empty($org)){
+            $user1 = $org->twilioUser;
+            if(!empty($user1)){
+                $objectID = $org->twilioUser->_id;
+                if($objectID == $user->_id){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static function isFirstUser(User $user, $org = null)
@@ -36,7 +45,7 @@ class AuthServiceProvider extends ServiceProvider
             return true;
 
         if (!empty($org->firstUser)) {
-            if ($org->firstUser->_id === $user->_id){
+            if ($org->firstUser->_id == $user->_id){
                 return true;
             }
         }

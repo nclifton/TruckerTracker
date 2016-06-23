@@ -12,30 +12,54 @@
 
 namespace TruckerTracker\Twilio;
 
+include_once __DIR__.DIRECTORY_SEPARATOR.'http_build_url.php';
 
 use TruckerTracker\Organisation;
 
 class TwilioHelper
 {
 
-    public static function MessageRequestUrl(Organisation $org)
+    public static function MessageRequestUrl($username, $password=null)
     {
-        return self::serverRootUrl($org) . '/incoming/message';
+        return http_build_url(self::getUrl($username, $password),['path'=>'/incoming/message']);
     }
 
-    public static function MessageStatusCallbackUrl($org)
+    public static function MessageStatusCallbackUrl($username, $password=null)
     {
-        return self::serverRootUrl($org) . '/incoming/message/status';
+        return http_build_url(self::getUrl($username, $password),['path'=>'/incoming/message/status']);
+    }
+
+
+    /**
+     * @param $username
+     * @param $password
+     * @return array
+     */
+    protected static function getCredentials($username, $password=null)
+    {
+        if (is_a($username, Organisation::class)) {
+            $org = $username;
+            $twilioUser = $org->twilioUser()->first();
+            $username = $twilioUser->username;
+            $password = $org->twilio_user_password;
+        }
+        return [$username,$password];
     }
 
     /**
-     * @param Organisation $org
-     * @return string
+     * @param $username
+     * @param $password
+     * @return array|string
      */
-    protected static function serverRootUrl(Organisation $org)
+    protected static function getUrl($username, $password=null)
     {
-        return env('URL_SCHEME', 'http') . '://'
-        . $org->twilioUser->username . ':' . $org->twilio_user_password . '@'
-        . env('SERVER_DOMAIN_NAME', 'example.com');
+        list($username, $password) = self::getCredentials($username, $password);
+        $url = http_build_url('', [
+            'user' => $username,
+            'pass' => $password,
+            'scheme' => env('URL_SCHEME', 'http'),
+            'host' => env('SERVER_DOMAIN_NAME', 'example.com')
+        ]);
+        return $url;
     }
 }

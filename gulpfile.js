@@ -21,6 +21,22 @@ elixir(function (mix) {
             'message.js',
             'location.js',
             'user.js'
-        ],'public/js/home.js')
-        .version(["css/app.css", "public/js/home.js"]);
+        ], 'public/js/home.js')
+        .version([
+            "css/app.css",
+            "public/js/home.js"
+        ])
+        .copy(
+            'resources/assets/bower/jquery/dist/jquery.js',
+            'public/js/jquery.js')
+        .copy(
+            'resources/assets/bower/bootstrap-sass/assets/javascripts/bootstrap.js',
+            'public/js/bootstrap.js')
+        .copy(
+            'resources/assets/bower/jquery-ui/jquery-ui.js',
+            'public/js/jquery-ui.js')
+        .copy(
+            'resources/assets/bower/jquery-ui/themes/smoothness/jquery-ui.css',
+            'public/css/jquery-ui.css'
+        );
 });

@@ -58,11 +58,13 @@ class ConfigController extends Controller
         $this->validateOrganisation($request);
         $attributes = array_merge($request->all(), ['auto_reply' => false]);
         $this->internationalisePhoneNumbers($attributes, ['twillio_phone_number']);
+        $twilioUsername = $attributes['twilio_username'];
+        unset($attributes['twilio_username']);
         $org = Organisation::create($attributes);
         $user = Auth::user();
         $org->users()->save($user);
         $user->firstUserOrganisation()->save($org);
-        $this->addOrganisationTwilioUser($user, $org);
+        $this->addOrganisationTwilioUser($twilioUsername, $org);
 
         return Response::json($this
             ->prepareOrganisationResponse($this
@@ -463,36 +465,35 @@ class ConfigController extends Controller
     }
 
     /**
-     * @param User $user
-     * @return array
+     * @param $username
+     * @param Organisation $org
+     * @return User
      */
-    private function createTwillioUser(User $user)
+    private function createTwillioUser($username, Organisation $org)
     {
         $name = 'twiliouser';
-        $email = preg_replace('/^[^@]*(.*)/', $name . '$1', $user->email);
-        $password = bin2hex(random_bytes(16));
-        $username = bin2hex(random_bytes(16));
+        $email = preg_replace('/^[^@]*(.*)/', $name . '$1', $org->firstUser->email);
+        $password = $org->twilio_user_password;
         $user = User::create([
             'name' => $name,
             'email' => $email,
             'username' => $username,
             'password' => bcrypt($password)
         ]);
-        return [$user, $password];
+        return $user;
 
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @param Organisation $org
      * @return User
      */
-    private function addOrganisationTwilioUser(User $user, Organisation $org)
+    private function addOrganisationTwilioUser( $twilioUsername, Organisation $org)
     {
-        list($twilioUser, $password) = $this->createTwillioUser($user);
+        $twilioUser = $this->createTwillioUser($twilioUsername,$org);
         $org->users()->save($twilioUser);
         $twilioUser->twilioUserOrganisation()->save($org);
-        $org->update(['twilio_user_password' => $password]);
         return $twilioUser;
     }
 

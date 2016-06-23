@@ -28,11 +28,12 @@ class Kernel extends HttpKernel
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            // \TruckerTracker\Http\Middleware\VerifyCsrfToken::class,
+            \TruckerTracker\Http\Middleware\VerifyCsrfToken::class,
         ],
 
         'api' => [
             'throttle:60,1',
+            'auth.basic'
         ],
     ];
 
@@ -45,7 +46,7 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => \TruckerTracker\Http\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'auth.basic' => \TruckerTracker\Http\Middleware\AuthenticateWithBasicAuth::class,
         'can' => \Illuminate\Foundation\Http\Middleware\Authorize::class,
         'guest' => \TruckerTracker\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,

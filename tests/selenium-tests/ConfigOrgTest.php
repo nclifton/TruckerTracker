@@ -5,6 +5,7 @@ namespace TruckerTracker;
 use Mockery\Exception\RuntimeException;
 
 include_once 'IntegratedTestCase.php';
+include_once __DIR__.'/../../app/Twilio/http_build_url.php';
 
 class ConfigOrgTest extends IntegratedTestCase
 {
@@ -109,12 +110,15 @@ class ConfigOrgTest extends IntegratedTestCase
     /**
      * can add organisation with
      * - name
+     * - timezone
+     * - datetime_format
+     * 
      * - twilio_account_sid
      * - twilio_auth_token
      * - twilio_phone_number
-     * - twilio_user_password'
-     * - timezone
-     * - datetime_format
+     *
+     * - twilio_inbound_message_request_url
+     * - twilio_outbound_message_status_callback_url
      *
      * @return void
      *
@@ -123,25 +127,122 @@ class ConfigOrgTest extends IntegratedTestCase
     public function testAddsOrg()
     {
         // Arrange
+        $org = $this->orgset['test'];
+
+
 
         // Act
-        $this->login()->addOrg();
+        $this
+            ->login();
 
+        // the org dialog is expected to be automatically present
+        $this
+            ->clearType($org['name'], '#org_name');
+        $this
+            ->select('timezone', $org['timezone'])
+            ->wait(500)
+            ->select('datetime_format', $org['datetime_format'])
+            ->wait(500);
+        
+         // Twilio mobile network gateway properties are on a separate tab
+        $this
+            ->byId('org-twilio-tab-link')->click();
+        $this
+            ->wait(1000)
+            ->clearType($org['twilio_account_sid'], '#twilio_account_sid')
+            ->clearType($org['twilio_auth_token'], '#twilio_auth_token')
+            ->clearType($org['twilio_phone_number'], '#twilio_phone_number');
 
         // Assert
 
+        // we have the twilio username and password as hidden input
+        $this
+            ->assertThat($this
+                ->byCssSelector('input#twilio_username')
+                ->attribute('type'),$this
+                ->equalTo('hidden'));
+        $this
+            ->assertThat($this
+                ->byCssSelector('input#twilio_user_password')
+                ->attribute('type'),$this
+                ->equalTo('hidden'));
 
-        $this->assertThat($this->byId('btn-add-org')->displayed(), $this->isFalse());
-        $this->assertThat($this->byId('btn-edit-org')->displayed(), $this->isTrue());
+        // Arrange
+        $twilioUsername = $this
+            ->byId('twilio_username')
+            ->attribute('value');
+        $twilioPassword = $this
+            ->byId('twilio_user_password')
+            ->attribute('value');
 
-        $this->assertThat($this->byId('btn-add-driver')->attribute('disabled'), $this->isNull());
-        $this->assertThat($this->byId('btn-add-vehicle')->attribute('disabled'), $this->isNull());
+        // the twilio urls to use are displayed
+        $this
+            ->assertThat(
+                $this
+                    ->byId('twilio_inbound_message_request_url')
+                    ->attribute('value'),
+                $this
+                    ->equalTo(http_build_url('',[
+                        'scheme'=> env('URL_SCHEME','http'),
+                        'user' => $twilioUsername,
+                        'pass' => $twilioPassword,
+                        'host' => env('SERVER_DOMAIN_NAME','example.com'),
+                        'path' => '/incoming/message'
+                    ])));
+        $this
+            ->assertThat(
+                $this
+                    ->byId('twilio_outbound_message_status_callback_url')
+                    ->attribute('value'),
+                $this
+                    ->equalTo(http_build_url('',[
+                        'scheme'=> env('URL_SCHEME','http'),
+                        'user' => $twilioUsername,
+                        'pass' => $twilioPassword,
+                        'host' => env('SERVER_DOMAIN_NAME','example.com'),
+                        'path' => '/incoming/message/status'
+                    ])));
 
-        $this->assertCount(1, $this->getMongoConnection()
+
+        // Act - save
+
+        $this
+            ->byId('btn-save-org')
+            ->click();
+        $this->wait(1000);
+        // Assert
+
+        $this
+            ->assertThat($this
+                ->byId('btn-add-org')
+                ->displayed(), $this
+                ->isFalse());
+        $this
+            ->assertThat($this
+                ->byId('btn-edit-org')
+                ->displayed(), $this
+                ->isTrue());
+        $this
+            ->assertThat($this
+                ->byId('btn-add-driver')
+                ->attribute('disabled'), $this
+                ->isNull());
+        $this
+            ->assertThat($this
+                ->byId('btn-add-vehicle')
+                ->attribute('disabled'), $this
+                ->isNull());
+
+        $this->assertCount(1, $this
+            ->getMongoConnection()
             ->collection('users')
-            ->find(['name' => $this->fixtureUserset[0]['name'], 'organisation_id' => ['$exists' => true]]));
+            ->find([
+                'name' => $this->fixtureUserset[0]['name'],
+                'organisation_id' => ['$exists' => true]
+            ]));
 
-        $this->seeInDatabase('organisations', $this->orgset['test']);
+        $this
+            ->seeInDatabase('organisations', $this->orgset['test']);
 
 
     }
@@ -162,9 +263,9 @@ class ConfigOrgTest extends IntegratedTestCase
 
         // Assert #orgForm > div:nth-child(4)
         $this->assertThat($this->byId('orgModalLabel')->text(), $this->equalTo('Organisation Editor'));
-        $this->assertThat(explode(' ', $this->byCssSelector('#orgForm > div:nth-child(1)')->attribute('class')),
+        $this->assertThat(explode(' ', $this->byCssSelector('#orgConfigForm > div:nth-child(1)')->attribute('class')),
             $this->contains('has-error'));
-        $this->assertThat($this->byCssSelector('#orgForm > div:nth-child(1) > div > span > strong')->text(),
+        $this->assertThat($this->byCssSelector('#orgConfigForm > div:nth-child(1) > div > span > strong')->text(),
             $this->equalTo('We do need a name for your organisation'));
 
 
@@ -209,43 +310,47 @@ class ConfigOrgTest extends IntegratedTestCase
 
         // Act
         $this->login()->addOrg('bad');
-        sleep(2);
 
         // Assert
         $this->assertThat($this->byId('orgModalLabel')->text(), $this->equalTo('Organisation Editor'));
+
+        $this->byId('org-config-tab-link')->click();
+
         $this->assertThat(explode(' ', $this
-            ->byCssSelector('#orgForm > div:nth-child(1)')
+            ->byCssSelector('#orgConfigForm > div:nth-child(1)')
             ->attribute('class')),
             $this->contains('has-error'));
         $this->assertThat($this
-            ->byCssSelector('#orgForm > div:nth-child(1) > div > span > strong')
+            ->byCssSelector('#orgConfigForm > div:nth-child(1) > div > span > strong')
             ->text(),
             $this->equalTo('That name for you organisation is too long, make it less than 128'));
 
+        $this->byId('org-twilio-tab-link')->click();
+        
         $this->assertThat(explode(' ', $this
-            ->byCssSelector('#orgForm > div:nth-child(2)')
+            ->byCssSelector('#orgTwilioForm > div:nth-child(1)')
             ->attribute('class')),
             $this->contains('has-error'));
         $this->assertThat($this
-            ->byCssSelector('#orgForm > div:nth-child(2) > div > span > strong')
+            ->byCssSelector('#orgTwilioForm > div:nth-child(1) > div > span > strong')
             ->text(),
             $this->equalTo('That does not match the pattern of a Twilio Account SID, please check'));
 
         $this->assertThat(explode(' ', $this
-            ->byCssSelector('#orgForm > div:nth-child(3)')
+            ->byCssSelector('#orgTwilioForm > div:nth-child(2)')
             ->attribute('class')),
             $this->contains('has-error'));
         $this->assertThat($this
-            ->byCssSelector('#orgForm > div:nth-child(3) > div > span > strong')
+            ->byCssSelector('#orgTwilioForm > div:nth-child(2) > div > span > strong')
             ->text(),
             $this->equalTo('That does not match the pattern of a Twilio Authentication Token, please check'));
 
         $this->assertThat(explode(' ', $this
-            ->byCssSelector('#orgForm > div:nth-child(4)')
+            ->byCssSelector('#orgTwilioForm > div:nth-child(3)')
             ->attribute('class')),
             $this->contains('has-error'));
         $this->assertThat($this
-            ->byCssSelector('#orgForm > div:nth-child(4) > div > span > strong')
+            ->byCssSelector('#orgTwilioForm > div:nth-child(3) > div > span > strong')
             ->text(),
             $this->equalTo('That doesn\'t look like an australian phone number, it needs to have 10 digits and start with a 0 or start with +61 and have 11 digits'));
 
@@ -432,10 +537,10 @@ class ConfigOrgTest extends IntegratedTestCase
         $this->byId('btn-add-user')->click();
         $this->wait();
 
-        $this->assertThat($this->byCssSelector('#orgForm > div:nth-child(1)')->displayed(),$this->isTrue());
+        $this->assertThat($this->byCssSelector('#orgConfigForm > div:nth-child(1)')->displayed(),$this->isTrue());
         $this->assertThat(explode(' ', $this->byCssSelector('#orgForm > div:nth-child(1)')->attribute('class')),
             $this->contains('has-error'));
-        $this->assertThat($this->byCssSelector('#orgForm > div:nth-child(1) > div > span > strong')->text(),
+        $this->assertThat($this->byCssSelector('#orgConfigForm > div:nth-child(1) > div > span > strong')->text(),
             $this->equalTo('We do need a name for your organisation'));
 
     }
@@ -458,19 +563,21 @@ class ConfigOrgTest extends IntegratedTestCase
         $org = $this->orgset[$orgkey];
 
         $this->clearType($org['name'], '#org_name');
+        if (isset($org['timezone']))
+            $this->select('timezone', $org['timezone']);
+        if (isset($org['datetime_format']))
+            $this->select('datetime_format', $org['datetime_format']);
+        $this->byId('org-twilio-tab-link')->click();
         if (isset($org['twilio_account_sid']))
             $this->clearType($org['twilio_account_sid'], '#twilio_account_sid');
         if (isset($org['twilio_auth_token']))
             $this->clearType($org['twilio_auth_token'], '#twilio_auth_token');
         if (isset($org['twilio_phone_number']))
             $this->clearType($org['twilio_phone_number'], '#twilio_phone_number');
-        if (isset($org['timezone']))
-            $this->select('timezone', $org['timezone']);
-        if (isset($org['datetime_format']))
-            $this->select('datetime_format', $org['datetime_format']);
+        $this->byId('org-config-tab-link')->click();
 
         $this->byId('btn-save-org')->click();
-        sleep(3); // wait for animation
+        $this->wait(3000); // wait for animation
         return $this;
     }
 
