@@ -27,17 +27,6 @@ Route::group(['middleware'=> ['none']], function () {
 });
 
 Route::get('/', function () {
-
-    Log::debug('routes.php parts using config():',[
-        'scheme' => config('app.external_scheme', 'not configured'),
-        'host' => config('app.external_host', 'not configured'),
-        'port'=>config('app.external_port', 'not configured')
-    ]);
-    Log::debug('routes.php parts using Config::get():',[
-        'scheme' => Config::get('app.external_scheme', 'not configured'),
-        'host' => Config::get('app.external_host', 'not configured'),
-        'port'=>Config::get('app.external_port', 'not configured')
-    ]);
     return view('welcome');
 });
 

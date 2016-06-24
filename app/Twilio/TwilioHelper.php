@@ -22,12 +22,12 @@ class TwilioHelper
 
     public static function MessageRequestUrl($username, $password=null)
     {
-        return http_build_url(self::getUrl($username, $password),['path'=>'/incoming/message']);
+        return http_build_url(self::getUrl($username, $password),['path'=>'/incoming/message'],HTTP_URL_REPLACE);
     }
 
     public static function MessageStatusCallbackUrl($username, $password=null)
     {
-        return http_build_url(self::getUrl($username, $password),['path'=>'/incoming/message/status']);
+        return http_build_url(self::getUrl($username, $password),['path'=>'/incoming/message/status'],HTTP_URL_REPLACE);
     }
 
 
@@ -41,8 +41,8 @@ class TwilioHelper
         if (is_a($username, Organisation::class)) {
             $org = $username;
             $twilioUser = $org->twilioUser()->first();
-            $username = $twilioUser->username;
-            $password = $org->twilio_user_password;
+            $username = $twilioUser->username.'';
+            $password = $org->twilio_user_password.'';
         }
         return [$username,$password];
     }
@@ -61,6 +61,7 @@ class TwilioHelper
             'host' => config('app.external_host', 'not configured'),
             'port'=>config('app.external_port', 'not configured')
         ]);
+
         list($username, $password) = self::getCredentials($username, $password);
         $urlParts = [
             'user' => $username,

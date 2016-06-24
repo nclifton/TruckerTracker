@@ -30,19 +30,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-
-        Log::debug('HomeController parts using config():',[
-            'scheme' => config('app.external_scheme', 'not configured'),
-            'host' => config('app.external_host', 'not configured'),
-            'port'=>config('app.external_port', 'not configured')
-        ]);
-        Log::debug('HomeController parts using Config::get():',[
-            'scheme' => Config::get('app.external_scheme', 'not configured'),
-            'host' => Config::get('app.external_host', 'not configured'),
-            'port'=>Config::get('app.external_port', 'not configured')
-        ]);
-
-
         $user = Auth::user();
         $org = $user->organisation()->first();
 
