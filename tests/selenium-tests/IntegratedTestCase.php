@@ -152,14 +152,14 @@ abstract class IntegratedTestCase extends \Laracasts\Integrated\Extensions\Selen
     protected function addDriver($driver)
     {
         $this->clickOnElement('btn-add-driver');
-        sleep(2); // wait for animation
+        $this->wait(2000); // wait for animation
 
         $this->type($driver['first_name'], '#first_name');
         $this->type($driver['last_name'], '#last_name');
         $this->type($driver['mobile_phone_number'], '#driver_mobile_phone_number');
         $this->type($driver['drivers_licence_number'], '#drivers_licence_number');
         $this->clickOnElement('btn-save-driver');
-        sleep(2); // wait for animation
+        $this->wait(2000); // wait for animation
         return $this;
     }
 

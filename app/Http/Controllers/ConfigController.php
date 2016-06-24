@@ -259,7 +259,7 @@ class ConfigController extends Controller
         if (Gate::denies('add-vehicle', $user->organisation)) {
             abort(403);
         }
-        $request->merge(['tracker_password'=>env('DEFAULT_TRACKER_PASSWORD')]);
+        $request->merge(['tracker_password'=>config('app.default_tracker_password')]);
         $this->validateVehicle($request, $user);
         $vehicle = Vehicle::create($request->all());
         $user->organisation->vehicles()->save($vehicle);

@@ -36,19 +36,28 @@ class MessageTest extends IntegratedTestCase
         $message_text = 'Hello';
         $this->type($message_text,'#message_text');
         $this->byId('btn-save-message')->click();
-        $this->wait(7000);
+        $this->wait(4000);
 
         // Assert
+        $maxCnt = 10;
+        $message = null;
+        while ($maxCnt > 0){
+            
+                $message = $this->getMongoConnection()->collection('messages')->findOne(
+                    [
+                        'driver_id' => $driver['_id'],
+                        'organisation_id' => $this->orgset[0]['_id'],
+                        'message_text' => $message_text,
+                        'status' => 'queued'
+                    ]);
+            if (! is_null($message )){
+                break;
+            }
+            $this->wait(4000);
+            --$maxCnt;
+        }
 
-        $message = $this->getMongoConnection()->collection('messages')->findOne(
-            [
-                'driver_id' => $driver['_id'],
-                'organisation_id' => $this->orgset[0]['_id'],
-                'message_text' => $message_text,
-                'status' => 'queued'
-            ]);
-
-        $this->assertNotNull($message);
+        $this->assertGreaterThan(0,$maxCnt,'timed out waiting for database to update');
         $this->assertThat($this->byId('message'.$message['_id'])->displayed(),$this->isTrue());
 
         $this

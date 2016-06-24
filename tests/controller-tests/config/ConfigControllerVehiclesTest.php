@@ -46,17 +46,16 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
+        $v = $this->vehicleset[0];
+        $submittedVehicle = $this->bind_vehicle($v);
+        unset($submittedVehicle['tracker_password']);
 
         // Act
-
-        $v = $this->vehicleset[0];
-        $submitedVehicle = $this->bind_vehicle($v);
-        unset($submitedVehicle['tracker_password']);
-        $this->actingAs($user)->json('post', '/vehicles', $submitedVehicle);
+        $this->actingAs($user)->json('post', '/vehicles', $submittedVehicle);
 
         // Assert
         $this->assertResponseOk();
-        $this->seeJson($submitedVehicle);
+        $this->seeJson($submittedVehicle);
         $this->seeJsonStructure(['_id','registration_number','mobile_phone_number','tracker_imei_number']);
         $this->seeInDatabase('vehicles', $this->bind_vehicle_Org_id($v));
 

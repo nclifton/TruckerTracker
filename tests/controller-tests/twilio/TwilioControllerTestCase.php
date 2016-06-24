@@ -14,6 +14,7 @@ namespace TruckerTracker;
 require_once __DIR__ . '/../../TestTrait.php';
 
 use \Mockery as m;
+use TruckerTracker\Twilio\TwilioInterface;
 
 class TwilioControllerTestCase extends TestCase
 {
@@ -92,16 +93,21 @@ class TwilioControllerTestCase extends TestCase
         $mockServicesTwilioRestMessage->sid = $this->messageSet[0]['sid'];
         $mockServicesTwilioRestMessage->account_sid = $org['twilio_account_sid'];
 
-        $creds = rawurlencode($twilioUsername) . ':' . rawurldecode($org['twilio_user_password']);
-        $host=env('SERVER_DOMAIN_NAME','example.com');
+        $parts = [
+          'scheme' => config('app.external_scheme','http'),
+            'host' => config('app.external_host','external-host.com'),
+            'port' => config('app.external_port'),
+            'user' => $twilioUsername,
+            'pass' => $org['twilio_user_password'],
+            'path' => '/incoming/message/status'
+        ];
 
-        $from = $org['twilio_phone_number'];
-        $statusCallBack = "http://${creds}@${host}/incoming/message/status";
+        $statusCallBack = http_build_url('',$parts);
 
         $this->subset = m::subset(
             [
                 'To' => $to,
-                'From' => $from,
+                'From' => $org['twilio_phone_number'],
                 'Body' => $message_text,
                 'StatusCallback' => $statusCallBack
             ]);
@@ -115,7 +121,7 @@ class TwilioControllerTestCase extends TestCase
 
     protected function mockTwilioNeverUsed()
     {
-        $mockTwilio = m::mock(\TruckerTracker\Twilio\TwilioInterface::class);
+        $mockTwilio = m::mock(TwilioInterface::class);
         $mockTwilio->shouldReceive('setSid')->never();
         return $mockTwilio;
     }
@@ -128,13 +134,13 @@ class TwilioControllerTestCase extends TestCase
      */
     protected function injectMockTwilio($org, $to, $twilioUsername, $expectedMessageText, $expectedStatus)
     {
-        $this->app->instance(\TruckerTracker\Twilio\TwilioInterface::class,
+        $this->app->instance(TwilioInterface::class,
             $this->mockTwilio($org, $to, $twilioUsername, $expectedMessageText, $expectedStatus));
     }
 
     protected function injectMockNeverUsedTwilio()
     {
-        $this->app->instance(\TruckerTracker\Twilio\TwilioInterface::class,
+        $this->app->instance(TwilioInterface::class,
             $this->mockTwilioNeverUsed());
     }
 }

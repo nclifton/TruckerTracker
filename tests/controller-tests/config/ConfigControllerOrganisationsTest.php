@@ -44,6 +44,19 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         $tUser = $this->twilioUser();
         $this->user();
         $org = $this->orgset[0];
+        $urlParts = [
+            'scheme' => config('app.external_scheme'),
+            'host' => config('app.external_host'),
+            'port' => config('app.external_port'),
+            'user' => $tUser->username,
+            'pass' => $org['twilio_user_password'],
+            'path' => '/incoming/message'
+        ];
+        $expected_twilio_inbound_message_request_url = http_build_url('', $urlParts);
+        $urlParts['path'] = '/incoming/message/status';
+        $expected_twilio_outbound_message_status_callback_url = http_build_url('', $urlParts);
+
+            //'http://' . $tUser->username . ':' . $org['twilio_user_password'] . '@' . $host . '/incoming/message/status';
 
         // Act
         $this->actingAs($user)->json('get', '/organisation/' . $org['_id']);
@@ -71,16 +84,38 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
                 ]
             ]
         ]);
-        $host = env('SERVER_DOMAIN_NAME','example.com');
-        $this->seeJson([
+         $this->seeJson([
             '_id' => $org['_id'],
             'name' => $org['name'],
-            'twilio_inbound_message_request_url' => 
-                'http://'.$tUser->username.':'.$org['twilio_user_password']. '@' . $host . '/incoming/message',
+            'twilio_inbound_message_request_url' =>
+                $expected_twilio_inbound_message_request_url,
             'twilio_outbound_message_status_callback_url' =>
-                'http://'.$tUser->username.':'.$org['twilio_user_password'].'@' . $host . '/incoming/message/status',
+                $expected_twilio_outbound_message_status_callback_url,
         ]);
-
+/*
+ *
+ * Unable to find JSON fragment
+ * [
+ * "twilio_inbound_message_request_url":"http:\/\/5c1f63bd5fd7b71506ee2de36bdd2027:1ad19bda8aff34050549c306e2d7b961@mcsweeneytg.com.au\/incoming\/message"]
+ * "twilio_inbound_message_request_url":"http:\/\/5c1f63bd5fd7b71506ee2de36bdd2027:1ad19bda8aff34050549c306e2d7b961@mcsweeneytg.com.au:8000\/incoming\/message",
+ * within
+ * [{"_id":"10001",
+ * "auto_reply":true,
+ * "datetime_format":"H:i:s d\/m\/y",
+ * "name":"McSweeney Transport Group",
+ * "timezone":"Australia\/Sydney",
+ * "twilio_account_sid":"AC392e8d8bc564eb45ea67cc0f3a8ebf3c",
+ * "twilio_auth_token":"36c8ee5499df1e116aa53b1ee05ca5fa",
+ * "twilio_outbound_message_status_callback_url":"http:\/\/5c1f63bd5fd7b71506ee2de36bdd2027:1ad19bda8aff34050549c306e2d7b961@mcsweeneytg.com.au:8000\/incoming\/message\/status",
+ * "twilio_phone_number":"+15005550006",
+ * "twilio_user_password":"1ad19bda8aff34050549c306e2d7b961",
+ * "users":[{"_id":"576d13fb09e6dd06af263e71",
+ * "email":"myrna82@example.com",
+ * "name":"Mrs. Leta McClure Sr.",
+ * "organisation_id":"10001"}]}].
+ *
+ *
+ */
     }
 
     /**
@@ -216,14 +251,17 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         $twilioUsername = bin2hex(random_bytes(16));
         $twilioName = 'twiliouser';
         $twilioEmail = preg_replace('/^[^@]*(.*)/', $twilioName . '$1', $user->email);
-        $twilio_inbound_message_request_url = env('URL_SCHEME', 'http') . '://'
-            . $twilioUsername . ':' . $twilioPassword . '@'
-            . env('SERVER_DOMAIN_NAME', 'example.com')
-            . '/incoming/message';
-        $twilio_outbound_message_status_callback_url = env('URL_SCHEME', 'http') . '://'
-            . $twilioUsername . ':' . $twilioPassword . '@'
-            . env('SERVER_DOMAIN_NAME', 'example.com')
-            .'/incoming/message/status';
+        $urlParts = [
+            'scheme'=>config('app.external_scheme','http'),
+            'host'=>config('app.external_host','external-host.com'),
+            'port'=>config('app.external_port'),
+            'user'=>$twilioUsername,
+            'pass'=>$twilioPassword,
+            'path'=>'/incoming/message'
+        ];
+        $twilio_inbound_message_request_url = http_build_url('',$urlParts);
+        $urlParts['path']='/incoming/message/status';
+        $twilio_outbound_message_status_callback_url = http_build_url('',$urlParts);
 
         $org = $this->orgset[0];
         $this->getMongoConnection()->collection('organisations')

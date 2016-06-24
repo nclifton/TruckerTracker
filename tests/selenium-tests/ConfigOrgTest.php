@@ -176,32 +176,32 @@ class ConfigOrgTest extends IntegratedTestCase
             ->attribute('value');
 
         // the twilio urls to use are displayed
+        $urlParts = [
+            'scheme' => config('app.external_scheme', 'http'),
+            'user' => $twilioUsername,
+            'pass' => $twilioPassword,
+            'host' => config('app.external_host', 'example.com'),
+            'port' => config('app.external_port'),
+            'path' => '/incoming/message'
+        ];
+        $twilio_inbound_message_request_url = http_build_url('', $urlParts);
+        $urlParts['path'] = '/incoming/message/status';
+        $twilio_outbound_message_status_callback_url = http_build_url('', $urlParts);
+
         $this
             ->assertThat(
                 $this
                     ->byId('twilio_inbound_message_request_url')
                     ->attribute('value'),
                 $this
-                    ->equalTo(http_build_url('',[
-                        'scheme'=> env('URL_SCHEME','http'),
-                        'user' => $twilioUsername,
-                        'pass' => $twilioPassword,
-                        'host' => env('SERVER_DOMAIN_NAME','example.com'),
-                        'path' => '/incoming/message'
-                    ])));
+                    ->equalTo($twilio_inbound_message_request_url));
         $this
             ->assertThat(
                 $this
                     ->byId('twilio_outbound_message_status_callback_url')
                     ->attribute('value'),
                 $this
-                    ->equalTo(http_build_url('',[
-                        'scheme'=> env('URL_SCHEME','http'),
-                        'user' => $twilioUsername,
-                        'pass' => $twilioPassword,
-                        'host' => env('SERVER_DOMAIN_NAME','example.com'),
-                        'path' => '/incoming/message/status'
-                    ])));
+                    ->equalTo($twilio_outbound_message_status_callback_url));
 
 
         // Act - save

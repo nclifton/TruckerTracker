@@ -54,12 +54,16 @@ class TwilioHelper
     protected static function getUrl($username, $password=null)
     {
         list($username, $password) = self::getCredentials($username, $password);
-        $url = http_build_url('', [
+        $urlParts = [
             'user' => $username,
             'pass' => $password,
-            'scheme' => env('URL_SCHEME', 'http'),
-            'host' => env('SERVER_DOMAIN_NAME', 'example.com')
-        ]);
+            'scheme' => config('app.external_scheme', 'http'),
+            'host' => config('app.external_host', 'example.com'),
+        ];
+        if (!empty(config('app.external_port', ''))){
+            $urlParts['port']=config('app.external_port', '');
+        }
+        $url = http_build_url('', $urlParts);
         return $url;
     }
 }

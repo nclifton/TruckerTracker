@@ -79,8 +79,6 @@
     and paste it in as the Inbound Settings REQUEST URL.
 </div>
 
-<script src="{{ asset('/js/clipboard.js') }}"></script>
-
 <script>
 
     $(document).ready(function () {

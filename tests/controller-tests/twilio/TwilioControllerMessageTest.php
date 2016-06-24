@@ -2,8 +2,6 @@
 
 namespace TruckerTracker;
 
-use TruckerTracker\Twilio\TwilioInterface;
-
 require_once __DIR__ . '/TwilioControllerTestCase.php';
 
 class TwilioControllerMessageTest extends TwilioControllerTestCase
@@ -128,8 +126,7 @@ class TwilioControllerMessageTest extends TwilioControllerTestCase
             'organisation_id' => $org['_id'],
             'message_text' => $expectedMessageText,
             'status' => $expectedStatus,
-            'sid' => $data['sid'],
-            'account_sid' => $data['account_sid']
+            'sid' => $data['sid']
         ]);
         return $data;
     }

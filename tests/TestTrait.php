@@ -11,6 +11,8 @@
 
 namespace TruckerTracker;
 
+include_once __DIR__.'/../app/Twilio/http_build_url.php';
+
 use DB;
 use Zumba\PHPUnit\Extensions\Mongo\Client\Connector;
 use Zumba\PHPUnit\Extensions\Mongo\DataSet\DataSet;
@@ -239,7 +241,8 @@ Trait TestTrait
             $this->twilioUser->password = bcrypt($this->orgset[0]['twilio_user_password']);
             $this->twilioUser->save();
             try{
-                $org = $this->twilioUser->organisation;
+                if (is_null($org))
+                    $org = $this->twilioUser->organisation;
                 $this->twilioUser->twilioUserOrganisation()->save($org);
                 $org->twilio_user_password = $this->orgset[0]['twilio_user_password'];
                 $org->save();
@@ -256,9 +259,10 @@ Trait TestTrait
     protected function firstUser(Organisation $org = null){
 
         $user = $this->user($org);
+        if (is_null($org))
+            $org = $user->organisation;
         try{
-            $uorg = $user->organisation;
-            $user->firstUserOrganisation()->save($uorg);
+            $user->firstUserOrganisation()->save($org);
           } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
         }
         $this->twilioUser = $this->twilioUser($org);
