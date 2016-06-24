@@ -20,27 +20,16 @@ class TwilioHelper
 
     public static function MessageRequestUrl($username, $password=null)
     {
-        $parts = [];
-        $url1 = self::getUrl($username, $password);
-        $url = http_build_url(
-            $url1,
-            ['path' => '/incoming/message'],
-            HTTP_URL_REPLACE,
-            $parts);
-        Log::debug('MessageRequestUrl() ',['url-from-getUrl()'=>$url1,'url-after'=>$url,'parts'=>$parts]);
-        return $url;
+        return http_build_url(
+            self::getUrl($username, $password),
+            ['path' => '/incoming/message']);
     }
 
     public static function MessageStatusCallbackUrl($username, $password=null)
     {
-        $parts = [];
-        $url1 = self::getUrl($username, $password);
-        $url = http_build_url(
-            $url1,
-            ['path' => '/incoming/message/status'],
-            HTTP_URL_REPLACE,$parts);
-        Log::debug('MessageRequestUrl() ',['url-from-getUrl()'=>$url1,'url-after'=>$url,'parts'=>$parts]);
-        return $url;
+          return http_build_url(
+            self::getUrl($username, $password),
+            ['path' => '/incoming/message/status']);
     }
 
 
