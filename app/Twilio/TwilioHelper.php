@@ -14,6 +14,7 @@ namespace TruckerTracker\Twilio;
 
 include_once __DIR__.DIRECTORY_SEPARATOR.'http_build_url.php';
 
+use Illuminate\Database\Eloquent\Model;
 use Log;
 use TruckerTracker\Organisation;
 
@@ -54,21 +55,24 @@ class TwilioHelper
      */
     protected static function getUrl($username, $password=null)
     {
+
+        list($tUsername, $tPassword) = self::getCredentials($username, $password);
+
         Log::debug('getUrl() parts:',[
-            'user' => $username,
-            'pass' => $password,
+            'user' => $tUsername,
+            'pass' => $tPassword,
             'scheme' => config('app.external_scheme', 'not configured'),
             'host' => config('app.external_host', 'not configured'),
             'port'=>config('app.external_port', 'not configured')
         ]);
 
-        list($username, $password) = self::getCredentials($username, $password);
         $urlParts = [
-            'user' => $username,
-            'pass' => $password,
+            'user' => $tUsername,
+            'pass' => $tPassword,
             'scheme' => config('app.external_scheme', 'http'),
             'host' => config('app.external_host', 'example.com'),
         ];
+
         if (!empty(config('app.external_port', ''))){
             $urlParts['port']=config('app.external_port', '');
         }
