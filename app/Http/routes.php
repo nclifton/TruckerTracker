@@ -20,6 +20,11 @@ Route::group(['middleware'=> ['api']], function () {
     Route::get('/incoming/message', 'TwilioIncomingController@message');
 });
 
+Route::group(['middleware'=> ['none']], function () {
+    Route::get('/tracker','TrackerController@storeLocation');
+    Route::post('/','TrackerController@storeLocation');
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
