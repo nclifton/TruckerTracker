@@ -59,14 +59,6 @@ class TwilioHelper
 
         list($tUsername, $tPassword) = self::getCredentials($username, $password);
 
-        Log::debug('getUrl() parts:',[
-            'user' => $tUsername,
-            'pass' => $tPassword,
-            'scheme' => config('app.external_scheme', 'not configured'),
-            'host' => config('app.external_host', 'not configured'),
-            'port'=>config('app.external_port', 'not configured')
-        ]);
-
         $urlParts = [
             'user' => $tUsername,
             'pass' => $tPassword,
@@ -77,7 +69,6 @@ class TwilioHelper
         if (!empty(config('app.external_port', ''))){
             $urlParts['port']=config('app.external_port', '');
         }
-        $url = http_build_url('', $urlParts);
-        return $url;
+        return http_build_url('', $urlParts);
     }
 }
