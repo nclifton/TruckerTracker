@@ -27,6 +27,9 @@ elixir(function (mix) {
             "public/js/home.js"
         ])
         .copy(
+            'resources/assets/images',
+            'public/images')
+        .copy(
             'resources/assets/bower/jquery/dist/jquery.js',
             'public/js/jquery.js')
         .copy(
