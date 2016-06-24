@@ -7,10 +7,11 @@ Homestead.json
 .env
 /junk/
 /.idea/
-
 /composer.phar
 /tests/bin/phantomjs-2.1.1-macosx/
 /tests/bin/chromedriver_mac32.zip
 /tests/bin/geckodriver-0.8.0-OSX
 /tests/bin/selenium-server-standalone-2.53.0.jar
 /tests/bin/chromedriver
+/.vagrant/
+/public/css/jquery-ui.css
