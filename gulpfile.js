@@ -42,16 +42,6 @@ elixir(function (mix) {
             'resources/assets/bower/jquery-ui/themes/smoothness/jquery-ui.css',
             'public/css/jquery-ui.css')
         .copy(
-            'resources/assets/js/maperizer/jqueryui.maperizer.js',
-            'public/js/maperizer/jqueryui.maperizer.js')
-        .copy(
-            'resources/assets/js/maperizer/List.js',
-            'public/js/maperizer/List.js')
-        .copy(
-            'resources/assets/js/maperizer/map-options.js',
-            'public/js/maperizer/map-options.js')
-        .copy(
-            'resources/assets/js/maperizer/Maperizer.js',
-            'public/js/maperizer/Maperizer.js'
-        );
+            'resources/assets/bower/gmap3/dist/gmap3.js',
+            'public/js/gmap3.js');
 });

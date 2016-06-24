@@ -4,6 +4,8 @@
 $(document).ready(function () {
 
 
+
+
     //display modal form viewing a location
     function setup_view_location() {
         $('.open-modal-location-view').click(function () {
@@ -16,16 +18,35 @@ $(document).ready(function () {
                 $('#location_id').val(data._id);
                 $('#datetime').text(data.vehicle.datetime);
                 $('#registration_number').text(data.vehicle.registration_number);
-                $('#location-viewModal').modal('show');
-                
-                // map stuff here
-                var $maperizer = $('#map-canvas').maperizer(Maperizer.MAP_OPTIONS);
-                $maperizer.maperizer('addFocusedMarker', {
-                    lat: data.latitude,
-                    lng: data.longitude
+
+                $('#location-viewModal').on('shown.bs.modal', function (e) {
+                    // map stuff here after the modal is finished forming
+                    var location = [data.latitude, data.longitude];
+                    var latLng = new google.maps.LatLng(data.latitude, data.longitude);
+                    $('#map')
+                        .gmap3({
+                            center: latLng,
+                            zoom: 10,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP,
+                            disableDefaultUI: true,
+                            zoomControl: true,
+                            scaleControl: true,
+                            fullscreenControl: true
+                        })
+                        .marker({
+                            position: location,
+                            icon: {
+                                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                                scale: 3
+                            },
+                            title: data.vehicle.registration_number
+                        });
                 });
 
-            }).fail(function(data){
+                $('#location-viewModal').modal('show');
+
+
+            }).fail(function (data) {
                 var newDoc = document.open("text/html", "replace");
                 newDoc.write(data.responseText);
                 newDoc.close();
@@ -62,6 +83,7 @@ $(document).ready(function () {
             });
         });
     }
+
     setup_delete_location();
 
     //send location request to vehicle
@@ -79,11 +101,11 @@ $(document).ready(function () {
         $.ajax({
 
             type: 'POST',
-            url: '/vehicle/'+vehicle_id+'/location',
+            url: '/vehicle/' + vehicle_id + '/location',
             dataType: 'json',
             success: function (data) {
                 console.log(data);
-                
+
                 $('#locationForm').trigger("reset");
                 $('#locationModal').modal('hide');
                 $('#location-list-panel').show();

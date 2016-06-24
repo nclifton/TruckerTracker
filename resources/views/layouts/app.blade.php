@@ -28,14 +28,8 @@
     <script src="{{ asset('/js/jquery.js') }}"></script>
     <script src="{{ asset('/js/bootstrap.js') }}"></script>
     <script src="{{ asset('/js/jquery-ui.js') }}"></script>
+    <script src="{{ asset('/js/gmap3.js') }}"></script>
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBPDj8tgIxOYgafbLRbFE_wonogRcFF4XY&signed_in=true&libraries=geometry,places"></script>
-    <script src="https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/src/markerclusterer.js"></script>
-    <script src="{{ asset('js/maperizer/List.js')}}"></script>
-    <script src="{{ asset('js/maperizer/Maperizer.js')}}"></script>
-    <script src="{{ asset('js/maperizer/map-options.js')}}"></script>
-    <script src="{{ asset('js/maperizer/jqueryui.maperizer.js')}}"></script>
-
-
 
 </head>
 <body id="app-layout">
