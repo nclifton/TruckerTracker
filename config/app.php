@@ -243,7 +243,7 @@ return [
    */
     'external_host' => env('EXTERNAL_HOST_NAME','external-host.com'),
     'external_scheme' => env('EXTERNAL_SCHEME', 'http'),
-    'external_port' => env('EXTERNAL_PORT', 'http'),
+    'external_port' => env('EXTERNAL_PORT', ''),
     /*
    |--------------------------------------------------------------------------
    | The GPS Trackers Default Password
