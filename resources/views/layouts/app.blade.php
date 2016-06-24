@@ -30,10 +30,10 @@
     <script src="{{ asset('/js/jquery-ui.js') }}"></script>
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBPDj8tgIxOYgafbLRbFE_wonogRcFF4XY&signed_in=true&libraries=geometry,places"></script>
     <script src="https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/src/markerclusterer.js"></script>
-    <script src="{{asset('js/maperizer/List.js')}}"></script>
-    <script src="{{asset('js/maperizer/Maperizer.js')}}"></script>
-    <script src="{{asset('js/maperizer/map-options.js')}}"></script>
-    <script src="{{asset('js/maperizer/jqueryui.maperizer.js')}}"></script>
+    <script src="{{ asset('js/maperizer/List.js')}}"></script>
+    <script src="{{ asset('js/maperizer/Maperizer.js')}}"></script>
+    <script src="{{ asset('js/maperizer/map-options.js')}}"></script>
+    <script src="{{ asset('js/maperizer/jqueryui.maperizer.js')}}"></script>
 
 
 
@@ -53,7 +53,7 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    trucker<img src="{{URL::asset('/img/Maps-Gps-Receiving-icon.png')}}" style="display:inline-block">tracker
+                    trucker<img src="{{asset('Maps-Gps-Receiving-icon.png')}}" style="display:inline-block">tracker
                 </a>
             </div>
 

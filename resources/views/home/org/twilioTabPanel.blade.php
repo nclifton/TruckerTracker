@@ -36,7 +36,7 @@
                     <button class="btn copy-to-clipboard" data-clipboard-target="#twilio_inbound_message_request_url"
                             data-clipboard-success-alert="#copy-twilio_inbound_message_request_url-to-clipboard-success-alert"
                             title="copy to clipboard">
-                        <img class="clippy" src="assets/clippy.svg" alt="Copy to clipboard" width="13">
+                        <img class="clippy" src="{{ asset('clippy.svg') }}" alt="Copy to clipboard" width="13">
                     </button>
                 </span>
             </div>
@@ -57,7 +57,7 @@
                             data-clipboard-target="#twilio_outbound_message_status_callback_url"
                             data-clipboard-success-alert="#copy-twilio_outbound_message_status_callback_url-to-clipboard-success-alert"
                             title="copy to clipboard">
-                        <img class="clippy" src="assets/clippy.svg" alt="Copy to clipboard" width="13">
+                        <img class="clippy" src="{{ asset('clippy.svg') }}" alt="Copy to clipboard" width="13">
                     </button>
                 </span>
             </div>
