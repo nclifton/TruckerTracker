@@ -53,7 +53,7 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    trucker<img src="{{asset('Maps-Gps-Receiving-icon.png')}}" style="display:inline-block">tracker
+                    trucker<img src="{{asset('assets/Maps-Gps-Receiving-icon.png')}}" style="display:inline-block">tracker
                 </a>
             </div>
 
