@@ -11,8 +11,6 @@
 
 namespace TruckerTracker;
 
-include_once __DIR__.'/../app/Twilio/http_build_url.php';
-
 use DB;
 use Zumba\PHPUnit\Extensions\Mongo\Client\Connector;
 use Zumba\PHPUnit\Extensions\Mongo\DataSet\DataSet;

@@ -18,6 +18,17 @@ abstract class ConfigControllerTestCase extends TestCase
 
     use TestTrait;
 
+    protected function refreshApplication()
+    {
+        putenv('APP_ENV=testing');
+
+        if (env('APP_ENV') != 'testing'){
+            throw new \Exception("environment not set to testing");
+        }
+
+        $this->app = $this->createApplication();
+    }
+
     /**
      * @before
      */

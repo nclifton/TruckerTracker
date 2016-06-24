@@ -12,9 +12,6 @@
 
 namespace TruckerTracker\Twilio;
 
-include_once __DIR__.DIRECTORY_SEPARATOR.'http_build_url.php';
-
-use Illuminate\Database\Eloquent\Model;
 use Log;
 use TruckerTracker\Organisation;
 
@@ -23,12 +20,23 @@ class TwilioHelper
 
     public static function MessageRequestUrl($username, $password=null)
     {
-        return http_build_url(self::getUrl($username, $password),['path'=>'/incoming/message'],HTTP_URL_REPLACE);
+        $parts = [];
+        $url = http_build_url(
+            self::getUrl($username, $password),
+            ['path' => '/incoming/message'],
+            HTTP_URL_REPLACE,
+            $parts);
+        return $url;
     }
 
     public static function MessageStatusCallbackUrl($username, $password=null)
     {
-        return http_build_url(self::getUrl($username, $password),['path'=>'/incoming/message/status'],HTTP_URL_REPLACE);
+        $parts = [];
+        $url = http_build_url(
+            self::getUrl($username, $password),
+            ['path' => '/incoming/message/status'],
+            HTTP_URL_REPLACE,$parts);
+        return $url;
     }
 
 

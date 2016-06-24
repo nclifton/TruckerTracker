@@ -2,10 +2,8 @@
 
 namespace TruckerTracker;
 
-use Mockery\Exception\RuntimeException;
 
 include_once 'IntegratedTestCase.php';
-include_once __DIR__.'/../../app/Twilio/http_build_url.php';
 
 class ConfigOrgTest extends IntegratedTestCase
 {
