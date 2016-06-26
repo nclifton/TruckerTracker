@@ -10,6 +10,11 @@
  **/
 namespace TruckerTracker;
 
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use TruckerTracker\Events\LocationUpdate;
+use TruckerTracker\Http\Controllers\LocationController;
+use TruckerTracker\Http\Controllers\TwilioIncomingController;
+
 require_once __DIR__ . '/TwilioControllerTestCase.php';
 
 class TwilioControllerIncomingTest extends TwilioControllerTestCase
@@ -263,9 +268,9 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $org = $this->orgset[1];
         $vehicle = $this->vehicleset[0];
         $location = $this->locationSet[0];
+        $this->expectsEvents(LocationUpdate::class);
 
-
-        $message = [
+        $locMsg = [
             'MessageSid' => '9999999',
             'SmsSid' => '9999999',
             'AccountSid' => $org['twilio_account_sid'],
@@ -279,7 +284,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $expectedLocation =
             [
                 'sid' => $location['sid'],
-                'sid_response' => $message['MessageSid'],
+                'sid_response' => $locMsg['MessageSid'],
                 'vehicle_id' => $vehicle['_id'],
                 'latitude' => -34.04387,
                 'longitude' => 150.84342419999996,
@@ -290,7 +295,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             ];
 
         // Act
-        $this->actingAs($user)->json('POST','/incoming/message',$message);
+        $this->actingAs($user)->json('POST','/incoming/message',$locMsg);
 
         // Assert
         $this->assertResponseOk();
@@ -303,11 +308,12 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         }
         $this->notSeeInDatabase('messages',
             [
-                'sid' => $message['MessageSid']
+                'sid' => $locMsg['MessageSid']
             ]);
         $this->seeInDatabase('locations', $expectedLocation);
 
     }
+
 
 
 }

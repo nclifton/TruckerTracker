@@ -4,6 +4,7 @@ namespace TruckerTracker\Providers;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use TruckerTracker\Http\Controllers\LocationController;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -12,11 +13,15 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $listen = [
-        'TruckerTracker\Events\SomeEvent' => [
-            'TruckerTracker\Listeners\EventListener',
-        ],
-    ];
+    protected $listen = [];
+
+    /**
+     * The subscriber classes to register.
+     *
+     * @var array
+     */
+    protected $subscribe = [];
+
 
     /**
      * Register any other events for your application.

@@ -24,6 +24,9 @@ Route::group(['middleware'=> ['api']], function () {
 Route::group(['middleware'=> ['none']], function () {
     Route::get('/tracker','TrackerController@storeLocation');
     Route::post('/','TrackerController@storeLocation');
+    Route::get('publish', function () {
+        Redis::publish('test-channel', json_encode(['foo' => 'bar'])); 
+    });
 });
 
 Route::get('/', function () {
@@ -61,5 +64,3 @@ Route::delete('/vehicle/location/{location}',   'LocationController@deleteLocati
 
 Route::get('/driver/message/{message}',         'MessageController@getMessage');
 Route::delete('/driver/message/{message}',      'MessageController@deleteMessage');
-
-

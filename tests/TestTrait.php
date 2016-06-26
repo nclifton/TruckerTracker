@@ -86,7 +86,7 @@ Trait TestTrait
             'twilio_user_id' => '101',
             'name' => 'McSweeney Transport Group',
             'timezone' => 'Australia/Sydney',
-            'datetime_format' => 'H:i:s d/m/y',
+            'datetime_format' => 'h:i:s A D d/m/y',
             'twilio_account_sid' =>   'AC392e8d8bc564eb45ea67cc0f3a8ebf3c',
             'twilio_auth_token' =>    '36c8ee5499df1e116aa53b1ee05ca5fa',
             'twilio_phone_number' => '+15005550006',
@@ -180,7 +180,7 @@ Trait TestTrait
             '_id' => '300001',
             'organisation_id' => '10001',
             'vehicle_id' => '120001',
-            'queued_at' => '2016-06-0920:55:10+10:00',
+            'queued_at' => '2016-06-09T20:55:10+10:00',
             'sent_at' => '2016-06-09T20:56:10+10:00',
             'sid' => '2222222',
             'sid_response' => '9999999',
@@ -190,7 +190,21 @@ Trait TestTrait
             'speed' => 0.5204,
             'datetime' => '2016-07-02T21:05:43+10:00',
             'status' => 'received'
-        ]
+        ],[
+        '_id' => '300002',
+        'organisation_id' => '10001',
+        'vehicle_id' => '120001',
+        'queued_at' => '2016-06-09T21:00:10+10:00',
+        'sent_at' => '2016-06-09T21:01:10+10:00',
+        'sid' => '2222222',
+        'sid_response' => '9999999',
+        'latitude' => -34.01387,
+        'longitude' => 150.8434242,
+        'course' => 275.00,
+        'speed' => 40.3304,
+        'datetime' => '2016-07-02T21:15:43+10:00',
+        'status' => 'received'
+    ]
 
     ];
 

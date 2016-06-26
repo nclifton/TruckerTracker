@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('QUEUE_DRIVER', 'sync'),
+    'default' => env('QUEUE_DRIVER', 'redis'),
 
     /*
     |--------------------------------------------------------------------------
@@ -36,32 +36,32 @@ return [
 
         'database' => [
             'driver' => 'mongodb',
-            'table' => 'jobs',
-            'queue' => 'default',
+            'table' =>  'jobs',
+            'queue' =>  'default',
             'expire' => 60,
         ],
 
         'beanstalkd' => [
             'driver' => 'beanstalkd',
-            'host' => 'localhost',
-            'queue' => 'default',
-            'ttr' => 60,
+            'host' =>   'localhost',
+            'queue' =>  'default',
+            'ttr' =>    60,
         ],
 
         'sqs' => [
             'driver' => 'sqs',
-            'key' => 'your-public-key',
+            'key' =>    'your-public-key',
             'secret' => 'your-secret-key',
             'prefix' => 'https://sqs.us-east-1.amazonaws.com/your-account-id',
-            'queue' => 'your-queue-name',
+            'queue' =>  'your-queue-name',
             'region' => 'us-east-1',
         ],
 
         'redis' => [
-            'driver' => 'redis',
+            'driver' =>     'redis',
             'connection' => 'default',
-            'queue' => 'default',
-            'expire' => 60,
+            'queue' =>      'default',
+            'expire' =>     60,
         ],
 
     ],
@@ -78,7 +78,7 @@ return [
     */
 
     'failed' => [
-        'database' => env('DB_CONNECTION', 'mysql'),
+        'database' => env('DB_CONNECTION', 'mongodb'),
         'table' => 'failed_jobs',
     ],
 

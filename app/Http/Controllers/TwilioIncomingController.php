@@ -2,6 +2,7 @@
 
 namespace TruckerTracker\Http\Controllers;
 
+use Event;
 use Gate;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use MongoDB\BSON\UTDDateTime;
 use Response;
 use Services_Twilio_Twiml;
 use TruckerTracker\Driver;
+use TruckerTracker\Events\LocationUpdate;
 use TruckerTracker\Http\Requests;
 use TruckerTracker\Message;
 use TruckerTracker\Organisation;
@@ -60,7 +62,8 @@ class TwilioIncomingController extends Controller
             if ($org->auto_reply)
                 $twiml->message('Thank you ' . $driver['first_name'] . ', message received');
         } else if ($vehicle = Vehicle::where('mobile_phone_number', $from)->first()) {
-            $this->storeVehicleLocation($request, $vehicle);
+            $location = $this->storeVehicleLocation($request, $vehicle);
+            event(new LocationUpdate($location));
         } else {
             Log::info('ignoring message: unknown number: ' . $from);
         }
@@ -101,6 +104,7 @@ class TwilioIncomingController extends Controller
                 ->where('sid', $sid)){
                 Log::info("location: ".$sid);
                 $location->update(['status' => $status]);
+                event(new LocationUpdate($location));
             }
 
         } catch (ModelNotFoundException $e) {
@@ -160,7 +164,7 @@ class TwilioIncomingController extends Controller
                 'datetime' => $this->readTrackerDatetime($data['DateTime'],$org),
                 'status' => 'received'
             ]);
-
+        return $location;
     }
 
     private function readTrackerDatetime($DateTime,Organisation $org)

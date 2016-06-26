@@ -43,5 +43,11 @@ elixir(function (mix) {
             'public/css/jquery-ui.css')
         .copy(
             'resources/assets/bower/gmap3/dist/gmap3.js',
-            'public/js/gmap3.js');
+            'public/js/gmap3.js')
+        .copy(
+            'node_modules/socket.io-client/socket.io.js',
+            'public/js/socket.io.js');
+
+
+
 });

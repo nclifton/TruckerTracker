@@ -3,7 +3,17 @@
  */
 $(document).ready(function () {
 
-
+    if (truckertracker.channel){
+        truckertracker.socket.on(truckertracker.channel + ':\\TruckerTracker\\Events\\LocationUpdate', function(data){
+            var loc = $('#location' + data._id)
+            loc.find('button.open-modal-view-location').val(data._id);
+            loc.find('button.delete-location').val(data._id);
+            loc.find('span.registration_number').text(data.vehicle.registration_number);
+            loc.find('span.sent_at').text(data.sent_at);
+            loc.find('span.status').text(data.status);
+            loc.show();
+        });
+    }
 
 
     //display modal form viewing a location
@@ -17,7 +27,8 @@ $(document).ready(function () {
 
                 $('#location_id').val(data._id);
                 $('#datetime').text(data.vehicle.datetime);
-                $('#registration_number').text(data.vehicle.registration_number);
+                $('#view_location_vehicle_registration_number').text(data.vehicle.registration_number);
+                $('#view_location_datetime').text(data.datetime);
 
                 $('#location-viewModal').on('shown.bs.modal', function (e) {
                     // map stuff here after the modal is finished forming
@@ -39,7 +50,7 @@ $(document).ready(function () {
                                 path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
                                 scale: 3
                             },
-                            title: data.vehicle.registration_number
+                            title: data.vehicle.registration_number + ' '+ data.course + '° at ' + data.speed + ' km/h'
                         });
                 });
 
@@ -110,14 +121,15 @@ $(document).ready(function () {
                 $('#locationModal').modal('hide');
                 $('#location-list-panel').show();
 
-                var msg;
-                msg = $('#location').clone(false).appendTo('#location_list').attr("id", "location" + data._id);
-                msg.find('button.open-modal-view-location').val(data._id);
-                msg.find('button.delete-location').val(data._id);
-                msg.find('span.registration_number').text(data.vehicle.registration_number);
-                msg.find('span.sent_at').text(data.sent_at);
-                msg.find('span.status').text(data.status);
-                msg.show();
+                var loc = $('#location').clone(false).appendTo('#location_list').attr("id", "location" + data._id);
+                loc.find('button.open-modal-view-location').val(data._id);
+                loc.find('button.delete-location').val(data._id);
+                loc.find('span.registration_number').text(data.vehicle.registration_number);
+                loc.find('span.sent_at').text(data.queued_at);
+                if (data.sent_at)
+                    loc.find('span.sent_at').text(data.sent_at);
+                loc.find('span.status').text(data.status);
+                loc.show();
 
                 setup_view_location();
                 setup_delete_location();

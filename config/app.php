@@ -230,30 +230,41 @@ return [
     ],
 
     /*
-   |--------------------------------------------------------------------------
-   | The external server host name, port and protocol/scheme
-   |--------------------------------------------------------------------------
-   |
-   | We may be running on localhost but we may have a remote tunnel setup so
-   | external gateway servers may be able to talk to us. This would be the
-   | domain name of the remote server that is acting as a proxy - tunnel -
-   | host. The scheme maybe different too. We separate so that we can insert
-   | credentials between them. The external gateway server may only be able to
-   | authenticate this way. May be using a specific port as well.
-   */
+    |--------------------------------------------------------------------------
+    | The external server host name, port and protocol/scheme
+    |--------------------------------------------------------------------------
+    | 
+    | This information is configured into the gateway services so that they can 
+    | find us.
+    | We may be running on localhost but we may have a remote tunnel setup so
+    | external gateway servers may be able to talk to us. This would be the
+    | domain name of the remote server that is acting as a proxy - tunnel -
+    | host. The scheme maybe different too. We separate so that we can insert
+    | credentials between them. The external gateway server may only be able to
+    | authenticate this way. May be using a specific port as well.
+    */
     'external_host' => env('EXTERNAL_HOST_NAME','external-host.com'),
     'external_scheme' => env('EXTERNAL_SCHEME', 'http'),
     'external_port' => env('EXTERNAL_PORT', ''),
+    
     /*
-   |--------------------------------------------------------------------------
-   | The GPS Trackers Default Password
-   |--------------------------------------------------------------------------
-   |
-   | The GPS Trackers accept commands SMS text messages that must contain a
-   | password. This is the default password that will be used until their
-   | passwords are changed.
+    |--------------------------------------------------------------------------
+    | The GPS Trackers Default Password
+    |--------------------------------------------------------------------------
+    |
+    | The GPS Trackers accept commands SMS text messages that must contain a
+    | password. This is the default password that will be used until their
+    | passwords are changed.
     */
     'default_tracker_password' => env('DEFAULT_TRACKER_PASSWORD','666666'),
 
-
+    /*
+    |--------------------------------------------------------------------------
+    | Message Broadcast Server URL
+    |--------------------------------------------------------------------------
+    |
+    | We use a Socket.io server (node.js) to get broadcast evens to connected 
+    | clients. This is the URL we put in the connecting javascript in the view.
+    */    
+    'broadcast_server_url' => env('BROADCAST_SERVER_URL','http://localhost:3000'),
 ];

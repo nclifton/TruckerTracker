@@ -29,6 +29,7 @@
     <script src="{{ asset('/js/bootstrap.js') }}"></script>
     <script src="{{ asset('/js/jquery-ui.js') }}"></script>
     <script src="{{ asset('/js/gmap3.js') }}"></script>
+    <script src="{{ asset('/js/socket.io.js') }}"></script>
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBPDj8tgIxOYgafbLRbFE_wonogRcFF4XY&signed_in=true&libraries=geometry,places"></script>
 
 </head>

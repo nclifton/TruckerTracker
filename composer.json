@@ -14,7 +14,8 @@
         "jenssegers/mongodb": "^3.0",
         "guzzlehttp/guzzle": "~5.3",
         "camroncade/timezone": "^0.1.0",
-        "jakeasmith/http_build_url": "1.0.0"
+        "jakeasmith/http_build_url": "1.0.0",
+        "predis/predis": "~1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

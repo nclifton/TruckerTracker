@@ -21,6 +21,7 @@ use MongoDB\BSON\ObjectID;
  * @property array users
  * @property array drivers
  * @property array vehicles
+ * @property ObjectID _id
  */
 class Organisation extends Moloquent
 {

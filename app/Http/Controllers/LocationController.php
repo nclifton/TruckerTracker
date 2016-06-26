@@ -2,11 +2,17 @@
 
 namespace TruckerTracker\Http\Controllers;
 
+use Auth;
 use Gate;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Redis;
+use Log;
 use Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use TruckerTracker\Events\LocationUpdate;
 use TruckerTracker\Http\Requests;
+use TruckerTracker\Listeners\ClientLocationUpdater;
 use TruckerTracker\Location;
 
 class LocationController extends Controller
@@ -46,6 +52,7 @@ class LocationController extends Controller
         $loc->delete();
         return Response::json($loc);
     }
+
 
     private function filterLocationDetails($loc)
     {

@@ -19,6 +19,7 @@
     "jquery-ui": "^1.11.4",
     "bootstrap-sass": "^3.3.6",
     "jquery": "2.2.4",
-    "gmap3": "7.1.0"
+    "gmap3": "7.1.0",
+    "jquery-sse": "^0.1.3"
   }
 }
