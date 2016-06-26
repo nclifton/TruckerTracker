@@ -26,14 +26,15 @@ class LocationControllerDeleteLocationTest extends LocationControllerTestCase
     public function deleteVehicleLocationDataPoint()
     {
         // Arrange
+        $org = $this->orgset[0];
         $user = $this->firstUser();
         $loc = $this->viewLocationSet[0];
         $expectedLoc = $loc;
         unset($expectedLoc['organisation_id']);
         unset($expectedLoc['vehicle_id']);
-        $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format('H:i:s d/m/y');
-        $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format('H:i:s d/m/y');
-        $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format('H:i:s d/m/y');
+        $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format($org['datetime_format']);
+        $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format($org['datetime_format']);
+        $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format($org['datetime_format']);
 
         // Act
         $this->actingAs($user)->json('delete','vehicle/location/'. $loc['_id']);

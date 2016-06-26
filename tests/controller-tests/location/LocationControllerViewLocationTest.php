@@ -26,15 +26,16 @@ class LocationControllerViewLocationTest extends LocationControllerTestCase
     public function suppliesSpecificVehicleLocationDataPoint()
     {
         // Arrange
+        $org = $this->orgset[0];
         $user = $this->user();
         $loc = $this->viewLocationSet[0];
         $vehicle = $this->vehicleset[0];
         $expectedLoc = $loc;
         unset($expectedLoc['organisation_id']);
         unset($expectedLoc['vehicle_id']);
-        $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format('H:i:s d/m/y');
-        $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format('H:i:s d/m/y');
-        $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format('H:i:s d/m/y');
+        $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format($org['datetime_format']);
+        $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format($org['datetime_format']);
+        $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format($org['datetime_format']);
         $vehicle = array_filter($vehicle, function($key) {
             return !in_array($key,['mobile_phone_number','tracker_imei_number','tracker_password','organisation_id']);
         },ARRAY_FILTER_USE_KEY);
@@ -58,14 +59,15 @@ class LocationControllerViewLocationTest extends LocationControllerTestCase
     public function deleteVehicleLocationDataPoint()
     {
         // Arrange
+        $org = $this->orgset[0];
         $user = $this->firstUser();
         $loc = $this->viewLocationSet[0];
         $expectedLoc = $loc;
         unset($expectedLoc['organisation_id']);
         unset($expectedLoc['vehicle_id']);
-        $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format('H:i:s d/m/y');
-        $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format('H:i:s d/m/y');
-        $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format('H:i:s d/m/y');
+        $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format($org['datetime_format']);
+        $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format($org['datetime_format']);
+        $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format($org['datetime_format']);
 
         // Act
         $this->actingAs($user)->json('delete','vehicle/location/'. $loc['_id']);

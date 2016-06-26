@@ -2,7 +2,6 @@
 
 namespace TruckerTracker\Http\Controllers;
 
-use Event;
 use Gate;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -97,12 +96,15 @@ class TwilioIncomingController extends Controller
 
             if ($message = $org->messages()
                 ->where('sid', $sid)
-                ->first()){
-                Log::info("message: ".$sid);
+                ->first()
+            ) {
+                Log::info("message: " . $sid);
                 $message->update(['status' => $status]);
             } elseif ($location = $org->locations()
-                ->where('sid', $sid)){
-                Log::info("location: ".$sid);
+                ->where('sid', $sid)
+                ->first()
+            ) {
+                Log::info("location: " . $sid);
                 $location->update(['status' => $status]);
                 event(new LocationUpdate($location));
             }
@@ -161,13 +163,13 @@ class TwilioIncomingController extends Controller
                 'longitude' => $this->latLonToFloat($data['Lon']),
                 'course' => floatval($data['Course']),
                 'speed' => floatval($data['Speed']),
-                'datetime' => $this->readTrackerDatetime($data['DateTime'],$org),
+                'datetime' => $this->readTrackerDatetime($data['DateTime'], $org),
                 'status' => 'received'
             ]);
         return $location;
     }
 
-    private function readTrackerDatetime($DateTime,Organisation $org)
+    private function readTrackerDatetime($DateTime, Organisation $org)
     {
         $datetime = \DateTime::createFromFormat('y -m -d H:i:s', $DateTime);
         $datetime->setTimezone(new \DateTimeZone($org->timezone));
@@ -178,13 +180,13 @@ class TwilioIncomingController extends Controller
     {
         preg_match_all('/([^:]*):([^,]*)[,$]?/', $messageText, $matches);
         return (empty($matches))
-            ?[]
-            :array_combine($matches[1],$matches[2]);
+            ? []
+            : array_combine($matches[1], $matches[2]);
 
     }
 
     private function latLonToFloat($str)
     {
-        return floatval(str_replace(['N','S','E','W'],['','-','','-'],$str));
+        return floatval(str_replace(['N', 'S', 'E', 'W'], ['', '-', '', '-'], $str));
     }
 }
