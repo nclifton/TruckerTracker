@@ -16,4 +16,4 @@ Homestead.json
 /.vagrant/
 /public/css/jquery-ui.css
 /.idea/workspace.xml
-/bootstrap/cache/
+/redis-stable
