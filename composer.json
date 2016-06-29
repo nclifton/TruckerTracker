@@ -15,7 +15,8 @@
         "guzzlehttp/guzzle": "~5.3",
         "camroncade/timezone": "^0.1.0",
         "jakeasmith/http_build_url": "1.0.0",
-        "predis/predis": "~1.1@dev"
+        "predis/predis": "~1.1@dev",
+        "tonyhhyip/laravel-sse": "~1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -27,7 +28,8 @@
 	    "phpunit/phpunit": "4.8.26",
 	    "phpunit/phpunit-selenium": "2.x-dev",
 	    "zumba/mongounit": "~2.0",
-        "laracasts/integrated": "^0.15.6"
+        "laracasts/integrated": "^0.15.6",
+        "laravel/homestead": "^3.0"
     },
     "autoload": {
         "classmap": [
@@ -55,6 +57,8 @@
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "php artisan ide-helper:generate",
+            "php artisan ide-helper:meta",
             "php artisan optimize"
         ]
     },

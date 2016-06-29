@@ -175,6 +175,11 @@ return [
         Jenssegers\Mongodb\MongodbServiceProvider::class,
         Jenssegers\Mongodb\Auth\PasswordResetServiceProvider::class,
 
+        /*
+         * SSE
+         */
+        \Sse\Laravel\SseServiceProvider::class
+
     ],
 
     /*
@@ -225,7 +230,9 @@ return [
 
         'Moloquent' => Jenssegers\Mongodb\Eloquent\Model::class,
 
-        'Twilio' => TruckerTracker\Twilio\Facade::class
+        'Twilio' => TruckerTracker\Twilio\Facade::class,
+
+        'SSE' => \Sse\Laravel\Facade::class
 
     ],
 

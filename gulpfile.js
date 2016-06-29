@@ -20,7 +20,8 @@ elixir(function (mix) {
             'organisation.js',
             'message.js',
             'location.js',
-            'user.js'
+            'user.js',
+            'pushstream.js'
         ], 'public/js/home.js')
         .copy(
             'resources/assets/images',

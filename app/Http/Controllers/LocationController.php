@@ -4,6 +4,7 @@ namespace TruckerTracker\Http\Controllers;
 
 use Auth;
 use Gate;
+use SSE;
 
 use Illuminate\Support\Facades\Redis;
 use Log;
@@ -53,7 +54,7 @@ class LocationController extends Controller
     /**
      * subscribe to vehicle location updates for the organisation
      */
-    public function subscribe()
+    public function subscribe(SSE $sse)
     {
         $user = Auth::getUser();
         $org = $user->organisation;
@@ -61,28 +62,31 @@ class LocationController extends Controller
             abort(403);
         }
         Log::debug('location updates SSE request received');
-        $response = new StreamedResponse(function() {
+        $response = $sse->createResponse();
+        $sse->addEventListener('onLocationUpdate',new LocationUpdateHandler());
 
-            $after = (new \DateTime())->setTime(0,0);
-            $locations = Location::where('status','<>','received')
-                ->where('status','<>','queued')
-                ->whereDate('updated_at', '>=', $after);
-            while (true){
-                $nextAfter = new \DateTime();
 
-                foreach ($locations as $loc){
-                    Log::debug('sending location update '.$loc->_id);
-                    echo 'data: '.$loc->toJson."\n\n";
-                    ob_flush();
-                    flush();
-                }
-                $after = $nextAfter;
-                sleep(4);
-                Log::debug('awake and looking for location updates ');
-                $locations = Location::where('status','<>','queued')
-                    ->whereDate('updated_at', '>=', $after);
-            }
-
+//        $response = new StreamedResponse(function() {
+//
+//            $after = (new \DateTime())->setTime(0,0);
+//            $locations = Location::where('status','<>','received')
+//                ->where('status','<>','queued')
+//                ->whereDate('updated_at', '>=', $after);
+//            while (true){
+//                $nextAfter = new \DateTime();
+//
+//                foreach ($locations as $loc){
+//                    Log::debug('sending location update '.$loc->_id);
+//                    echo 'data: '.$loc->toJson."\n\n";
+//                    ob_flush();
+//                    flush();
+//                }
+//                $after = $nextAfter;
+//                sleep(4);
+//                Log::debug('awake and looking for location updates ');
+//                $locations = Location::where('status','<>','queued')
+//                    ->whereDate('updated_at', '>=', $after);
+//            }
 
 //            $channel = 'trucker-tracker.' . $org->_id;
 //            Redis::subscribe([$channel], function($message) {
@@ -91,10 +95,8 @@ class LocationController extends Controller
 //                ob_flush();
 //                flush();
 //            });
-        });
+//        });
         Log::debug('location updates SSE in place');
-        $response->headers->set('Content-Type', 'text/event-stream');
-        $response->headers->set('X-Accel-Buffering', 'no');
         return $response;
     }
 
