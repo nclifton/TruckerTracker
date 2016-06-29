@@ -22,10 +22,6 @@ elixir(function (mix) {
             'location.js',
             'user.js'
         ], 'public/js/home.js')
-        .version([
-            "css/app.css",
-            "public/js/home.js"
-        ])
         .copy(
             'resources/assets/images',
             'public/images')
@@ -45,8 +41,8 @@ elixir(function (mix) {
             'resources/assets/bower/gmap3/dist/gmap3.js',
             'public/js/gmap3.js')
         .copy(
-            'node_modules/socket.io-client/socket.io.js',
-            'public/js/socket.io.js');
+            'resources/assets/bower/jquery-sse/jquery.sse.js',
+            'public/js/jquery.sse.js');
 
 
 

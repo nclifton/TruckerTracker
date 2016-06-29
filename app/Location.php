@@ -33,8 +33,10 @@ class Location extends Moloquent
     protected $fillable = 
         [
             'vehicle_id',
-            'sent_at',
             'queued_at',
+            'sent_at',
+            'delivered_at',
+            'received_at',
             'status',
             'organisation_id',
             'sid',
@@ -46,14 +48,14 @@ class Location extends Moloquent
             'datetime'
         ];
     
-    protected $dates = ['sent_at','queued_at', 'datetime'];
+    protected $dates = ['queued_at','sent_at','delivered_at','received_at', 'datetime'];
 
     protected $hidden = [
         'organisation_id',
         'vehicle_id',
         'organisation',
         'created_at',
-        'changed_at'
+        'updated_at'
     ];
 
     public function vehicle(){

@@ -7,12 +7,12 @@ var io = require('socket.io')(http);
 var Redis = require('ioredis');
 var redis = new Redis();
 
-redis.subscribe('*', function(err, count) {
+redis.subscribe('', function(err, count) {
 
 });
 
 redis.on('message', function(channel, message) {
-    console.log('Message Recieved: ' + message);
+    console.log('Message Received: ' + message);
 
     message = JSON.parse(message);
 

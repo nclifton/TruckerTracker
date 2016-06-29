@@ -19,6 +19,7 @@ Route::group(['middleware'=> ['api']], function () {
     Route::get('/incoming/message/status', 'TwilioIncomingController@messageStatus');
     Route::post('/incoming/message', 'TwilioIncomingController@message');
     Route::get('/incoming/message', 'TwilioIncomingController@message');
+    Route::get('/location/updates/subscribe',       'LocationController@subscribe');
 });
 
 Route::group(['middleware'=> ['none']], function () {
@@ -61,6 +62,7 @@ Route::post('/vehicle/{vehicle}/location',      'TwilioController@locateVehicle'
 
 Route::get('/vehicle/location/{location}',      'LocationController@getLocation');
 Route::delete('/vehicle/location/{location}',   'LocationController@deleteLocation');
+
 
 Route::get('/driver/message/{message}',         'MessageController@getMessage');
 Route::delete('/driver/message/{message}',      'MessageController@deleteMessage');

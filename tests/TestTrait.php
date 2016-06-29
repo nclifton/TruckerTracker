@@ -89,7 +89,7 @@ Trait TestTrait
             'datetime_format' => 'h:i:s A D d/m/y',
             'twilio_account_sid' =>   'AC392e8d8bc564eb45ea67cc0f3a8ebf3c',
             'twilio_auth_token' =>    '36c8ee5499df1e116aa53b1ee05ca5fa',
-            'twilio_phone_number' => '+15005550006',
+            'twilio_phone_number' =>  '+15005550006',
             'twilio_user_password' => 'mstgpwd1',
             'auto_reply' => true
         ], [
@@ -97,9 +97,9 @@ Trait TestTrait
             'name' => 'Some Other Organisation',
             'timezone' => 'Australia/Sydney',
             'datetime_format' => 'H:i:s d/m/y',
-            'twilio_account_sid' => 'someOtherAccountSID',
-            'twilio_auth_token' => '36c8ee5499df1e116aa53b1ee05ca5fa',
-            'twilio_phone_number' => '+15005550006',
+            'twilio_account_sid' =>   'someOtherAccountSID',
+            'twilio_auth_token' =>    '36c8ee5499df1e116aa53b1ee05ca5fa',
+            'twilio_phone_number' =>  '+15005550006',
             'twilio_user_password' => 'mstgpwd1',
             'auto_reply' => false
         ]
@@ -191,19 +191,19 @@ Trait TestTrait
             'datetime' => '2016-07-02T21:05:43+10:00',
             'status' => 'received'
         ],[
-        '_id' => '300002',
-        'organisation_id' => '10001',
-        'vehicle_id' => '120001',
-        'queued_at' => '2016-06-09T21:00:10+10:00',
-        'sent_at' => '2016-06-09T21:01:10+10:00',
-        'sid' => '2222222',
-        'sid_response' => '9999999',
-        'latitude' => -34.01387,
-        'longitude' => 150.8434242,
-        'course' => 275.00,
-        'speed' => 40.3304,
-        'datetime' => '2016-07-02T21:15:43+10:00',
-        'status' => 'received'
+            '_id' => '300002',
+            'organisation_id' => '10001',
+            'vehicle_id' => '120001',
+            'queued_at' => '2016-06-09T21:00:10+10:00',
+            'sent_at' => '2016-06-09T21:01:10+10:00',
+            'sid' => '2222222',
+            'sid_response' => '9999999',
+            'latitude' => -34.01387,
+            'longitude' => 150.8434242,
+            'course' => 275.00,
+            'speed' => 40.3304,
+            'datetime' => '2016-07-02T21:15:43+10:00',
+            'status' => 'received'
     ]
 
     ];
@@ -306,9 +306,10 @@ Trait TestTrait
         foreach ($fixture as $key => $value) {
             if (is_array($value)) {
                 $fixture[$key] = $this->setMongoDates($value);
-            } else if (in_array($key, ['queued_at', 'sent_at', 'received_at', 'datetime'])) {
-                $mongoDate = $this->iso8601LocalStringToMongoDate($value);
-                $fixture[$key] = $mongoDate;
+            } else if (in_array($key, ['queued_at', 'sent_at', 'received_at', 'delivered_at', 'datetime'])) {
+                $fixture[$key] = ($value instanceof \DateTime)
+                    ? $this->localDateTimeToMongoUTCDateTime($value)
+                    : $this->iso8601LocalStringToMongoDate($value);
             }
         }
         return $fixture;
@@ -326,9 +327,7 @@ Trait TestTrait
     protected function iso8601LocalStringToMongoUTCDatetime($value)
     {
         $dateTime = new \DateTime($value);
-        $dateTime->setTimezone(new \DateTimeZone('UTC'));
-        $mongoDate = new \MongoDB\BSON\UTCDatetime(round($dateTime->getTimestamp() * 1000));
-        return $mongoDate;
+        return $this->localDateTimeToMongoUTCDateTime($dateTime);
     }
 
 
@@ -370,6 +369,17 @@ Trait TestTrait
         ));
 
         return $this;
+    }
+
+    /**
+     * @param $dateTime
+     * @return \MongoDB\BSON\UTCDatetime
+     */
+    protected function localDateTimeToMongoUTCDateTime($dateTime)
+    {
+        $dateTime->setTimezone(new \DateTimeZone('UTC'));
+        $mongoDate = new \MongoDB\BSON\UTCDatetime(round($dateTime->getTimestamp() * 1000));
+        return $mongoDate;
     }
 
 }

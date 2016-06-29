@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Log;
 use MongoDB\BSON\UTCDatetime;
-use MongoDB\BSON\UTDDateTime;
+use Illuminate\Support\Facades\Redis;
 use Response;
 use Services_Twilio_Twiml;
 use TruckerTracker\Driver;
@@ -56,13 +56,21 @@ class TwilioIncomingController extends Controller
         $from = $request->From;
         $twiml = new Services_Twilio_Twiml();;
         if ($driver = Driver::where('mobile_phone_number', $from)->first()) {
+            Log::debug(sprintf("text message received from driver: %s" , $driver->first_name.' '.$driver->last_name));
             $org = $driver->organisation;
-            $this->storeMessageFromDriver($request, $org, $driver);
+            $message = $this->storeMessageFromDriver($request, $org, $driver);
+            Redis::publish('trucker-tracker.'.$org->_id, $message->toJson());
+            Log::debug('published message');
             if ($org->auto_reply)
                 $twiml->message('Thank you ' . $driver['first_name'] . ', message received');
         } else if ($vehicle = Vehicle::where('mobile_phone_number', $from)->first()) {
+            Log::debug(sprintf("location text message received from vehicle: %s" , $vehicle->registration_number));
             $location = $this->storeVehicleLocation($request, $vehicle);
-            event(new LocationUpdate($location));
+            if ($location) {
+                $org = $vehicle->organisation;
+                Redis::publish('trucker-tracker.'.$org->_id, $location->toJson());
+                Log::debug('published location');
+            }
         } else {
             Log::info('ignoring message: unknown number: ' . $from);
         }
@@ -96,21 +104,36 @@ class TwilioIncomingController extends Controller
 
             if ($message = $org->messages()
                 ->where('sid', $sid)
-                ->first()
-            ) {
-                Log::info("message: " . $sid);
+                ->first()) {
+
+                Log::debug(sprintf("status update (%s) received for message: %s" ,$status, $sid));
+                $message[$status.'_at'] = new \DateTime();
                 $message->update(['status' => $status]);
+                $message->load('driver');
+                $pubMsg = [
+                    'event'=>'LocationUpdate',
+                    'data'=>$message
+                ];
+                //Redis::publish('trucker-tracker.'.$org->_id, $message->toJson());
+                //Log::debug('published message');
+
             } elseif ($location = $org->locations()
                 ->where('sid', $sid)
-                ->first()
-            ) {
-                Log::info("location: " . $sid);
+                ->first()) {
+
+                Log::debug(sprintf("status update (%s) received for location: %s" ,$status, $sid));
+                $location[$status.'_at'] = new \DateTime();
                 $location->update(['status' => $status]);
-                event(new LocationUpdate($location));
+                $location->load('vehicle');
+                //Redis::publish('trucker-tracker.'.$org->_id, $location->toJson());
+                //Log::debug('published location');
+
             }
 
         } catch (ModelNotFoundException $e) {
             Log::info("received a message status update for a message we didn't send");
+        } catch (\Exception $e) {
+            throw $e;
         }
 
         return Response::json(['status' => 'received']);
@@ -141,6 +164,8 @@ class TwilioIncomingController extends Controller
         ]);
         $org->messages()->save($message);
         $driver->messages()->save($message);
+        $message->load('driver');
+        return $message;
     }
 
     /**
@@ -150,22 +175,27 @@ class TwilioIncomingController extends Controller
     private function storeVehicleLocation($request, $vehicle)
     {
 
-        $location = $vehicle->locations()->where('status', '<>', 'received')->orderby('sent_at', 'desc')->first();
-        $org = $vehicle->organisation;
+        $location = $vehicle->locations()->where('status', '<>', 'received')->orderby('changed_at', 'asc')->first();
+        if ($location){
+            $org = $vehicle->organisation;
+            $location->load('vehicle');
 
-        $messageText = $request->Body;
-        $data = $this->trackerData($messageText);
+            $messageText = $request->Body;
+            $data = $this->trackerData($messageText);
 
-        $location->update(
-            [
-                'sid_response' => $request->MessageSid,
-                'latitude' => $this->latLonToFloat($data['Lat']),
-                'longitude' => $this->latLonToFloat($data['Lon']),
-                'course' => floatval($data['Course']),
-                'speed' => floatval($data['Speed']),
-                'datetime' => $this->readTrackerDatetime($data['DateTime'], $org),
-                'status' => 'received'
-            ]);
+            $location->update(
+                [
+                    'sid_response' => $request->MessageSid,
+                    'latitude' => $this->latLonToFloat($data['Lat']),
+                    'longitude' => $this->latLonToFloat($data['Lon']),
+                    'course' => floatval($data['Course']),
+                    'speed' => floatval($data['Speed']),
+                    'datetime' => $this->readTrackerDatetime($data['DateTime'], $org),
+                    'status' => 'received',
+                    'received_at' => new \DateTime()
+                ]);
+        }
+
         return $location;
     }
 
@@ -173,7 +203,7 @@ class TwilioIncomingController extends Controller
     {
         $datetime = \DateTime::createFromFormat('y -m -d H:i:s', $DateTime);
         $datetime->setTimezone(new \DateTimeZone($org->timezone));
-        return $datetime; // new UTCDatetime(floor($datetime->getTimestamp() * 1000));
+        return $datetime;
     }
 
     private function trackerData($messageText)

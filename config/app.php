@@ -258,13 +258,5 @@ return [
     */
     'default_tracker_password' => env('DEFAULT_TRACKER_PASSWORD','666666'),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Message Broadcast Server URL
-    |--------------------------------------------------------------------------
-    |
-    | We use a Socket.io server (node.js) to get broadcast evens to connected 
-    | clients. This is the URL we put in the connecting javascript in the view.
-    */    
-    'broadcast_server_url' => env('BROADCAST_SERVER_URL','http://localhost:3000'),
+
 ];

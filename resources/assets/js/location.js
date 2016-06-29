@@ -3,18 +3,49 @@
  */
 $(document).ready(function () {
 
-    if (truckertracker.channel){
-        truckertracker.socket.on(truckertracker.channel + ':\\TruckerTracker\\Events\\LocationUpdate', function(data){
-            var loc = $('#location' + data._id)
-            loc.find('button.open-modal-view-location').val(data._id);
-            loc.find('button.delete-location').val(data._id);
-            loc.find('span.registration_number').text(data.vehicle.registration_number);
+    function update_location_line(data){
+        var loc = $('#location' + data._id);
+        loc.find('span.sent_at').text(data.queued_at);
+        if (data.sent_at)
             loc.find('span.sent_at').text(data.sent_at);
-            loc.find('span.status').text(data.status);
-            loc.show();
-        });
+        if (data.delivered_at)
+            loc.find('span.sent_at').text(data.delivered_at);
+        if (data.received_at)
+            loc.find('span.sent_at').text(data.received_at);
+        loc.find('span.status').text(data.status);
     }
 
+    // var sse = $.SSE('/location/updates/subscribe', {
+    //     onMessage: function(e){
+    //         console.log("Message");
+    //         console.log(e);
+    //         //update_location_line("Message");
+    //      }
+    // });
+
+    if (subscribe_sse){
+
+        (function poll(){
+            setTimeout(function(){
+                $.ajax({ url: "/location/updates/subscribe", success: function(data){
+                    console.log(data);
+                    poll();
+                }, dataType: "json"});
+            }, 3000);
+        })();
+
+        // locationUpdatesEventSource = new EventSource('/location/updates/subscribe');
+        // locationUpdatesEventSource.addEventListener("message", function(e) {
+        //     console.log(e.data);
+        //     update_location_line(e.data);
+        // }, false);
+        //
+        // $(window).unload(function() {
+        //     locationUpdatesEventSource.close();
+        // });
+
+        //sse.start();
+    }
 
     //display modal form viewing a location
     function setup_view_location() {
@@ -147,5 +178,7 @@ $(document).ready(function () {
             }
         });
     });
+
+
 
 });

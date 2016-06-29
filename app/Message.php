@@ -27,6 +27,7 @@ class Message extends Moloquent
             'from',
             'queued_at',
             'sent_at',
+            'delivered_at',
             'status',
             'organisation_id',
             'driver_id',
@@ -37,7 +38,7 @@ class Message extends Moloquent
 
     protected $hidden = ['organisation'];
 
-    protected $dates = ['sent_at','queued_at', 'received_at'];
+    protected $dates = ['queued_at','sent_at','delivered_at','received_at'];
 
     public function driver(){
         return $this->belongsTo(Driver::class,'driver_id','_id');

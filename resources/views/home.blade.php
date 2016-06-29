@@ -29,14 +29,13 @@
         </div>
     </div>
     <meta name="_token" content="{!! csrf_token() !!}"/>
-    @if($org)
-        <script>
-            truckertracker = {
-                socket: io('{{ config('broadcast-server-url','http://localhost:3000') }}'),
-                channel: 'trucker-tracker.{{$org->_id}}'
-            }
-        </script>
-    @endif
-    <script src="{{ elixir('js/home.js') }}"></script>
+    <script>
+        @if($org && $user->can('view-location') )
+            subscribe_sse = true;
+        @else
+            subscribe_sse = false;
+        @endif
+    </script>
+    <script src="{{ asset('js/home.js') }}"></script>
 
 @endsection
