@@ -18,38 +18,38 @@ $(document).ready(function () {
         loc.find('span.status').text(data.status);
     }
 
-    // var sse = $.SSE('/location/updates/subscribe', {
-    //     onMessage: function(e){
-    //         console.log("Message");
-    //         console.log(e);
-    //         //update_location_line("Message");
-    //      }
-    // });
+    var sse = $.SSE('/location/updates/subscribe', {
+        onMessage: function(e){
+            console.log("Message");
+            console.log(e);
+            update_location_line("Message");
+         }
+    });
 
     if (subscribe_sse){
 
-        (function poll(){
-            setTimeout(function(){
-                $.ajax({
-                    type: "GET",
-                    url: "/location/updates/subscribe",
-                    dataType: "json",
-                    headers: {
-                        'X-Accel-Buffering':'no'
-                    },
-                    success: function(data){
-                        console.log(data);
-                        update_location_line(data);
-                    },
-                    error: function(data){
-                        console.log(data);
-                    },
-                    complete: function(data) {
-                        poll();
-                    }
-                });
-            }, 3000);
-        })();
+        //(function poll(){
+        //     setTimeout(function(){
+        //         $.ajax({
+        //             type: "GET",
+        //             url: "/location/updates/subscribe",
+        //             dataType: "json",
+        //             headers: {
+        //                 'X-Accel-Buffering':'no'
+        //             },
+        //             success: function(data){
+        //                 console.log(data);
+        //                 update_location_line(data);
+        //             },
+        //             error: function(data){
+        //                 console.log(data);
+        //             },
+        //             complete: function(data) {
+        //                 poll();
+        //             }
+        //         });
+        //     }, 3000);
+        // })();
 
         // locationUpdatesEventSource = new EventSource('/location/updates/subscribe');
         // locationUpdatesEventSource.addEventListener("message", function(e) {
@@ -61,7 +61,7 @@ $(document).ready(function () {
         //     locationUpdatesEventSource.close();
         // });
 
-        //sse.start();
+        sse.start();
     }
 
     //display modal form viewing a location
