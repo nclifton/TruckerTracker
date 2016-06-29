@@ -27,10 +27,21 @@ $(document).ready(function () {
 
         (function poll(){
             setTimeout(function(){
-                $.ajax({ url: "/location/updates/subscribe", success: function(data){
-                    console.log(data);
-                    poll();
-                }, dataType: "json"});
+                $.ajax({
+                    type: "GET",
+                    url: "/location/updates/subscribe",
+                    dataType: "json",
+                    success: function(data){
+                        console.log(data);
+                        update_location_line(data);
+                    },
+                    error: function(data){
+                        console.log(data);
+                    },
+                    always: function(data) {
+                        poll();
+                    }
+                });
             }, 3000);
         })();
 
