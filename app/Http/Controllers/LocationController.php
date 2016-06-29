@@ -78,6 +78,7 @@ class LocationController extends Controller
                 }
                 $after = $nextAfter;
                 sleep(4);
+                Log::debug('awake and looking for location updates ');
                 $locations = Location::where('status','<>','queued')
                     ->whereDate('updated_at', '>=', $after);
             }
