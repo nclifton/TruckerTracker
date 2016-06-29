@@ -17,3 +17,4 @@ Homestead.json
 /public/css/jquery-ui.css
 /.idea/workspace.xml
 /redis-stable
+/resources/assets/bower/
