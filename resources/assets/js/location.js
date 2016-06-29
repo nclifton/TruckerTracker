@@ -10,8 +10,11 @@ $(document).ready(function () {
             loc.find('span.sent_at').text(data.sent_at);
         if (data.delivered_at)
             loc.find('span.sent_at').text(data.delivered_at);
-        if (data.received_at)
+        if (data.received_at) {
             loc.find('span.sent_at').text(data.received_at);
+            loc.find('button.open-modal-view-location').val(data._id);
+            loc.find('button.open-modal-view-location').show();
+        }
         loc.find('span.status').text(data.status);
     }
 
@@ -31,6 +34,9 @@ $(document).ready(function () {
                     type: "GET",
                     url: "/location/updates/subscribe",
                     dataType: "json",
+                    headers: {
+                        'X-Accel-Buffering':'no'
+                    },
                     success: function(data){
                         console.log(data);
                         update_location_line(data);
@@ -38,7 +44,7 @@ $(document).ready(function () {
                     error: function(data){
                         console.log(data);
                     },
-                    always: function(data) {
+                    complete: function(data) {
                         poll();
                     }
                 });
