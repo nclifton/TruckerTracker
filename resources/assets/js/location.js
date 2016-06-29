@@ -19,11 +19,26 @@ $(document).ready(function () {
     }
 
     var sse = $.SSE('/location/updates/subscribe', {
+        onOpen: function(e) {
+            console.log("SSE Open");
+        },
+        onEnd: function(e) {
+            console.log("SSE Closed");
+        },
+        onError: function(e) {
+            console.log(e);
+        },
         onMessage: function(e){
             console.log("Message");
             console.log(e);
             update_location_line("Message");
-         }
+         },
+        events: {
+            locationEvent: function(e,data) {
+                console.log(e);
+                update_location_line(data);
+            }
+        }
     });
 
     if (subscribe_sse){
