@@ -19,22 +19,22 @@ $(document).ready(function () {
     }
 
     var sse = $.SSE('/location/updates/subscribe', {
-        onopen: function(e) {
+        onOpen: function(e) {
             console.log("SSE Open");
         },
-        onend: function(e) {
+        onEnd: function(e) {
             console.log("SSE Closed");
         },
-        onerror: function(e) {
+        onError: function(e) {
             console.log(e);
         },
-        onmessage: function(e){
+        onMessage: function(e){
             console.log("Message");
             console.log(e);
             update_location_line("Message");
          },
         events: {
-            locationupdate: function(e,data) {
+            onLocationUpdate: function(e,data) {
                 console.log(e);
                 update_location_line(data);
             }
