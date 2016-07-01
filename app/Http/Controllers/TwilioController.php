@@ -29,17 +29,13 @@ use MongoDB\BSON\UTDDateTime;
  */
 class TwilioController extends Controller
 {
-    protected $twilio;
-
-
 
     /**
      * Create a new controller instance.
      * @param TwilioInterface $twilio
      */
-    public function __construct(\TruckerTracker\Twilio\TwilioInterface $twilio)
+    public function __construct()
     {
-        $this->twilio = $twilio;
         $this->middleware('auth');
     }
 
@@ -118,10 +114,10 @@ class TwilioController extends Controller
     private function text($sendToNumber, $message_text, $org)
     {
 
-        $this->twilio->setSid($org->twilio_account_sid);
-        $this->twilio->setToken($org->twilio_auth_token);
-        $this->twilio->setFrom($org->twilio_phone_number);
-        $client = $this->twilio->getTwilio();
+        Twilio::setSid($org->twilio_account_sid);
+        Twilio::setToken($org->twilio_auth_token);
+        Twilio::setFrom($org->twilio_phone_number);
+        $client = Twilio::getTwilio();
 
         $from = $org->twilio_phone_number;
         $statusCallbackUrl = TwilioHelper::MessageStatusCallbackUrl($org);

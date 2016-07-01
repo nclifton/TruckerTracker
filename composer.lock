@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "40a4fb923270822edda354578deaf1d2",
-    "content-hash": "5d7bb7656d13519648abfd45cff970a7",
+    "hash": "6458c63b22a01382ed1b45b1ccaec37b",
+    "content-hash": "bb606dcc0b50f7f6511f350d15e1a5a9",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -715,17 +715,73 @@
             "time": "2016-02-29 04:36:50"
         },
         {
+            "name": "kozz/laravel-guzzle-provider",
+            "version": "5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/urakozz/laravel-guzzle.git",
+                "reference": "5a159ffc92d4402e9f87d7b86d03229fc3f4e6f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/urakozz/laravel-guzzle/zipball/5a159ffc92d4402e9f87d7b86d03229fc3f4e6f6",
+                "reference": "5a159ffc92d4402e9f87d7b86d03229fc3f4e6f6",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~5.0",
+                "illuminate/support": "~5.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kozz\\Laravel\\": "src/",
+                    "Kozz\\Tests\\Laravel\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hongbo Tang",
+                    "email": "thbourlove@gmail.com"
+                },
+                {
+                    "name": "Yury Kozyrev",
+                    "email": "urakozz@gmail.com"
+                }
+            ],
+            "description": "Guzzle Service Provider for Laravel 5",
+            "keywords": [
+                "Guzzle",
+                "http",
+                "laravel"
+            ],
+            "time": "2015-04-16 11:25:40"
+        },
+        {
             "name": "laravel/framework",
             "version": "5.2.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "bb4021bc5bfe20fed434ee6bdde629b34cc7d15f"
+                "reference": "bf987ea5306555633a9d5e761ddf6adf069117fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/bb4021bc5bfe20fed434ee6bdde629b34cc7d15f",
-                "reference": "bb4021bc5bfe20fed434ee6bdde629b34cc7d15f",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/bf987ea5306555633a9d5e761ddf6adf069117fa",
+                "reference": "bf987ea5306555633a9d5e761ddf6adf069117fa",
                 "shasum": ""
             },
             "require": {
@@ -842,7 +898,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-06-29 01:58:50"
+            "time": "2016-06-30 12:25:09"
         },
         {
             "name": "laravelcollective/html",
@@ -1968,12 +2024,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "212037feac15902e216e4457f20c651d607ebf40"
+                "reference": "e2a8f7793555c3c93fccda79c9a98d70bb209231"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/212037feac15902e216e4457f20c651d607ebf40",
-                "reference": "212037feac15902e216e4457f20c651d607ebf40",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/e2a8f7793555c3c93fccda79c9a98d70bb209231",
+                "reference": "e2a8f7793555c3c93fccda79c9a98d70bb209231",
                 "shasum": ""
             },
             "require": {
@@ -1981,7 +2037,7 @@
                 "psr/log": "~1.0",
                 "symfony/debug": "~2.8|~3.0",
                 "symfony/event-dispatcher": "~2.8|~3.0",
-                "symfony/http-foundation": "~2.8|~3.0"
+                "symfony/http-foundation": "~2.8.8|~3.0.8|~3.1.2|~3.2"
             },
             "conflict": {
                 "symfony/config": "<2.8"
@@ -2042,7 +2098,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-29 07:02:21"
+            "time": "2016-06-30 09:37:32"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -2050,12 +2106,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "f9bc5072e11b2ad15ea55e0f4171cc870dc33a1d"
+                "reference": "8a6bdec191138e01c92ae026e5aacb7b3e66267d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/f9bc5072e11b2ad15ea55e0f4171cc870dc33a1d",
-                "reference": "f9bc5072e11b2ad15ea55e0f4171cc870dc33a1d",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/8a6bdec191138e01c92ae026e5aacb7b3e66267d",
+                "reference": "8a6bdec191138e01c92ae026e5aacb7b3e66267d",
                 "shasum": ""
             },
             "require": {
@@ -2101,7 +2157,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-06-07 08:38:42"
+            "time": "2016-06-29 14:58:48"
         },
         {
             "name": "symfony/polyfill-php56",
@@ -2817,61 +2873,17 @@
             "time": "2015-05-05 21:14:57"
         },
         {
-            "name": "facebook/webdriver",
-            "version": "1.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/facebook/php-webdriver.git",
-                "reference": "0b889d7de7461439f8a3bbcca46e0f696cb27986"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/facebook/php-webdriver/zipball/0b889d7de7461439f8a3bbcca46e0f696cb27986",
-                "reference": "0b889d7de7461439f8a3bbcca46e0f696cb27986",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.3.19"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.6.*"
-            },
-            "suggest": {
-                "phpdocumentor/phpdocumentor": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Facebook\\WebDriver\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "description": "A PHP client for WebDriver",
-            "homepage": "https://github.com/facebook/php-webdriver",
-            "keywords": [
-                "facebook",
-                "php",
-                "selenium",
-                "webdriver"
-            ],
-            "time": "2016-06-04 00:02:34"
-        },
-        {
             "name": "fzaninotto/faker",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "7a98043c1c985612ffefbe8a5f0ec087808a1d19"
+                "reference": "f23e41880c6dd611a125bca584c95a60214bfe48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/7a98043c1c985612ffefbe8a5f0ec087808a1d19",
-                "reference": "7a98043c1c985612ffefbe8a5f0ec087808a1d19",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/f23e41880c6dd611a125bca584c95a60214bfe48",
+                "reference": "f23e41880c6dd611a125bca584c95a60214bfe48",
                 "shasum": ""
             },
             "require": {
@@ -2908,7 +2920,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2016-06-27 12:50:43"
+            "time": "2016-06-30 12:51:34"
         },
         {
             "name": "hamcrest/hamcrest-php",

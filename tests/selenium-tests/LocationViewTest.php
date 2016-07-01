@@ -17,9 +17,9 @@ class LocationViewTest extends IntegratedTestCase
         return [
             'users' => $this->fixtureUserset,
             'password_resets' => [],
-            'organisations' => $this->orgset,
-            'drivers' => $this->driverset,
-            'vehicles' => $this->vehicleset,
+            'organisations' => $this->orgSet,
+            'drivers' => $this->driverSet,
+            'vehicles' => $this->vehicleSet,
             'messages' => $this->messageSet,
             'locations' => $this->viewLocationSet
         ];
@@ -37,9 +37,9 @@ class LocationViewTest extends IntegratedTestCase
 
         // Arrange
         $this->login();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
         $loc = $this->viewLocationSet[0];
-        $vehicle = $this->vehicleset[0];
+        $vehicle = $this->vehicleSet[0];
         $expectedDatetime = (new \DateTime($loc['datetime']))->format($org['datetime_format']);
 
         // Act

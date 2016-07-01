@@ -12,9 +12,9 @@ class HomePageAppearanceTest extends IntegratedTestCase
         return [
             'users' => $this->fixtureUserset,
             'password_resets' => [],
-            'organisations' => $this->orgset,
-            'drivers' => $this->driverset,
-            'vehicles' => $this->vehicleset,
+            'organisations' => $this->orgSet,
+            'drivers' => $this->driverSet,
+            'vehicles' => $this->vehicleSet,
             'messages' => $this->messageSet,
             'locations' => $this->locationSet
         ];
@@ -28,7 +28,7 @@ class HomePageAppearanceTest extends IntegratedTestCase
 
         // Arrange
         $message = $this->messageSet[0];
-        $driver = $this->driverset[0];
+        $driver = $this->driverSet[0];
 
         // Act
         $this->login();
@@ -37,7 +37,7 @@ class HomePageAppearanceTest extends IntegratedTestCase
 
         $results = $this->getMongoConnection()->collection('locations')->find(
             [
-                'organisation_id' => $this->orgset[0]['_id'],
+                'organisation_id' => $this->orgSet[0]['_id'],
                 'status' => 'sent'
             ]);
         $id = null;
@@ -68,7 +68,7 @@ class HomePageAppearanceTest extends IntegratedTestCase
                 ->equalTo('sent'));
         $dateTime = new \DateTime($message['sent_at']);
         $dateTime->setTimezone(new \DateTimezone('Australia/Sydney'));
-        $dateString = $dateTime->format($this->orgset[0]['datetime_format']);
+        $dateString = $dateTime->format($this->orgSet[0]['datetime_format']);
         $this
             ->assertThat($this
                 ->byCssSelector('#message'.$message['_id'].' .sent_at')

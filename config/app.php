@@ -178,7 +178,12 @@ return [
         /*
          * SSE
          */
-        \Sse\Laravel\SseServiceProvider::class
+        Sse\Laravel\SseServiceProvider::class,
+
+        /*
+         * Guzzle
+         */
+        Kozz\Laravel\Providers\Guzzle::class
 
     ],
 
@@ -232,7 +237,9 @@ return [
 
         'Twilio' => TruckerTracker\Twilio\Facade::class,
 
-        'SSE' => \Sse\Laravel\Facade::class
+        'SSE' => Sse\Laravel\Facade\SSE::class,
+
+        'Guzzle' => Kozz\Laravel\Facades\Guzzle::class
 
     ],
 

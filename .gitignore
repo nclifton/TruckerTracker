@@ -18,3 +18,4 @@ Homestead.json
 /.idea/workspace.xml
 /redis-stable
 /resources/assets/bower/
+/nginx/

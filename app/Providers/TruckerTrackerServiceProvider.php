@@ -25,7 +25,7 @@ class TruckerTrackerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(TwilioInterface::class, function () {
+        $this->app->singleton('twilio', function () {
             return $this->app->make(Twilio::class);
         });
 

@@ -36,7 +36,14 @@ class Message extends Moloquent
             'received_at'
         ];
 
-    protected $hidden = ['organisation'];
+    protected $hidden = [
+        'organisation',
+        'organisation_id',
+        'driver_id',
+        'created_at',
+        'updated_at',
+        'sid'
+    ];
 
     protected $dates = ['queued_at','sent_at','delivered_at','received_at'];
 
@@ -51,6 +58,12 @@ class Message extends Moloquent
         return $this->formatDate($value,$this->organisation);
     }
     public function getQueuedAtAttribute($value){
+        return $this->formatDate($value,$this->organisation);
+    }
+    public function getDeliveredAtAttribute($value){
+        return $this->formatDate($value,$this->organisation);
+    }
+    public function getReceivedAtAttribute($value){
         return $this->formatDate($value,$this->organisation);
     }
 

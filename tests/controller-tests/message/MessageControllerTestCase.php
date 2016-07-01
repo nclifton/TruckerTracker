@@ -36,8 +36,8 @@ class MessageControllerTestCase extends TestCase
         return [
             'users' => [],
             'password_resets' => [],
-            'organisations' => $this->orgset,
-            'drivers' => $this->driverset,
+            'organisations' => $this->orgSet,
+            'drivers' => $this->driverSet,
             'vehicles' => [],
             'messages' => $this->messageSet,
             'locations' => []

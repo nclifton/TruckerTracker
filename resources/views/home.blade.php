@@ -32,6 +32,7 @@
     <script>
         @if($org && $user->can('view-location') )
             subscribe_sse = true;
+            organisation_id = '{{$org->_id}}';
         @else
             subscribe_sse = false;
         @endif

@@ -30,7 +30,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         return [
             'users' => [],
             'password_resets' => [],
-            'organisations' => $this->orgset,
+            'organisations' => $this->orgSet,
             'drivers' => [],
             'vehicles' => []
         ];
@@ -46,7 +46,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $submittedVehicle = $this->bind_vehicle($v);
         unset($submittedVehicle['tracker_password']);
 
@@ -73,7 +73,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
 
         // Act
 
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $this->actingAs($user)->json('post', '/vehicles', $this->bind_vehicle($v));
 
         // Assert
@@ -91,7 +91,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
 
         // Act
 
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $this->actingAs($user)->json('post', '/vehicles', $this->bind_vehicle($v));
 
         // Assert
@@ -106,7 +106,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function putDriverFirstUserUpdates()
     {
         // Arrange
-        $v2 = $this->vehicleset[1];
+        $v2 = $this->vehicleSet[1];
         $submitedVehicle = $this->bind_vehicle($v2);
         unset($submitedVehicle['tracker_password']);
 
@@ -130,7 +130,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function putDriverTwilioUserFailsUnauthorised()
     {
         // Arrange
-        $v2 = $this->vehicleset[1];
+        $v2 = $this->vehicleSet[1];
         $submitedVehicle = $this->bind_vehicle($v2);
         unset($submitedVehicle['tracker_password']);
 
@@ -152,7 +152,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function putDriverOpsUserFailsUnauthorised()
     {
         // Arrange
-        $v2 = $this->vehicleset[1];
+        $v2 = $this->vehicleSet[1];
         $user = $this->user();
         $submitedVehicle = $this->bind_vehicle($v2);
         unset($submitedVehicle['tracker_password']);
@@ -174,7 +174,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function getDriverAsFirstUserOk()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $vehicle = $this->bind_vehicle($v);
         unset($vehicle['tracker_password']);
 
@@ -218,7 +218,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function getDriverAsOpsUserOk()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $vehicle = $this->bind_vehicle($v);
         unset($vehicle['tracker_password']);
 
@@ -241,7 +241,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function testRequiredValidationFail()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $v['registration_number'] = '';
         $v['mobile_phone_number'] = '';
         $user = $this->firstUser();
@@ -268,7 +268,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     {
         // Arrange
         $firstUser = $this->addVehicleAddsVehicle();
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $v['registration_number'] = '';
         $v['mobile_phone_number'] = '';
 
@@ -295,7 +295,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function testOptionalValidationPass()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $v['tracker_imei_number'] = '';
         $vehicle = $this->bind_vehicle($v);
         unset($vehicle['tracker_password']);
@@ -308,7 +308,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         $this->seeJson($vehicle);
         $this->seeJsonStructure(['_id','registration_number','mobile_phone_number','tracker_imei_number']);
         $this->seeInDatabase('vehicles',
-            array_merge($this->bind_vehicle($v),['organisation_id'=>$this->orgset[0]['_id']]));
+            array_merge($this->bind_vehicle($v),['organisation_id'=>$this->orgSet[0]['_id']]));
 
     }
 
@@ -320,7 +320,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function testUniqueRegistrationMobilePhoneImeiOrganisationValidationFail()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $firstUser = $this->firstUser();
 
         // Act
@@ -346,9 +346,9 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     {
         // Arrange
         $user1=$this->firstUser();
-        $org2 = Organisation::where('_id',$this->orgset[1]['_id'])->firstOrFail();
+        $org2 = Organisation::where('_id',$this->orgSet[1]['_id'])->firstOrFail();
         $user2 = $this->firstUser($org2);
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $vehicle = $this->bind_vehicle($v);
         unset($vehicle['tracker_password']);
 
@@ -360,7 +360,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         $this->assertResponseOk();
         $this->seeJson($vehicle);
         $this->seeJsonStructure(['_id','registration_number','mobile_phone_number','tracker_imei_number']);
-        $this->seeInDatabase('vehicles',array_merge($this->bind_vehicle($v),['organisation_id'=>$this->orgset[0]['_id']]));
+        $this->seeInDatabase('vehicles',array_merge($this->bind_vehicle($v),['organisation_id'=>$this->orgSet[0]['_id']]));
 
     }
 
@@ -374,7 +374,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     {
         // Arrange
         $firstUser = $this->firstUser();
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $v['mobile_phone_number'] = '04X9140683';
 
         // Act
@@ -398,7 +398,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function validateTooLongPhoneNumberFail()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $v['mobile_phone_number'] = '041914068300';
         $firstUser = $this->firstUser();
 
@@ -422,7 +422,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function validateTooShortPhoneNumberFail()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $v['mobile_phone_number'] = '914068300';
         $firstUser = $this->firstUser();
 
@@ -447,7 +447,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function validateRegoBadCharsFail()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $v['registration_number'] = 'BB-66-XX';
         $firstUser = $this->firstUser();
 
@@ -470,7 +470,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function validateShortRegoNumberFail()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $v['registration_number'] = '10000';
         $firstUser = $this->firstUser();
 
@@ -494,7 +494,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function validateLongRegoNumberFail()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $v['registration_number'] = '12345678';
         $user = $this->firstUser();
 
@@ -518,7 +518,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function validateImeiNumberShortFail()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $v['tracker_imei_number'] = '12345678901234';
         $user = $this->firstUser();
 
@@ -542,7 +542,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function validateImeiNumberLongFail()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $v['tracker_imei_number'] = '123456789012345678';
         $user = $this->firstUser();
 
@@ -566,7 +566,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
     public function validateImeiNumberNonDigitFail()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $v['tracker_imei_number'] = 'x234567891234567';
         $user = $this->firstUser();
 
@@ -590,7 +590,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
  */
     public function deleteAsFisrtUserOk(){
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $user = $this->firstUser();
 
         // Act
@@ -611,7 +611,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
      */
     public function deleteAsTwilioUserFailsUnauthorised(){
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         
         // Act
         $this->addVehicleAddsVehicle();
@@ -630,7 +630,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
      */
     public function deleteAsOpsUserFailsUnauthorised(){
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
 
         // Act
         $this->addVehicleAddsVehicle();
@@ -663,7 +663,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
      */
     protected function bind_vehicle_Org_id($v)
     {
-        return array_merge ($this->bind_vehicle($v),['organisation_id' => $this->orgset[0]['_id']]);
+        return array_merge ($this->bind_vehicle($v),['organisation_id' => $this->orgSet[0]['_id']]);
     }
 
     /**

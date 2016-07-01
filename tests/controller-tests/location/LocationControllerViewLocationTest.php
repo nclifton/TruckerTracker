@@ -26,16 +26,21 @@ class LocationControllerViewLocationTest extends LocationControllerTestCase
     public function suppliesSpecificVehicleLocationDataPoint()
     {
         // Arrange
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
         $user = $this->user();
         $loc = $this->viewLocationSet[0];
-        $vehicle = $this->vehicleset[0];
+        $vehicle = $this->vehicleSet[0];
         $expectedLoc = $loc;
         unset($expectedLoc['organisation_id']);
         unset($expectedLoc['vehicle_id']);
+        unset($expectedLoc['sid']);
+
         $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format($org['datetime_format']);
         $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format($org['datetime_format']);
         $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format($org['datetime_format']);
+        $expectedLoc['delivered_at'] = (new \DateTime($expectedLoc['delivered_at']))->format($org['datetime_format']);
+        $expectedLoc['received_at'] = (new \DateTime($expectedLoc['received_at']))->format($org['datetime_format']);
+
         $vehicle = array_filter($vehicle, function($key) {
             return !in_array($key,['mobile_phone_number','tracker_imei_number','tracker_password','organisation_id']);
         },ARRAY_FILTER_USE_KEY);

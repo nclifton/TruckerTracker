@@ -36,9 +36,9 @@ class LocationControllerTestCase extends TestCase
         return [
             'users' => [],
             'password_resets' => [],
-            'organisations' => $this->orgset,
+            'organisations' => $this->orgSet,
             'drivers' => [],
-            'vehicles' => $this->vehicleset,
+            'vehicles' => $this->vehicleSet,
             'messages' => [],
             'locations' => $this->viewLocationSet
         ];

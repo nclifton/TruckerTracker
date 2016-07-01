@@ -13,21 +13,16 @@
 
 
 Route::group(['middleware'=> ['api']], function () {
-    Route::get('/incoming', 'TwilioIncomingController@voice');
     Route::post('/incoming', 'TwilioIncomingController@voice');
+    Route::get('/incoming', 'TwilioIncomingController@voice');
     Route::post('/incoming/message/status', 'TwilioIncomingController@messageStatus');
     Route::get('/incoming/message/status', 'TwilioIncomingController@messageStatus');
+    Route::post('/incoming/location/status', 'TwilioIncomingController@messageStatus');
+    Route::get('/incoming/location/status', 'TwilioIncomingController@messageStatus');
     Route::post('/incoming/message', 'TwilioIncomingController@message');
     Route::get('/incoming/message', 'TwilioIncomingController@message');
-    Route::get('/location/updates/subscribe',       'LocationController@subscribe');
-});
-
-Route::group(['middleware'=> ['none']], function () {
-    Route::get('/tracker','TrackerController@storeLocation');
-    Route::post('/','TrackerController@storeLocation');
-    Route::get('publish', function () {
-        Redis::publish('test-channel', json_encode(['foo' => 'bar'])); 
-    });
+    Route::post('/incoming/location', 'TwilioIncomingController@message');
+    Route::get('/incoming/location', 'TwilioIncomingController@message');
 });
 
 Route::get('/', function () {

@@ -10,6 +10,9 @@
  **/
 namespace TruckerTracker;
 
+use DB;
+use Faker\Provider\DateTime;
+use Guzzle;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use TruckerTracker\Events\LocationUpdate;
 use TruckerTracker\Http\Controllers\LocationController;
@@ -19,6 +22,8 @@ require_once __DIR__ . '/TwilioControllerTestCase.php';
 
 class TwilioControllerIncomingTest extends TwilioControllerTestCase
 {
+    protected $datetime_format;
+    protected $allowedDateTimeDiffInSeconds = 5;
 
     /**
      * @before
@@ -33,9 +38,9 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         return [
             'users' => [],
             'password_resets' => [],
-            'organisations' => $this->orgset,
-            'drivers' => $this->driverset,
-            'vehicles' => $this->vehicleset,
+            'organisations' => $this->orgSet,
+            'drivers' => $this->driverSet,
+            'vehicles' => $this->vehicleSet,
             'messages' => $this->messageSet,
             'locations' => $this->locationSet
         ];
@@ -63,14 +68,37 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
      * 
      * @test
      */
-    public function updateMessageStatus()
+    public function update_message_status()
     {
 
         // Arrange
         $user= $this->twilioUser();
         $message = $this->messageSet[0];
-        $driver = $this->driverset[0];
-        $org = $this->orgset[0];
+        $driver = $this->driverSet[0];
+        $org = $this->orgSet[0];
+        $this->datetime_format = $org['datetime_format'];
+        $expectedUrl = 'http://homestead.app/pub/messages'.$org['_id'];
+        $expectedMessage = $message;
+        $expectedMessage['status']='delivered';
+        unset($expectedMessage['organisation_id']);
+        unset($expectedMessage['driver_id']);
+        unset($expectedMessage['sid']);
+        $expectedMessage['delivered_at'] = (new \DateTime())->format($org['datetime_format']);
+        $expectedMessage['queued_at'] = (new \DateTime($expectedMessage['queued_at']))->format($org['datetime_format']);
+        $expectedMessage['sent_at'] = (new \DateTime($expectedMessage['sent_at']))->format($org['datetime_format']);
+        $expectedPostData = [
+            'json' => [
+                'event' => 'MessageUpdate',
+                'data' => $expectedMessage
+            ]
+        ];
+        $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
+        $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
+
+        Guzzle::shouldReceive('post')->once()->with($expectedUrl,\Mockery::on(function($arg) use ($expectedPostData){
+            $matches = $this->array_contains_recursive($expectedPostData, $arg);
+            return $matches;
+        }))->andReturn($mockResponse);
 
         // Act
         $this->actingAs($user)->post( '/incoming/message/status',
@@ -91,6 +119,67 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             ]);
 
     }
+
+
+    /**
+     * updates the status of a sent message from a request with the right account sid
+     *
+     * @test
+     */
+    public function update_location_status()
+    {
+
+        // Arrange
+        $user= $this->twilioUser();
+        $location = $this->locationSet[0];
+        $vehicle = $this->vehicleSet[0];
+        $org = $this->orgSet[0];
+        $this->datetime_format = $org['datetime_format'];
+
+        $expectedUrl = 'http://homestead.app/pub/locations'.$org['_id'];
+        $expectedLocation = $location;
+        $expectedLocation['status']='delivered';
+        unset($expectedLocation['organisation_id']);
+        unset($expectedLocation['vehicle_id']);
+        unset($expectedLocation['sid']);
+        $expectedLocation['delivered_at'] = (new \DateTime())->format($org['datetime_format']);
+        $expectedLocation['queued_at'] = (new \DateTime($expectedLocation['queued_at']))->format($org['datetime_format']);
+        $expectedLocation['sent_at'] = (new \DateTime($expectedLocation['sent_at']))->format($org['datetime_format']);
+        $expectedPostData = [
+            'json' => [
+                'event' => 'LocationUpdate',
+                'data' => $expectedLocation
+            ]
+        ];
+        $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
+        $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
+
+        Guzzle::shouldReceive('post')->once()->with($expectedUrl,\Mockery::on(function($arg) use ($expectedPostData){
+            $matches = $this->array_contains_recursive($expectedPostData, $arg);
+            return $matches;
+        }))->andReturn($mockResponse);
+
+        // Act
+        $this->actingAs($user)->post( '/incoming/message/status',
+            [
+                'MessageSid' => $location['sid'],
+                'AccountSid' => $org['twilio_account_sid'],
+                'MessageStatus' => 'delivered',
+                'To' => $vehicle['mobile_phone_number'],
+                'From' => $org['twilio_phone_number']
+            ]);
+
+        // Assert
+        $this->assertResponseOk();
+        $this->seeInDatabase('locations',
+            [
+                '_id' => $location['_id'],
+                'status' => 'delivered'
+            ]);
+
+
+
+    }
     /**
      * does not update the status of a sent message from a request with the wrong account sid
      *
@@ -102,8 +191,8 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         // Arrange
         $user= $this->twilioUser();
         $message = $this->messageSet[0];
-        $driver = $this->driverset[0];
-        $org = $this->orgset[1];
+        $driver = $this->driverSet[0];
+        $org = $this->orgSet[1];
 
         // Act
         $incomingMessage = [
@@ -136,9 +225,10 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
 
         // Arrange
         $user= $this->twilioUser();
-        $org = $this->orgset[0];
-        $driver = $this->driverset[0];
-        
+        $org = $this->orgSet[0];
+        $driver = $this->driverSet[0];
+        $this->datetime_format = $org['datetime_format'];
+
         $message = [
             'MessageSid' => '9999999',
             'SmsSid' => '9999999',
@@ -150,9 +240,31 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             'NumMedia' => '0'
         ];
 
+        $expectedUrl = 'http://homestead.app/pub/messages'.$org['_id'];
+
+        $expectedMessage['_id'] = '*';
+        $expectedMessage['message_text'] = $message['Body'];
+        $expectedDriver = $driver;
+        unset($expectedDriver['organisation_id']);
+        $expectedMessage['driver'] = $expectedDriver;
+        $expectedMessage['status']='received';
+        $expectedMessage['received_at'] = (new \DateTime())->format($org['datetime_format']);
+        $expectedPostData = [
+            'json' => [
+                'event' => 'MessageReceived',
+                'data' => $expectedMessage
+            ]
+        ];
+        $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
+        $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
+
+        Guzzle::shouldReceive('post')->once()->with($expectedUrl,\Mockery::on(function($arg) use ($expectedPostData){
+            $matches = $this->array_contains_recursive($expectedPostData, $arg);
+            return $matches;
+        }))->andReturn($mockResponse);
+
         // Act
         $this->actingAs($user)->json('POST','/incoming/message',$message);
-        $this->json('POST','/incoming/message',$message);
 
         // Assert
         $this->assertResponseOk();
@@ -178,7 +290,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
 
         // Arrange
         $user= $this->twilioUser();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         $message = [
             'MessageSid' => '9999999',
@@ -220,9 +332,13 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
     {
 
         // Arrange
+        $org = $this->orgSet[0];
+
+        DB::collection('organisations')->where('_id', $org['_id'])->update(['auto_reply'=>false]);
+
         $user= $this->twilioUser();
-        $org = $this->orgset[1];
-        $driver = $this->driverset[0];
+        $driver = $this->driverSet[0];
+        $this->datetime_format = $org['datetime_format'];
 
         $message = [
             'MessageSid' => '9999999',
@@ -234,6 +350,29 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             'Body' => 'Ahoy hoy!',
             'NumMedia' => '0'
         ];
+
+        $expectedUrl = 'http://homestead.app/pub/messages'.$org['_id'];
+
+        $expectedMessage['_id'] = '*';
+        $expectedMessage['message_text'] = $message['Body'];
+        $expectedDriver = $driver;
+        unset($expectedDriver['organisation_id']);
+        $expectedMessage['driver'] = $expectedDriver;
+        $expectedMessage['status']='received';
+        $expectedMessage['received_at'] = (new \DateTime())->format($org['datetime_format']);
+        $expectedPostData = [
+            'json' => [
+                'event' => 'MessageReceived',
+                'data' => $expectedMessage
+            ]
+        ];
+        $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
+        $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
+
+        Guzzle::shouldReceive('post')->once()->with($expectedUrl,\Mockery::on(function($arg) use ($expectedPostData){
+            $matches = $this->array_contains_recursive($expectedPostData, $arg);
+            return $matches;
+        }))->andReturn($mockResponse);
 
         // Act
         $this->actingAs($user)->json('POST','/incoming/message',$message);
@@ -257,17 +396,20 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
     }
 
     /**
-     * Will accept a location message from a vehicle and not auto reply and add to vehicle locations collection
+     * Will accept a location message from a vehicle tracker and not auto reply and add to vehicle locations collection
      *
      * @test
      */
-    public function acceptsVehicleLocationNoAutoReplyAddsToLocationsCollection(){
+    public function acceptsVehicleLocationAddsToLocationsCollection(){
 
         // Arrange
         $user= $this->twilioUser();
-        $org = $this->orgset[1];
-        $vehicle = $this->vehicleset[0];
-        $location = $this->locationSet[0];
+        $org = $this->orgSet[0];
+        $vehicle = $this->vehicleSet[0];
+        $location = $this->locationSet[1];
+
+        DB::collection('locations')->where('_id',$this->locationSet[0]['_id'])->delete();
+
         $this->expectsEvents(LocationUpdate::class);
 
         $locMsg = [
@@ -281,7 +423,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             'NumMedia' => '0'
         ];
 
-        $expectedLocation =
+        $expectedLocationDb =
             [
                 'sid' => $location['sid'],
                 'sid_response' => $locMsg['MessageSid'],
@@ -293,6 +435,32 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
                 'datetime' => new \DateTime('2016-07-02T21:05:43+10:00'),
                 'status' => 'received'
             ];
+
+        $this->datetime_format = $org['datetime_format'];
+
+        $expectedUrl = 'http://homestead.app/pub/locations'.$org['_id'];
+        $expectedData = $expectedLocationDb;
+        unset($expectedData['sid_response']);
+        unset($expectedData['vehicle_id']);
+        unset($expectedData['sid']);
+        $expectedData['received_at'] = (new \DateTime())->format($org['datetime_format']);
+        $expectedData['delivered_at'] = (new \DateTime($location['delivered_at']))->format($org['datetime_format']);
+        $expectedData['queued_at'] = (new \DateTime($location['queued_at']))->format($org['datetime_format']);
+        $expectedData['sent_at'] = (new \DateTime($location['sent_at']))->format($org['datetime_format']);
+        $expectedData['datetime'] = $expectedData['datetime']->format($org['datetime_format']);
+        $expectedPostData = [
+            'json' => [
+                'event' => 'LocationReceived',
+                'data' => $expectedData
+            ]
+        ];
+        $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
+        $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
+
+        Guzzle::shouldReceive('post')->once()->with($expectedUrl,\Mockery::on(function($arg) use ($expectedPostData){
+            $matches = $this->array_contains_recursive($expectedPostData, $arg);
+            return $matches;
+        }))->andReturn($mockResponse);
 
         // Act
         $this->actingAs($user)->json('POST','/incoming/message',$locMsg);
@@ -310,10 +478,51 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             [
                 'sid' => $locMsg['MessageSid']
             ]);
-        $this->seeInDatabase('locations', $expectedLocation);
+        $this->seeInDatabase('locations', $expectedLocationDb);
 
     }
 
+    private function array_contains_recursive($expected, $actual)
+    {
+        foreach ($expected as $key => $value) {
+            if (key_exists($key, $actual)) {
+                if (is_array($value) != is_array($actual[$key])) {
+                    return false;
+                } elseif (is_array($value) && is_array($actual[$key])) {
+                    if (!$this->array_contains_recursive($value, $actual[$key])) {
+                        return false;
+                    }
+                } elseif ($this->isDate($value) && $this->isDate($actual[$key])){
+                    if (!$this->datesAreClose($value,$actual[$key])) {
+                        return false;
+                    }
+                } elseif ($value != '*' && $value != $actual[$key]){
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
 
+    private function isDate($value)
+    {
+        $dt = \DateTime::createFromFormat($this->datetime_format,$value);
+        return !($dt === false);
+
+    }
+
+    private function datesAreClose($expected, $actual)
+    {
+        $dt1 = \DateTime::createFromFormat($this->datetime_format,$expected);
+        $dt2 =  \DateTime::createFromFormat($this->datetime_format,$expected);
+        $timestamp = $dt1->getTimestamp();
+        $timestamp1 = $dt2->getTimestamp();
+        $b = abs($timestamp - $timestamp1) < $this->allowedDateTimeDiffInSeconds;
+        return ($b);
+
+
+    }
 
 }

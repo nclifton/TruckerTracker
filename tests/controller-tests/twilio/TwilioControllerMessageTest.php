@@ -29,11 +29,11 @@ class TwilioControllerMessageTest extends TwilioControllerTestCase
         // Arrange
         $user = $this->firstUser();
         $twilioUser = $this->twilioUser();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
         $expectedMessageText = 'hello';
-        $driver = $this->driverset[0];
+        $driver = $this->driverSet[0];
         $expectedStatus = 'queued';
-        $this->injectMockTwilio($org, $driver['mobile_phone_number'], $twilioUser->username, $expectedMessageText, $expectedStatus);
+        $this->mockTwilio($org, $driver['mobile_phone_number'], $twilioUser->username, $expectedMessageText, $expectedStatus);
 
         // Act
         // Assert
@@ -54,11 +54,11 @@ class TwilioControllerMessageTest extends TwilioControllerTestCase
         // Arrange
         $user = $this->user();
         $twilioUser = $this->twilioUser();
-        $org = $this->orgset[0];
-        $driver = $this->driverset[0];
+        $org = $this->orgSet[0];
+        $driver = $this->driverSet[0];
         $expectedMessageText = 'hello';
         $expectedStatus = 'queued';
-        $this->injectMockTwilio($org, $driver['mobile_phone_number'], $twilioUser->username, $expectedMessageText, $expectedStatus);
+        $this->mockTwilio($org, $driver['mobile_phone_number'], $twilioUser->username, $expectedMessageText, $expectedStatus);
 
         // Act
         // Assert
@@ -77,7 +77,7 @@ class TwilioControllerMessageTest extends TwilioControllerTestCase
 
         // Arrange
         $user = $this->twilioUser();
-        $driver = $this->driverset[0];
+        $driver = $this->driverSet[0];
         $messageText = 'hello';
         $this->injectMockNeverUsedTwilio();
         $expectedResponseCode = 403;
@@ -111,10 +111,17 @@ class TwilioControllerMessageTest extends TwilioControllerTestCase
 
         // Assert
         $this->assertResponseOk();
-        $this->seeJsonStructure(['_id', 'message_text', 'driver_id', 'organisation_id', 'queued_at', 'status', 'driver' => ['first_name', 'last_name']]);
+        $this->seeJsonStructure([
+            '_id',
+            'message_text',
+            'queued_at',
+            'status',
+            'driver' => ['_id',
+                'first_name',
+                'last_name'
+            ]]);
         $this->seeJson(
             [
-                'driver_id' => $driver['_id'],
                 'organisation_id' => $org['_id'],
                 'message_text' => $expectedMessageText,
                 'status' => $expectedStatus
@@ -125,8 +132,7 @@ class TwilioControllerMessageTest extends TwilioControllerTestCase
             'driver_id' => $driver['_id'],
             'organisation_id' => $org['_id'],
             'message_text' => $expectedMessageText,
-            'status' => $expectedStatus,
-            'sid' => $data['sid']
+            'status' => $expectedStatus
         ]);
         return $data;
     }

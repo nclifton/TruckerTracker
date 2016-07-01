@@ -27,9 +27,9 @@ class TwilioControllerLocationTest extends TwilioControllerTestCase
         return [
             'users' => [],
             'password_resets' => [],
-            'organisations' => $this->orgset,
-            'drivers' => $this->driverset,
-            'vehicles' => $this->vehicleset,
+            'organisations' => $this->orgSet,
+            'drivers' => $this->driverSet,
+            'vehicles' => $this->vehicleSet,
             'messages' => [],
             'locations' => $this->locationSet
         ];
@@ -85,7 +85,7 @@ class TwilioControllerLocationTest extends TwilioControllerTestCase
         $user = $this->twilioUser();
 
         // Act
-        $this->actingAs($user)->json('post','/vehicle/'.$this->vehicleset[0]['_id'].'/location', []);
+        $this->actingAs($user)->json('post','/vehicle/'.$this->vehicleSet[0]['_id'].'/location', []);
 
         // Assert
         $this->assertResponseStatus(403);
@@ -97,12 +97,12 @@ class TwilioControllerLocationTest extends TwilioControllerTestCase
      */
     protected function assertLocationRequestSentToTwilio($user)
     {
-        $vehicle = $this->vehicleset[0];
+        $vehicle = $this->vehicleSet[0];
         $expectedMessageText = "WHERE,${vehicle['tracker_password']}#";
         $expectedStatus = 'queued';
         $twilioUser = $this->twilioUser();
-        $org = $this->orgset[0];
-        $this->injectMockTwilio($org, $vehicle['mobile_phone_number'], $twilioUser->username, $expectedMessageText, $expectedStatus);
+        $org = $this->orgSet[0];
+        $this->mockTwilio($org, $vehicle['mobile_phone_number'], $twilioUser->username, $expectedMessageText, $expectedStatus);
 
         // Act
         $this->actingAs($user)->json('post', '/vehicle/' . $vehicle['_id'].'/location', []);

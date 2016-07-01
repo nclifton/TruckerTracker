@@ -30,7 +30,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
         return [
             'users' => [],
             'password_resets' => [],
-            'organisations' => $this->orgset,
+            'organisations' => $this->orgSet,
             'drivers' => [],
             'vehicles' => []
         ];
@@ -46,7 +46,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
 
         // Act
         $this->actingAs($user)->json('post', '/drivers', $this->bind_driver($d));
@@ -54,9 +54,9 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
         // Assert
         $this->assertResponseOk();
         $this->seeJson($this->bind_driver($d));
-        $this->seeJsonStructure(['_id', 'created_at', 'first_name', 'last_name', 'mobile_phone_number', 'drivers_licence_number', 'organisation_id', 'updated_at']);
+        $this->seeJsonStructure(['_id', 'first_name', 'last_name', 'mobile_phone_number', 'drivers_licence_number']);
         $this->seeInDatabase('drivers', array_merge($this->bind_driver($d),
-            ['organisation_id' => $this->orgset[0]['_id']]));
+            ['organisation_id' => $this->orgSet[0]['_id']]));
     }
 
     /**
@@ -68,8 +68,8 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d1 = $this->driverset[0];
-        $d2 = $this->driverset[1];
+        $d1 = $this->driverSet[0];
+        $d2 = $this->driverSet[1];
         // Act
 
         $this->actingAs($user)->json('post', '/drivers', $this->bind_driver($d1));
@@ -81,9 +81,15 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
         // Assert
         $this->assertResponseOk();
         $this->seeJson($this->bind_driver($d2));
-        $this->seeJsonStructure(['_id', 'created_at', 'first_name', 'last_name', 'mobile_phone_number', 'drivers_licence_number', 'organisation_id', 'updated_at']);
+        $this->seeJsonStructure([
+            '_id', 
+            'first_name',
+            'last_name', 
+            'mobile_phone_number', 
+            'drivers_licence_number'
+        ]);
         $this->seeInDatabase('drivers', array_merge($this->bind_driver($d2),[
-            'organisation_id' => $this->orgset[0]['_id']
+            'organisation_id' => $this->orgSet[0]['_id']
         ]));
     }
 
@@ -96,7 +102,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
 
         // Act
         $this->actingAs($user)->json('post', '/drivers', $this->bind_driver($d));
@@ -109,9 +115,15 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
         // Assert
         $this->assertResponseOk();
         $this->seeJson(array_merge(['_id' => $data['_id']], $this->bind_driver($d)));
-        $this->seeJsonStructure(['_id', 'created_at', 'first_name', 'last_name', 'mobile_phone_number', 'drivers_licence_number', 'organisation_id', 'updated_at']);
+        $this->seeJsonStructure([
+            '_id',
+            'first_name', 
+            'last_name', 
+            'mobile_phone_number', 
+            'drivers_licence_number'
+        ]);
         $this->seeInDatabase('drivers', array_merge($this->bind_driver($d),
-            ['organisation_id' => $this->orgset[0]['_id']]));
+            ['organisation_id' => $this->orgSet[0]['_id']]));
     }
 
     /**
@@ -123,7 +135,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
         $d['first_name'] = '';
         $d['last_name'] = '';
         $d['mobile_phone_number'] = '';
@@ -152,7 +164,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
         // Arrange
         $user = $this->firstUser();
 
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
         $this->actingAs($user)->json('post', '/drivers', $this->bind_driver($d));
         $data = json_decode($this->response->getContent(), true);
 
@@ -183,7 +195,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
         $d['drivers_licence_number'] = '';
 
         // Act
@@ -192,9 +204,16 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
         // Assert
         $this->assertResponseOk();
         $this->seeJson($this->bind_driver($d));
-        $this->seeJsonStructure(['_id', 'created_at', 'first_name', 'last_name', 'mobile_phone_number', 'drivers_licence_number', 'organisation_id', 'updated_at']);
+        $this->seeJsonStructure([
+            '_id', 
+            'first_name', 
+            'last_name', 
+            'mobile_phone_number', 
+            'drivers_licence_number'
+        ]);
+        
         $this->seeInDatabase('drivers', array_merge($this->bind_driver($d), [
-            'organisation_id' => $this->orgset[0]['_id']
+            'organisation_id' => $this->orgSet[0]['_id']
         ]));
 
     }
@@ -208,7 +227,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
 
         // Act
         $this->actingAs($user)->json('post', '/drivers', $this->bind_driver($d));
@@ -235,8 +254,8 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d1 = $this->driverset[0];
-        $d2 = $this->driverset[1];
+        $d1 = $this->driverSet[0];
+        $d2 = $this->driverSet[1];
 
         // Act
         $this->actingAs($user)->json('post', '/drivers', $this->bind_driver($d1));
@@ -264,9 +283,9 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $org2 = Organisation::where('_id',$this->orgset[1]['_id'])->firstOrFail();
+        $org2 = Organisation::where('_id',$this->orgSet[1]['_id'])->firstOrFail();
         $user2 = $this->firstUser($org2);
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
 
         // Act
         $this->actingAs($user)->json('post', '/drivers', $this->bind_driver($d));
@@ -275,9 +294,15 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
         // Assert
         $this->assertResponseOk();
         $this->seeJson($this->bind_driver($d));
-        $this->seeJsonStructure(['_id', 'created_at', 'first_name', 'last_name', 'mobile_phone_number', 'drivers_licence_number', 'organisation_id', 'updated_at']);
+        $this->seeJsonStructure([
+            '_id',
+            'first_name',
+            'last_name',
+            'mobile_phone_number',
+            'drivers_licence_number'
+        ]);
         $this->seeInDatabase('drivers', array_merge($this->bind_driver($d), [
-            'organisation_id' => $this->orgset[0]['_id']
+            'organisation_id' => $this->orgSet[0]['_id']
         ]));
 
     }
@@ -292,7 +317,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
         $d['mobile_phone_number'] = '04X9140683';
 
         // Act
@@ -317,7 +342,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
 
 
         // Act
@@ -347,7 +372,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
         // Arrange
         $user = $this->firstUser();
 
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
         $d['mobile_phone_number'] = '041914068300';
 
         // Act
@@ -372,7 +397,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
 
         // Act
 
@@ -399,7 +424,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
         $d['mobile_phone_number'] = '914068300';
 
         // Act
@@ -425,7 +450,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
         // Arrange
         $user = $this->firstUser();
 
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
 
 
         // Act
@@ -454,7 +479,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
         $d['drivers_licence_number'] = '300';
 
         // Act
@@ -479,7 +504,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
 
 
         // Act
@@ -508,7 +533,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
         $d['drivers_licence_number'] = '100A00300';
 
         // Act
@@ -533,7 +558,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
 
 
         // Act
@@ -561,7 +586,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
         $d['drivers_licence_number'] = '0B11E0000';
 
         // Act
@@ -571,9 +596,15 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
         // Assert
         $this->assertResponseOk();
         $this->seeJson($this->bind_driver($d));
-        $this->seeJsonStructure(['_id', 'created_at', 'first_name', 'last_name', 'mobile_phone_number', 'drivers_licence_number', 'organisation_id', 'updated_at']);
+        $this->seeJsonStructure([
+            '_id',
+            'first_name',
+            'last_name',
+            'mobile_phone_number',
+            'drivers_licence_number'
+        ]);
         $this->seeInDatabase('drivers', array_merge($this->bind_driver($d), [
-            'organisation_id' => $this->orgset[0]['_id']
+            'organisation_id' => $this->orgSet[0]['_id']
         ]));
 
     }
@@ -587,7 +618,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
         $d['drivers_licence_number'] = 'AA00AAA0A';
 
         // Act
@@ -612,7 +643,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
 
 
         // Act
@@ -640,7 +671,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
         $d['drivers_licence_number'] = 'A00000A0A';
 
         // Act
@@ -665,7 +696,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
 
 
         // Act
@@ -693,7 +724,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $d = $this->driverset[0];
+        $d = $this->driverSet[0];
 
         $this->actingAs($user)->json('post', '/drivers', $this->bind_driver($d));
         $data = json_decode($this->response->getContent(), true);

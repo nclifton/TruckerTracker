@@ -24,7 +24,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
         return [
             'users' => $this->fixtureUserset,
             'password_resets' => [],
-            'organisations' => $this->orgset,
+            'organisations' => $this->orgSet,
             'drivers' => [],
             'vehicles' => []
         ];
@@ -67,7 +67,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
     public function testAddsVehicle()
     {
         // Arrange
-        $vehicle = $this->vehicleset[0];
+        $vehicle = $this->vehicleSet[0];
 
         // Act
         $this->login()->addVehicle($vehicle);
@@ -133,7 +133,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
     public function testBlankRegoValidationFail()
     {
         // Arrange
-        $vehicle = $this->vehicleset[0];
+        $vehicle = $this->vehicleSet[0];
         $vehicle['registration_number'] = '';
 
         // Act
@@ -155,7 +155,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
     public function testLowercaseRegoToUppercase()
     {
         // Arrange
-        $v = $this->vehicleset[0];
+        $v = $this->vehicleSet[0];
         $v['registration_number'] = 'aac993';
 
         // Act
@@ -178,7 +178,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
     public function testPhoneNumberValidationFail()
     {
         // Arrange
-        $vehicle = $this->vehicleset[0];
+        $vehicle = $this->vehicleSet[0];
         $vehicle['mobile_phone_number'] = '0419X40683';
 
         // Act
@@ -201,7 +201,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
     public function testImeiValidationFail()
     {
         // Arrange
-        $vehicle = $this->vehicleset[0];
+        $vehicle = $this->vehicleSet[0];
         $vehicle['tracker_imei_number'] = '12345678901234';
 
         // Act

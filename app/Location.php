@@ -55,7 +55,8 @@ class Location extends Moloquent
         'vehicle_id',
         'organisation',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'sid'
     ];
 
     public function vehicle(){
@@ -68,6 +69,12 @@ class Location extends Moloquent
         return $this->formatDate($value,$this->organisation);
     }
     public function getQueuedAtAttribute($value){
+        return $this->formatDate($value,$this->organisation);
+    }
+    public function getDeliveredAtAttribute($value){
+        return $this->formatDate($value,$this->organisation);
+    }
+    public function getReceivedAtAttribute($value){
         return $this->formatDate($value,$this->organisation);
     }
     public function getDatetimeAttribute($value){

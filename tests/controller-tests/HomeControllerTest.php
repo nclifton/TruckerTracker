@@ -15,9 +15,9 @@ class HomeControllerTest extends TestCase {
         return [
             'users' => [],
             'password_resets' => [],
-            'organisations' => $this->orgset,
-            'drivers' => $this->driverset,
-            'vehicles' => $this->vehicleset,
+            'organisations' => $this->orgSet,
+            'drivers' => $this->driverSet,
+            'vehicles' => $this->vehicleSet,
             'messages' => $this->messageSet,
             'locations' => $this->locationSet
         ];
@@ -50,7 +50,7 @@ class HomeControllerTest extends TestCase {
         // Assert
         $this->assertResponseOk();
         $this->seeElement('#heading_org_name');
-        $this->seeInElement('#heading_org_name',$this->orgset[0]['name']);
+        $this->seeInElement('#heading_org_name',$this->orgSet[0]['name']);
 
         $this->seeElement('#message'.$this->messageSet[0]['_id']);
         $this->seeElement('#location'.$this->locationSet[0]['_id']);
@@ -76,7 +76,7 @@ class HomeControllerTest extends TestCase {
         // Assert
         $this->assertResponseOk();
         $this->seeElement('#heading_org_name');
-        $this->seeInElement('#heading_org_name',$this->orgset[0]['name']);
+        $this->seeInElement('#heading_org_name',$this->orgSet[0]['name']);
 
         $this->seeElement('#message'.$this->messageSet[0]['_id']);
         $this->seeElement('#location'.$this->locationSet[0]['_id']);

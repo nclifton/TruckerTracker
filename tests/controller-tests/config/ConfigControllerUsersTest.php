@@ -30,7 +30,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         return [
             'users' => [],
             'password_resets' => [],
-            'organisations' => $this->orgset,
+            'organisations' => $this->orgSet,
             'drivers' => [],
             'vehicles' => []
         ];
@@ -45,7 +45,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
     public function createOrganisationOperationsUser()
     {
         $user = $this->firstUser();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
         $name = 'op1';
         $email = 'op1@example.com';
         $password = 'mstgpwd1';
@@ -90,7 +90,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
     {
         $fuser = $this->firstUser();
         $user = $this->user();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
         $name = 'op1x';
         $email = 'op1x@example.com';
         $password = 'mstgpwd2';
@@ -139,7 +139,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
     {
         $fuser = $this->firstuser();
         $user = $this->user();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
         $this->actingAs($fuser)->json('delete', '/organisation/user/' . $user->_id, []);
@@ -170,7 +170,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
     {
         //Arrange
         $login = $this->firstUser();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
         $user = $this->loginUserSet[0];
         
         // Act
@@ -203,7 +203,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $this->twilioUser();
         $user = $this->user();
         $xUser = $this->loginUserSet[0];
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
         $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
@@ -236,7 +236,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $this->twilioUser();
         $user = $this->user();
         $xUser = $this->loginUserSet[0];
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
         $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
@@ -269,7 +269,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $this->twilioUser();
         $user = $this->user();
         $xUser = $this->loginUserSet[0];
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
         $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
@@ -303,7 +303,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $this->twilioUser();
         $user = $this->user();
         $xUser = $this->loginUserSet[0];
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
         $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
@@ -336,7 +336,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $this->twilioUser();
         $user = $this->user();
         $xUser = $this->loginUserSet[0];
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
         $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
@@ -364,7 +364,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $this->twilioUser();
         $user = $this->user();
         $xUser = $this->loginUserSet[0];
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
         $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
@@ -397,7 +397,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $this->twilioUser();
         $user = $this->user();
         $xUser = $this->loginUserSet[0];
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
         $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
@@ -430,7 +430,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $this->twilioUser();
         $user = $this->user();
         $xUser = $this->loginUserSet[0];
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
         $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
@@ -462,7 +462,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $login = $this->firstUser();
         $this->twilioUser();
         $user = $this->user();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
         $this->actingAs($login)->json('get','/organisation/user/'.$user->_id);

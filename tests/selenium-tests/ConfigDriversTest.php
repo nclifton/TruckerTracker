@@ -23,7 +23,7 @@ class ConfigDriversTest extends IntegratedTestCase
         return [
             'users' => $this->fixtureUserset,
             'password_resets' => [],
-            'organisations' => $this->orgset,
+            'organisations' => $this->orgSet,
             'drivers' => [],
             'vehicles' => [],
             'messages' => [],
@@ -32,9 +32,9 @@ class ConfigDriversTest extends IntegratedTestCase
     }
 
 
-    /*
-  * @before
-  */
+    /**
+    * @before
+    */
     public function setUp()
     {
 
@@ -51,7 +51,7 @@ class ConfigDriversTest extends IntegratedTestCase
     public function testAddsDriver()
     {
         // Arrange
-        $driver = $this->driverset[0];
+        $driver = $this->driverSet[0];
 
         // Act
         $this->login()->addDriver($driver);
@@ -114,7 +114,7 @@ class ConfigDriversTest extends IntegratedTestCase
     public function testBlankFirstNameValidationFail()
     {
         // Arrange
-        $driver = $this->driverset[0];
+        $driver = $this->driverSet[0];
         $driver['first_name'] = '';
 
         // Act
@@ -139,7 +139,7 @@ class ConfigDriversTest extends IntegratedTestCase
     public function testBlankLastNameValidationFail()
     {
         // Arrange
-        $driver = $this->driverset[0];
+        $driver = $this->driverSet[0];
         $driver['last_name'] = '';
 
         // Act
@@ -165,7 +165,7 @@ class ConfigDriversTest extends IntegratedTestCase
     public function testPhoneNumberValidationFail()
     {
         // Arrange
-        $driver = $this->driverset[0];
+        $driver = $this->driverSet[0];
         $driver['mobile_phone_number'] = '0419X40683';
 
         // Act
@@ -189,7 +189,7 @@ class ConfigDriversTest extends IntegratedTestCase
     public function anotherPhoneNumberValidationFail()
     {
         // Arrange
-        $driver = $this->driverset[0];
+        $driver = $this->driverSet[0];
         $driver['mobile_phone_number'] = '298204732';
 
         // Act
@@ -213,7 +213,7 @@ class ConfigDriversTest extends IntegratedTestCase
     public function testDriversLicenceValidationFail()
     {
         // Arrange
-        $driver = $this->driverset[0];
+        $driver = $this->driverSet[0];
         $driver['drivers_licence_number'] = 'XXYY00000';
 
         // Act
@@ -236,8 +236,8 @@ class ConfigDriversTest extends IntegratedTestCase
     public function testAddTwoDrivers()
     {
         // Arrange
-        $driver1 = $this->driverset[0];
-        $driver2 = $this->driverset[1];
+        $driver1 = $this->driverSet[0];
+        $driver2 = $this->driverSet[1];
 
         // Act
         $this->login()->addDriver($driver1)->addDriver($driver2);

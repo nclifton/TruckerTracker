@@ -24,7 +24,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         return [
             'users' => [],
             'password_resets' => [],
-            'organisations' => $this->orgset,
+            'organisations' => $this->orgSet,
             'drivers' => [],
             'vehicles' => []
         ];
@@ -43,7 +43,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         $user = $this->firstUser();
         $tUser = $this->twilioUser();
         $this->user();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
         $urlParts = [
             'scheme' => config('app.external_scheme'),
             'host' => config('app.external_host'),
@@ -129,7 +129,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $org = $this->orgset[1];
+        $org = $this->orgSet[1];
 
         // Act
 
@@ -151,7 +151,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->twilioUser();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
 
@@ -174,7 +174,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->twilioUser();
-        $org = $this->orgset[1];
+        $org = $this->orgSet[1];
 
         // Act
 
@@ -196,7 +196,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->user();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
 
@@ -218,7 +218,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->user();
-        $org = $this->orgset[1];
+        $org = $this->orgSet[1];
 
         // Act
 
@@ -263,7 +263,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         $urlParts['path']='/incoming/message/status';
         $twilio_outbound_message_status_callback_url = http_build_url('',$urlParts);
 
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
         $this->getMongoConnection()->collection('organisations')
             ->remove(['_id' => $org['_id']]);
 
@@ -321,7 +321,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         // Arrange
         $user = $this->firstUser();
         $this->twilioUser(); // the database needs it
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
 
@@ -370,7 +370,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
         $twilioPassword = bin2hex(random_bytes(16));
         $twilioUsername = bin2hex(random_bytes(16));
 
@@ -417,7 +417,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
 
@@ -441,7 +441,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         // Arrange
         $user = $this->firstUser();
         $this->twilioUser();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
 
         // Act
 
@@ -670,7 +670,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
         $value = $value ?: $org[$propertyName];
         $storedValue = $storedValue ?: $value;
         DB::collection('organisations')
@@ -712,7 +712,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->user();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
         $value = $value ?: $org[$propertyName];
         $storedValue = $storedValue ?: $value;
         $this->getMongoConnection()->collection('organisations')
@@ -758,7 +758,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->user();
-        $org = $this->orgset[0];
+        $org = $this->orgSet[0];
         $this->getMongoConnection()->collection('organisations')
             ->remove(['_id' => $org['_id']]);
 

@@ -13,9 +13,9 @@ class MessageTest extends IntegratedTestCase
         return [
             'users' => $this->fixtureUserset,
             'password_resets' => [],
-            'organisations' => $this->orgset,
-            'drivers' => $this->driverset,
-            'vehicles' => $this->vehicleset,
+            'organisations' => $this->orgSet,
+            'drivers' => $this->driverSet,
+            'vehicles' => $this->vehicleSet,
             'messages' => [],
             'locations' => []
         ];
@@ -27,7 +27,7 @@ class MessageTest extends IntegratedTestCase
     public function queues_message_and_delete(){
 
         // Arrange
-        $driver = $this->driverset[0];
+        $driver = $this->driverSet[0];
 
         // Act
         $this->login();
@@ -46,7 +46,7 @@ class MessageTest extends IntegratedTestCase
                 $message = $this->getMongoConnection()->collection('messages')->findOne(
                     [
                         'driver_id' => $driver['_id'],
-                        'organisation_id' => $this->orgset[0]['_id'],
+                        'organisation_id' => $this->orgSet[0]['_id'],
                         'message_text' => $message_text,
                         'status' => 'queued'
                     ]);
@@ -77,7 +77,7 @@ class MessageTest extends IntegratedTestCase
                 ->equalTo('queued'));
         $toDateTime = $message['queued_at']->toDateTime();
         $toDateTime->setTimezone(new \DateTimezone('Australia/Sydney'));
-        $dateString = $toDateTime->format($this->orgset[0]['datetime_format']);
+        $dateString = $toDateTime->format($this->orgSet[0]['datetime_format']);
         $this
             ->assertThat($this
                 ->byCssSelector('#message'.$message['_id'].' .sent_at')

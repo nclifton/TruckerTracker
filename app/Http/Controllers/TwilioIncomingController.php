@@ -2,20 +2,23 @@
 
 namespace TruckerTracker\Http\Controllers;
 
+use Config;
 use Gate;
+use Guzzle;
+use Log;
+use Response;
+
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Log;
 use MongoDB\BSON\UTCDatetime;
 use Illuminate\Support\Facades\Redis;
-use Response;
 use Services_Twilio_Twiml;
 use TruckerTracker\Driver;
-use TruckerTracker\Events\LocationUpdate;
 use TruckerTracker\Http\Requests;
 use TruckerTracker\Message;
 use TruckerTracker\Organisation;
 use TruckerTracker\Vehicle;
+
 
 class TwilioIncomingController extends Controller
 {
@@ -54,21 +57,27 @@ class TwilioIncomingController extends Controller
         Log::info('received message');
 
         $from = $request->From;
-        $twiml = new Services_Twilio_Twiml();;
+        $twiml = new Services_Twilio_Twiml();
         if ($driver = Driver::where('mobile_phone_number', $from)->first()) {
             Log::debug(sprintf("text message received from driver: %s" , $driver->first_name.' '.$driver->last_name));
             $org = $driver->organisation;
             $message = $this->storeMessageFromDriver($request, $org, $driver);
-            Redis::publish('trucker-tracker.'.$org->_id, $message->toJson());
+            $url = Config::get('url',env('APP_URL')) . '/pub/messages' . $org->_id;
+            Log::debug("url: $url");
+            $this->publish($url, $message->toArray(),'MessageReceived');
             Log::debug('published message');
             if ($org->auto_reply)
                 $twiml->message('Thank you ' . $driver['first_name'] . ', message received');
+
+
         } else if ($vehicle = Vehicle::where('mobile_phone_number', $from)->first()) {
             Log::debug(sprintf("location text message received from vehicle: %s" , $vehicle->registration_number));
-            $location = $this->storeVehicleLocation($request, $vehicle);
+            $location = $this->updateVehicleLocation($request, $vehicle);
             if ($location) {
                 $org = $vehicle->organisation;
-                Redis::publish('trucker-tracker.'.$org->_id, $location->toJson());
+                $url = Config::get('url',env('APP_URL')) . '/pub/locations' . $org->_id;
+                Log::debug("url: $url");
+                $this->publish($url, $location->toArray(),'LocationReceived');
                 Log::debug('published location');
             }
         } else {
@@ -106,27 +115,13 @@ class TwilioIncomingController extends Controller
                 ->where('sid', $sid)
                 ->first()) {
 
-                Log::debug(sprintf("status update (%s) received for message: %s" ,$status, $sid));
-                $message[$status.'_at'] = new \DateTime();
-                $message->update(['status' => $status]);
-                $message->load('driver');
-                $pubMsg = [
-                    'event'=>'LocationUpdate',
-                    'data'=>$message
-                ];
-                //Redis::publish('trucker-tracker.'.$org->_id, $message->toJson());
-                //Log::debug('published message');
+                $this->handleMessageStatus($status, $sid, $message, $org);
 
             } elseif ($location = $org->locations()
                 ->where('sid', $sid)
                 ->first()) {
 
-                Log::debug(sprintf("status update (%s) received for location: %s" ,$status, $sid));
-                $location[$status.'_at'] = new \DateTime();
-                $location->update(['status' => $status]);
-                $location->load('vehicle');
-                //Redis::publish('trucker-tracker.'.$org->_id, $location->toJson());
-                //Log::debug('published location');
+                $this->handleLocationStatus($status, $sid, $location, $org);
 
             }
 
@@ -148,17 +143,18 @@ class TwilioIncomingController extends Controller
         return new UTCDateTime(round(microtime(true) * 1000));
     }
 
+
     /**
      * @param Request $request
      * @param $org
      * @param $driver
+     * @return static
      */
     protected function storeMessageFromDriver(Request $request, $org, $driver)
     {
         $message = Message::create([
             'sid' => $request->MessageSid,
             'message_text' => $request->Body,
-            'from' => $request->From,
             'received_at' => $this->getUTCDatetimeNow(),
             'status' => 'received'
         ]);
@@ -172,7 +168,7 @@ class TwilioIncomingController extends Controller
      * @param $request
      * @param $vehicle
      */
-    private function storeVehicleLocation($request, $vehicle)
+    private function updateVehicleLocation($request, $vehicle)
     {
 
         $location = $vehicle->locations()->where('status', '<>', 'received')->orderby('changed_at', 'asc')->first();
@@ -218,5 +214,80 @@ class TwilioIncomingController extends Controller
     private function latLonToFloat($str)
     {
         return floatval(str_replace(['N', 'S', 'E', 'W'], ['', '-', '', '-'], $str));
+    }
+
+    /**
+     * @param $status
+     * @param $sid
+     * @param $message
+     * @param $org
+     */
+    protected function handleMessageStatus($status, $sid, $message, $org)
+    {
+        Log::debug(sprintf("status update (%s) received for message: %s", $status, $sid));
+        $message[$status . '_at'] = new \DateTime();
+        $message->update(['status' => $status]);
+        $url = Config::get('url',env('APP_URL')) . '/pub/messages' . $org->_id;
+        Log::debug("url: $url");
+        $this->publish($url, $message->toArray(), 'MessageUpdate');
+
+    }
+
+    /**
+     * @param $status
+     * @param $sid
+     * @param $location
+     * @param $org
+     */
+    protected function handleLocationStatus($status, $sid, $location, $org)
+    {
+        Log::debug(sprintf("status update (%s) received for location: %s", $status, $location->_id));
+        $location[$status . '_at'] = new \DateTime();
+        $location->update(['status' => $status]);
+        $url = Config::get('url',env('APP_URL')) . '/pub/locations' . $org->_id;
+        Log::debug("url: $url");
+        $this->publish($url, $location->toArray(),'LocationUpdate');
+
+    }
+
+    /**
+     * @param $url
+     * @param $pubMsg
+     * @param $event
+     */
+    protected function publish($url, $pubMsg, $event)
+    {
+        Log::debug("publish event: $event data: ".json_encode($pubMsg));
+        try{
+            $response = Guzzle::post(
+                $url,
+                [
+                    'headers' => [
+                        'Accept'                => 'text/json',
+                        'X-EventSource-Event'   => $event
+                    ],
+                    'json' => $pubMsg
+                ]
+            );
+            switch ($code = $response->getStatusCode()) {
+                case 200:
+                    Log::debug("unexpected OK response from NGINX NCHAN Publish endpoint, : $code");
+                    break;
+                case 201:
+                    Log::debug("Created - with at least one subscriber present, : $code");
+                    break;
+                case 202:
+                    Log::debug("Accepted - no subscribers present, : $code");
+                    break;
+                default:
+                    $reason = $response->getReasonPhrase();
+                    Log::debug("Something broke, : $code : $reason");
+            }
+        } catch (\Exception $e){
+            Log::critical($e->getMessage());
+        }
+
+
+
     }
 }

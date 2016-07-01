@@ -128,7 +128,6 @@ class ConfigOrgTest extends IntegratedTestCase
         $org = $this->orgset['test'];
 
 
-
         // Act
         $this
             ->login();
@@ -141,8 +140,8 @@ class ConfigOrgTest extends IntegratedTestCase
             ->wait(500)
             ->select('datetime_format', $org['datetime_format'])
             ->wait(500);
-        
-         // Twilio mobile network gateway properties are on a separate tab
+
+        // Twilio mobile network gateway properties are on a separate tab
         $this
             ->byId('org-twilio-tab-link')->click();
         $this
@@ -157,12 +156,12 @@ class ConfigOrgTest extends IntegratedTestCase
         $this
             ->assertThat($this
                 ->byCssSelector('input#twilio_username')
-                ->attribute('type'),$this
+                ->attribute('type'), $this
                 ->equalTo('hidden'));
         $this
             ->assertThat($this
                 ->byCssSelector('input#twilio_user_password')
-                ->attribute('type'),$this
+                ->attribute('type'), $this
                 ->equalTo('hidden'));
 
         // Arrange
@@ -209,12 +208,22 @@ class ConfigOrgTest extends IntegratedTestCase
             ->click();
         $this->wait(1000);
         // Assert
+        $attempts = 0;
+        while ($attempts < 10) {
+            try {
+                $this
+                    ->assertThat($this
+                        ->byId('btn-add-org')
+                        ->displayed(), $this
+                        ->isFalse());
+                break;
+            } catch (\Exception $e) {
 
-        $this
-            ->assertThat($this
-                ->byId('btn-add-org')
-                ->displayed(), $this
-                ->isFalse());
+            }
+            $this->wait();
+            ++$attempts;
+        }
+
         $this
             ->assertThat($this
                 ->byId('btn-edit-org')
@@ -421,7 +430,7 @@ class ConfigOrgTest extends IntegratedTestCase
         $this->addVehicle();
 
         // Assert
-        $vehicle = $this->vehicleset[0];
+        $vehicle = $this->vehicleSet[0];
         $this->assertCount(1, $this->getMongoConnection()
             ->collection('vehicles')
             ->find([
@@ -582,7 +591,7 @@ class ConfigOrgTest extends IntegratedTestCase
 
     protected function addVehicle($vKey = 0)
     {
-        $vehicle = $this->vehicleset[$vKey];
+        $vehicle = $this->vehicleSet[$vKey];
 
         $this->clickOnElement('btn-add-vehicle');
         sleep(2); // wait for animation
@@ -626,7 +635,7 @@ class ConfigOrgTest extends IntegratedTestCase
         $this->byId('org-users-tab-link')->click();
         $this->wait();
         $this->byId('btn-add-user')->click();
-        $this->wait();
+        $this->wait(6000);
         $this->type($this->newUserLogin['name'], 'user_name');
         $this->type($this->newUserLogin['email'], 'email');
         $this->type($this->newUserLogin['password'], 'password');

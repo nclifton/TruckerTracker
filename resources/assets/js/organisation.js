@@ -61,7 +61,7 @@ $(document).ready(function ($) {
     });
 
 
-    //create new organisation / update existing driver
+    //create new organisation 
 
     $("#btn-save-org").click(function (e) {
         $.ajaxSetup({
@@ -93,6 +93,7 @@ $(document).ready(function ($) {
             success: function (data) {
                 console.log(data);
                 $("#heading_org_name").html(data.name);
+                organisation_id = data._id;
                 $("#btn-edit-org").val(data._id);
                 $("#btn-save-org").val('update');
                 $("#org_id").val(data._id);

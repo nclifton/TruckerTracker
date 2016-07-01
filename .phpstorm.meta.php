@@ -3,7 +3,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2016-06-29.
+    * Generated on 2016-06-30.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -37,8 +37,9 @@ namespace PHPSTORM_META {
             'view.engine.resolver' instanceof \Illuminate\View\Engines\EngineResolver,
             'view.finder' instanceof \Illuminate\View\FileViewFinder,
             'view' instanceof \Illuminate\View\Factory,
-            'TruckerTracker\Twilio\TwilioInterface' instanceof \TruckerTracker\Twilio\Twilio,
+            'twilio' instanceof \TruckerTracker\Twilio\Twilio,
             'timezone' instanceof \Camroncade\Timezone\Timezone,
+            'guzzle' instanceof \GuzzleHttp\Client,
             'validation.presence' instanceof \Illuminate\Validation\DatabasePresenceVerifier,
             'translation.loader' instanceof \Illuminate\Translation\FileLoader,
             'translator' instanceof \Illuminate\Translation\Translator,
@@ -153,8 +154,9 @@ namespace PHPSTORM_META {
             'view.engine.resolver' instanceof \Illuminate\View\Engines\EngineResolver,
             'view.finder' instanceof \Illuminate\View\FileViewFinder,
             'view' instanceof \Illuminate\View\Factory,
-            'TruckerTracker\Twilio\TwilioInterface' instanceof \TruckerTracker\Twilio\Twilio,
+            'twilio' instanceof \TruckerTracker\Twilio\Twilio,
             'timezone' instanceof \Camroncade\Timezone\Timezone,
+            'guzzle' instanceof \GuzzleHttp\Client,
             'validation.presence' instanceof \Illuminate\Validation\DatabasePresenceVerifier,
             'translation.loader' instanceof \Illuminate\Translation\FileLoader,
             'translator' instanceof \Illuminate\Translation\Translator,
@@ -269,8 +271,9 @@ namespace PHPSTORM_META {
             'view.engine.resolver' instanceof \Illuminate\View\Engines\EngineResolver,
             'view.finder' instanceof \Illuminate\View\FileViewFinder,
             'view' instanceof \Illuminate\View\Factory,
-            'TruckerTracker\Twilio\TwilioInterface' instanceof \TruckerTracker\Twilio\Twilio,
+            'twilio' instanceof \TruckerTracker\Twilio\Twilio,
             'timezone' instanceof \Camroncade\Timezone\Timezone,
+            'guzzle' instanceof \GuzzleHttp\Client,
             'validation.presence' instanceof \Illuminate\Validation\DatabasePresenceVerifier,
             'translation.loader' instanceof \Illuminate\Translation\FileLoader,
             'translator' instanceof \Illuminate\Translation\Translator,
@@ -385,8 +388,9 @@ namespace PHPSTORM_META {
             'view.engine.resolver' instanceof \Illuminate\View\Engines\EngineResolver,
             'view.finder' instanceof \Illuminate\View\FileViewFinder,
             'view' instanceof \Illuminate\View\Factory,
-            'TruckerTracker\Twilio\TwilioInterface' instanceof \TruckerTracker\Twilio\Twilio,
+            'twilio' instanceof \TruckerTracker\Twilio\Twilio,
             'timezone' instanceof \Camroncade\Timezone\Timezone,
+            'guzzle' instanceof \GuzzleHttp\Client,
             'validation.presence' instanceof \Illuminate\Validation\DatabasePresenceVerifier,
             'translation.loader' instanceof \Illuminate\Translation\FileLoader,
             'translator' instanceof \Illuminate\Translation\Translator,

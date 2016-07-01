@@ -13,8 +13,10 @@ namespace TruckerTracker;
 
 require_once __DIR__ . '/../../TestTrait.php';
 
+use Config;
 use \Mockery as m;
 use TruckerTracker\Twilio\TwilioInterface;
+use Twilio;
 
 class TwilioControllerTestCase extends TestCase
 {
@@ -30,6 +32,7 @@ class TwilioControllerTestCase extends TestCase
     {
         parent::setUp();
         $this->user = $this->user();
+        Config::set('url','http://homestead.app');
     }
 
     protected $twilio_cwf = [
@@ -46,9 +49,9 @@ class TwilioControllerTestCase extends TestCase
         return [
             'users' => [],
             'password_resets' => [],
-            'organisations' => $this->orgset,
-            'drivers' => $this->driverset,
-            'vehicles' => $this->vehicleset,
+            'organisations' => $this->orgSet,
+            'drivers' => $this->driverSet,
+            'vehicles' => $this->vehicleSet,
             'messages' => [],
             'locations' => []
         ];
@@ -68,18 +71,15 @@ class TwilioControllerTestCase extends TestCase
      * @param $twilioUsername
      * @param $message_text
      * @param $expectedStatus
-     * @return \Mockery\MockInterface
-     * @internal param $driver
      */
     protected function mockTwilio($org, $to, $twilioUsername, $message_text, $expectedStatus)
     {
         $mockTwilioService = m::mock(\Services_Twilio::class);
 
-        $mockTwilio = m::mock(\TruckerTracker\Twilio\TwilioInterface::class);
-        $mockTwilio->shouldReceive('setSid')->with($org['twilio_account_sid'])->once();
-        $mockTwilio->shouldReceive('setToken')->with($org['twilio_auth_token'])->once();
-        $mockTwilio->shouldReceive('setFrom')->with($org['twilio_phone_number'])->once();
-        $mockTwilio->shouldReceive('getTwilio')->andReturn($mockTwilioService)->once();
+        Twilio::shouldReceive('setSid')->with($org['twilio_account_sid'])->once();
+        Twilio::shouldReceive('setToken')->with($org['twilio_auth_token'])->once();
+        Twilio::shouldReceive('setFrom')->with($org['twilio_phone_number'])->once();
+        Twilio::shouldReceive('getTwilio')->andReturn($mockTwilioService)->once();
 
         $mockTwilioService->account = $mockTwilioService;
 
@@ -116,26 +116,13 @@ class TwilioControllerTestCase extends TestCase
             ->shouldReceive('create')
             ->with($this->subset)->once()
             ->andReturn($mockServicesTwilioRestMessage);
-        return $mockTwilio;
     }
 
     protected function mockTwilioNeverUsed()
     {
         $mockTwilio = m::mock(TwilioInterface::class);
-        $mockTwilio->shouldReceive('setSid')->never();
+        Twilio::shouldReceive('setSid')->never();
         return $mockTwilio;
-    }
-
-    /**
-     * @param $org
-     * @param $to
-     * @param $expectedMessageText
-     * @param $expectedStatus
-     */
-    protected function injectMockTwilio($org, $to, $twilioUsername, $expectedMessageText, $expectedStatus)
-    {
-        $this->app->instance(TwilioInterface::class,
-            $this->mockTwilio($org, $to, $twilioUsername, $expectedMessageText, $expectedStatus));
     }
 
     protected function injectMockNeverUsedTwilio()

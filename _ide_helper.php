@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.2.39 on 2016-06-29.
+ * Generated for Laravel 5.2.39 on 2016-06-30.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -12879,6 +12879,398 @@ namespace {
 
 
     class Moloquent extends \Jenssegers\Mongodb\Eloquent\Model{
+        
+    }
+
+
+    class Twilio extends \TruckerTracker\Twilio\Facade{
+        
+        /**
+         * 
+         *
+         * @param $sid
+         * @return \TruckerTracker\Twilio\TwilioInterface 
+         * @static 
+         */
+        public static function setSid($sid){
+            return \TruckerTracker\Twilio\Twilio::setSid($sid);
+        }
+        
+        /**
+         * 
+         *
+         * @param $token
+         * @return \TruckerTracker\Twilio\TwilioInterface 
+         * @static 
+         */
+        public static function setToken($token){
+            return \TruckerTracker\Twilio\Twilio::setToken($token);
+        }
+        
+        /**
+         * 
+         *
+         * @param $from
+         * @return \TruckerTracker\Twilio\TwilioInterface 
+         * @static 
+         */
+        public static function setFrom($from){
+            return \TruckerTracker\Twilio\Twilio::setFrom($from);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $to
+         * @param string $message
+         * @param string $from
+         * @return \Services_Twilio_Rest_Message 
+         * @static 
+         */
+        public static function message($to, $message, $from = null){
+            //Method inherited from \Aloha\Twilio\Twilio            
+            return \TruckerTracker\Twilio\Twilio::message($to, $message, $from);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $to
+         * @param string $message
+         * @param array $mediaUrls
+         * @param string $from
+         * @return \Services_Twilio_Rest_Message 
+         * @static 
+         */
+        public static function messageWithMedia($to, $message, $mediaUrls = null, $from = null){
+            //Method inherited from \Aloha\Twilio\Twilio            
+            return \TruckerTracker\Twilio\Twilio::messageWithMedia($to, $message, $mediaUrls, $from);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $to
+         * @param string|callable $message
+         * @param array $options
+         * @param string $from
+         * @return \Services_Twilio_Rest_Call 
+         * @static 
+         */
+        public static function call($to, $message, $options = array(), $from = null){
+            //Method inherited from \Aloha\Twilio\Twilio            
+            return \TruckerTracker\Twilio\Twilio::call($to, $message, $options, $from);
+        }
+        
+        /**
+         * 
+         *
+         * @return \Services_Twilio 
+         * @static 
+         */
+        public static function getTwilio(){
+            //Method inherited from \Aloha\Twilio\Twilio            
+            return \TruckerTracker\Twilio\Twilio::getTwilio();
+        }
+        
+    }
+
+
+    class SSE extends \Sse\Laravel\Facade\SSE{
+        
+        /**
+         * Attach a event handler
+         *
+         * @param string $event the event name
+         * @param \Sse\Event $handler the event handler
+         * @return void 
+         * @static 
+         */
+        public static function addEventListener($event, $handler){
+            \Sse\SSE::addEventListener($event, $handler);
+        }
+        
+        /**
+         * remove a event handler
+         *
+         * @param string $event the event name
+         * @return void 
+         * @static 
+         */
+        public static function removeEventListener($event){
+            \Sse\SSE::removeEventListener($event);
+        }
+        
+        /**
+         * Get all the listeners
+         *
+         * @return array 
+         * @static 
+         */
+        public static function getEventListeners(){
+            return \Sse\SSE::getEventListeners();
+        }
+        
+        /**
+         * Has listener
+         *
+         * @return bool 
+         * @static 
+         */
+        public static function hasEventListener(){
+            return \Sse\SSE::hasEventListener();
+        }
+        
+        /**
+         * Start the event loop
+         *
+         * @return null 
+         * @static 
+         */
+        public static function start(){
+            return \Sse\SSE::start();
+        }
+        
+        /**
+         * Returns a Symfony HTTPFoundation StreamResponse.
+         *
+         * @return \Sse\StreamedResponse 
+         * @static 
+         */
+        public static function createResponse(){
+            return \Sse\SSE::createResponse();
+        }
+        
+        /**
+         * Get the id for new message
+         *
+         * @return int 
+         * @static 
+         */
+        public static function getNewId(){
+            return \Sse\SSE::getNewId();
+        }
+        
+        /**
+         * Get config of SSE
+         *
+         * @param string $key
+         * @return mixed 
+         * @static 
+         */
+        public static function get($key){
+            return \Sse\SSE::get($key);
+        }
+        
+        /**
+         * Set config of SSE
+         *
+         * @param string $key
+         * @param mixed $value
+         * @return void 
+         * @static 
+         */
+        public static function set($key, $value){
+            \Sse\SSE::set($key, $value);
+        }
+        
+        /**
+         * Determine if the given attribute exists.
+         *
+         * @param string $offset
+         * @return bool 
+         * @static 
+         */
+        public static function offsetExists($offset){
+            return \Sse\SSE::offsetExists($offset);
+        }
+        
+        /**
+         * Get the value for a given offset.
+         *
+         * @param string $offset
+         * @return mixed 
+         * @static 
+         */
+        public static function offsetGet($offset){
+            return \Sse\SSE::offsetGet($offset);
+        }
+        
+        /**
+         * Set the value for a given offset.
+         *
+         * @param string $offset
+         * @param mixed $value
+         * @return void 
+         * @static 
+         */
+        public static function offsetSet($offset, $value){
+            \Sse\SSE::offsetSet($offset, $value);
+        }
+        
+        /**
+         * Unset the value for a given offset.
+         *
+         * @param string $offset
+         * @return void 
+         * @static 
+         */
+        public static function offsetUnset($offset){
+            \Sse\SSE::offsetUnset($offset);
+        }
+        
+    }
+
+
+    class Guzzle extends \Kozz\Laravel\Facades\Guzzle{
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function getDefaultOption($keyOrPath = null){
+            return \GuzzleHttp\Client::getDefaultOption($keyOrPath);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function setDefaultOption($keyOrPath, $value){
+            return \GuzzleHttp\Client::setDefaultOption($keyOrPath, $value);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function getBaseUrl(){
+            return \GuzzleHttp\Client::getBaseUrl();
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function createRequest($method, $url = null, $options = array()){
+            return \GuzzleHttp\Client::createRequest($method, $url, $options);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function get($url = null, $options = array()){
+            return \GuzzleHttp\Client::get($url, $options);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function head($url = null, $options = array()){
+            return \GuzzleHttp\Client::head($url, $options);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function delete($url = null, $options = array()){
+            return \GuzzleHttp\Client::delete($url, $options);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function put($url = null, $options = array()){
+            return \GuzzleHttp\Client::put($url, $options);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function patch($url = null, $options = array()){
+            return \GuzzleHttp\Client::patch($url, $options);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function post($url = null, $options = array()){
+            return \GuzzleHttp\Client::post($url, $options);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function options($url = null, $options = array()){
+            return \GuzzleHttp\Client::options($url, $options);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function send($request){
+            return \GuzzleHttp\Client::send($request);
+        }
+        
+        /**
+         * 
+         *
+         * @deprecated Use {@see GuzzleHttp\Pool} instead.
+         * @see GuzzleHttp\Pool
+         * @static 
+         */
+        public static function sendAll($requests, $options = array()){
+            return \GuzzleHttp\Client::sendAll($requests, $options);
+        }
+        
+        /**
+         * 
+         *
+         * @deprecated Use GuzzleHttp\Utils::getDefaultHandler
+         * @static 
+         */
+        public static function getDefaultHandler(){
+            return \GuzzleHttp\Client::getDefaultHandler();
+        }
+        
+        /**
+         * 
+         *
+         * @deprecated Use GuzzleHttp\Utils::getDefaultUserAgent
+         * @static 
+         */
+        public static function getDefaultUserAgent(){
+            return \GuzzleHttp\Client::getDefaultUserAgent();
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function getEmitter(){
+            return \GuzzleHttp\Client::getEmitter();
+        }
         
     }
 

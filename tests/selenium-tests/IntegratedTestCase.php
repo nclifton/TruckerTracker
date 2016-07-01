@@ -33,7 +33,7 @@ abstract class IntegratedTestCase extends \Laracasts\Integrated\Extensions\Selen
      *
      * @var string
      */
-    protected $baseUrl = 'http://localhost:8000';
+    protected $baseUrl = 'http://homestead.app';
 
     /**
      * @var \Illuminate\Foundation\Application
@@ -90,8 +90,8 @@ abstract class IntegratedTestCase extends \Laracasts\Integrated\Extensions\Selen
      */
     protected function login($userKey = 0)
     {
-        $this->visit('/')
-            ->click('Login')
+        $this->visit('/');
+        $this->click('Login')
             ->type($this->loginUserSet[$userKey]['email'], '#email')
             ->type($this->loginUserSet[$userKey]['password'], '#password')
             ->findByCssSelector('button.btn-primary')->click();

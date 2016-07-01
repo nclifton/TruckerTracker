@@ -22,7 +22,7 @@ Trait TestTrait
     protected $database = 'trucker_tracker';
     protected $db_username = 'trucker_tracker';
     protected $db_password = '6iSgcH2eNE';
-    protected $db_host = 'localhost';
+    protected $db_host = 'homestead.app';
     protected $db_port = 27017;
 
 
@@ -79,7 +79,7 @@ Trait TestTrait
 
     ];
 
-    protected $orgset = [
+    protected $orgSet = [
         [
             '_id' => '10001',
             'first_user_id' => '100',
@@ -105,7 +105,7 @@ Trait TestTrait
         ]
     ];
 
-    protected $driverset = [
+    protected $driverSet = [
         [
             '_id' => '110001',
             'first_name' => 'Driver',
@@ -126,7 +126,7 @@ Trait TestTrait
         ]
     ];
 
-    protected $vehicleset = [
+    protected $vehicleSet = [
         [
             '_id' => '120001',
             'registration_number' => 'DD6664',
@@ -166,12 +166,16 @@ Trait TestTrait
             'queued_at' => '2016-06-09T20:55:10+10:00',
             'sent_at' => '2016-06-09T20:56:10+10:00',
             'status' => 'sent',
-            'sid' => '2222222',
-            'latitude' => '0.0',
-            'longitude' => '0.0',
-            'course' => '0.0',
-            'speed' => '0.0',
-            'datetime' => ''
+            'sid' => '2222222'
+        ], [
+            '_id' => '300002',
+            'organisation_id' => '10001',
+            'vehicle_id' => '120001',
+            'queued_at' => '2016-06-09T20:55:10+10:00',
+            'sent_at' => '2016-06-09T20:56:10+10:00',
+            'delivered_at' => '2016-06-09T21:01:10+10:00',
+            'status' => 'delivered',
+            'sid' => '3333333'
         ]
     ];
 
@@ -182,6 +186,8 @@ Trait TestTrait
             'vehicle_id' => '120001',
             'queued_at' => '2016-06-09T20:55:10+10:00',
             'sent_at' => '2016-06-09T20:56:10+10:00',
+            'delivered_at' => '2016-06-09T20:57:10+10:00',
+            'received_at' => '2016-06-09T21:07:10+10:00',
             'sid' => '2222222',
             'sid_response' => '9999999',
             'latitude' => -34.04387,
@@ -196,8 +202,10 @@ Trait TestTrait
             'vehicle_id' => '120001',
             'queued_at' => '2016-06-09T21:00:10+10:00',
             'sent_at' => '2016-06-09T21:01:10+10:00',
-            'sid' => '2222222',
-            'sid_response' => '9999999',
+            'delivered_at' => '2016-06-09T21:10:10+10:00',
+            'received_at' => '2016-06-09T21:17:10+10:00',
+            'sid' => '3333333',
+            'sid_response' => '88888888',
             'latitude' => -34.01387,
             'longitude' => 150.8434242,
             'course' => 275.00,
@@ -249,14 +257,14 @@ Trait TestTrait
         if (is_null($this->twilioUser)) {
             $this->twilioUser = $this->user($org);
             $this->twilioUser->username = bin2hex(random_bytes(16));
-            $this->orgset[0]['twilio_user_password'] = bin2hex(random_bytes(16));
-            $this->twilioUser->password = bcrypt($this->orgset[0]['twilio_user_password']);
+            $this->orgSet[0]['twilio_user_password'] = bin2hex(random_bytes(16));
+            $this->twilioUser->password = bcrypt($this->orgSet[0]['twilio_user_password']);
             $this->twilioUser->save();
             try{
                 if (is_null($org))
                     $org = $this->twilioUser->organisation;
                 $this->twilioUser->twilioUserOrganisation()->save($org);
-                $org->twilio_user_password = $this->orgset[0]['twilio_user_password'];
+                $org->twilio_user_password = $this->orgSet[0]['twilio_user_password'];
                 $org->save();
             } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             }
@@ -290,7 +298,7 @@ Trait TestTrait
         $this->getMongoDataSet();
         $user = factory(User::class)->create();
         try{
-            $uorg = $org?:Organisation::where('_id',$this->orgset[0]['_id'])->firstOrFail();
+            $uorg = $org?:Organisation::where('_id',$this->orgSet[0]['_id'])->firstOrFail();
             $uorg->users()->save($user);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
         }

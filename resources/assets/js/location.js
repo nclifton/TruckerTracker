@@ -3,80 +3,94 @@
  */
 $(document).ready(function () {
 
-    function update_location_line(data){
+    function update_location_line(data) {
         var loc = $('#location' + data._id);
-        loc.find('span.sent_at').text(data.queued_at);
-        if (data.sent_at)
-            loc.find('span.sent_at').text(data.sent_at);
-        if (data.delivered_at)
-            loc.find('span.sent_at').text(data.delivered_at);
-        if (data.received_at) {
-            loc.find('span.sent_at').text(data.received_at);
-            loc.find('button.open-modal-view-location').val(data._id);
-            loc.find('button.open-modal-view-location').show();
-        }
         loc.find('span.status').text(data.status);
-    }
-
-    var sse = $.SSE('/location/updates/subscribe', {
-        onOpen: function(e) {
-            console.log("SSE Open");
-        },
-        onEnd: function(e) {
-            console.log("SSE Closed");
-        },
-        onError: function(e) {
-            console.log(e);
-        },
-        onMessage: function(e){
-            console.log("Message");
-            console.log(e);
-            update_location_line("Message");
-         },
-        events: {
-            onLocationUpdate: function(e,data) {
-                console.log(e);
-                update_location_line(data);
-            }
+        switch (data.status) {
+            case 'queued':
+                loc.find('span.sent_at').text(data.queued_at);
+                break;
+            case 'sent':
+                loc.find('span.sent_at').text(data.sent_at);
+                break;
+            case 'delivered':
+                loc.find('span.sent_at').text(data.delivered_at);
+                break;
+            case 'received':
+                loc.find('span.sent_at').text(data.received_at);
+                loc.find('button.open-modal-location-view').val(data._id);
+                loc.find('button.open-modal-location-view').show();
+                break;
         }
-    });
 
+    }
+    function setup_subscribe_location(){
+        if (!sse){
+            var sse = $.SSE('/sub/locations'+organisation_id, {
+                onOpen: function(e) {
+                    console.log("SSE Open");
+                    console.log(e);
+                },
+                onEnd: function(e) {
+                    console.log("SSE Closed");
+                    console.log(e);
+                },
+                onError: function(e) {
+                    console.log("SSE Error");
+                    console.log(e);
+                },
+                onMessage: function(e){
+                    console.log("SSE Message");
+                    console.log(e);
+                },
+                events: {
+                    LocationUpdate: function(e) {
+                        console.log(e);
+                        update_location_line($.parseJSON(e.data));
+                    },
+                    LocationReceived: function(e) {
+                        console.log(e);
+                        update_location_line($.parseJSON(e.data));
+                    }
+                }
+            });
+            sse.start();
+            //(function poll(){
+            //     setTimeout(function(){
+            //         $.ajax({
+            //             type: "GET",
+            //             url: "/location/updates/subscribe",
+            //             dataType: "json",
+            //             headers: {
+            //                 'X-Accel-Buffering':'no'
+            //             },
+            //             success: function(data){
+            //                 console.log(data);
+            //                 update_location_line(data);
+            //             },
+            //             error: function(data){
+            //                 console.log(data);
+            //             },
+            //             complete: function(data) {
+            //                 poll();
+            //             }
+            //         });
+            //     }, 3000);
+            // })();
+
+            // locationUpdatesEventSource = new EventSource('/location/updates/subscribe');
+            // locationUpdatesEventSource.addEventListener("message", function(e) {
+            //     console.log(e.data);
+            //     update_location_line(e.data);
+            // }, false);
+            //
+            // $(window).unload(function() {
+            //     locationUpdatesEventSource.close();
+            // });
+        }
+    }
     if (subscribe_sse){
-
-        //(function poll(){
-        //     setTimeout(function(){
-        //         $.ajax({
-        //             type: "GET",
-        //             url: "/location/updates/subscribe",
-        //             dataType: "json",
-        //             headers: {
-        //                 'X-Accel-Buffering':'no'
-        //             },
-        //             success: function(data){
-        //                 console.log(data);
-        //                 update_location_line(data);
-        //             },
-        //             error: function(data){
-        //                 console.log(data);
-        //             },
-        //             complete: function(data) {
-        //                 poll();
-        //             }
-        //         });
-        //     }, 3000);
-        // })();
-
-        // locationUpdatesEventSource = new EventSource('/location/updates/subscribe');
-        // locationUpdatesEventSource.addEventListener("message", function(e) {
-        //     console.log(e.data);
-        //     update_location_line(e.data);
-        // }, false);
-        //
-        // $(window).unload(function() {
-        //     locationUpdatesEventSource.close();
-        // });
-
-        sse.start();
+        setup_subscribe_location();
     }
 
     //display modal form viewing a location
@@ -196,6 +210,7 @@ $(document).ready(function () {
 
                 setup_view_location();
                 setup_delete_location();
+                setup_subscribe_location();
 
             },
             error: function (data) {

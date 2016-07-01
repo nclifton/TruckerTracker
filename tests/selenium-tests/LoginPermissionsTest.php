@@ -13,9 +13,9 @@ class LoginPermissionsTest extends IntegratedTestCase
         return [
             'users' => $this->fixtureUserset,
             'password_resets' => [],
-            'drivers' => $this->driverset,
-            'organisations' => $this->orgset,
-            'vehicles' => $this->vehicleset,
+            'drivers' => $this->driverSet,
+            'organisations' => $this->orgSet,
+            'vehicles' => $this->vehicleSet,
             'messages' => $this->messageSet,
             'locations' => $this->locationSet
         ];
@@ -50,15 +50,15 @@ class LoginPermissionsTest extends IntegratedTestCase
         $this->see('McSweeney Transport Group');
         $this->seeById("btn-edit-org","edit organisation enabled");
         $this->seeById('btn-add-driver','add driver enabled');
-        $this->seeByCssSelector('button.open-modal-driver[value="'.$this->driverset[0]['_id'].'"]','edit driver 0 enabled');
-        $this->seeByCssSelector('button.delete-driver[value="'.$this->driverset[0]['_id'].'"]','delete driver 0 enabled');
-        $this->seeByCssSelector('button.open-modal-driver[value="'.$this->driverset[1]['_id'].'"]','edit driver 1 enabled');
-        $this->seeByCssSelector('button.delete-driver[value="'.$this->driverset[1]['_id'].'"]','delete driver 1 enabled');
+        $this->seeByCssSelector('button.open-modal-driver[value="'.$this->driverSet[0]['_id'].'"]','edit driver 0 enabled');
+        $this->seeByCssSelector('button.delete-driver[value="'.$this->driverSet[0]['_id'].'"]','delete driver 0 enabled');
+        $this->seeByCssSelector('button.open-modal-driver[value="'.$this->driverSet[1]['_id'].'"]','edit driver 1 enabled');
+        $this->seeByCssSelector('button.delete-driver[value="'.$this->driverSet[1]['_id'].'"]','delete driver 1 enabled');
         $this->seeById('btn-add-vehicle','add vehicle enabled');
-        $this->seeByCssSelector('button.open-modal-vehicle[value="'.$this->vehicleset[0]['_id'].'"]','edit vehicle 0 enabled');
-        $this->seeByCssSelector('button.delete-vehicle[value="'.$this->vehicleset[0]['_id'].'"]','delete vehicle 0 enabled');
-        $this->seeByCssSelector('button.open-modal-vehicle[value="'.$this->vehicleset[1]['_id'].'"]','edit vehicle 1 enabled');
-        $this->seeByCssSelector('button.delete-vehicle[value="'.$this->vehicleset[1]['_id'].'"]','delete vehicle 1 enabled');
+        $this->seeByCssSelector('button.open-modal-vehicle[value="'.$this->vehicleSet[0]['_id'].'"]','edit vehicle 0 enabled');
+        $this->seeByCssSelector('button.delete-vehicle[value="'.$this->vehicleSet[0]['_id'].'"]','delete vehicle 0 enabled');
+        $this->seeByCssSelector('button.open-modal-vehicle[value="'.$this->vehicleSet[1]['_id'].'"]','edit vehicle 1 enabled');
+        $this->seeByCssSelector('button.delete-vehicle[value="'.$this->vehicleSet[1]['_id'].'"]','delete vehicle 1 enabled');
 
     }
     /**
@@ -98,15 +98,15 @@ class LoginPermissionsTest extends IntegratedTestCase
         $this->see('McSweeney Transport Group');
         $this->notSeeId("btn-edit-organisation","edit organisation button disabled");
         $this->notSeeId('btn-add-driver','add driver button disabled');
-        $this->notSeeCssSelector('button.open-modal-driver[value="'.$this->driverset[0]['_id'].'"]','edit driver 0 disabled');
-        $this->notSeeCssSelector('button.delete-driver[value="'.$this->driverset[0]['_id'].'"]','delete driver 0 disabled');
-        $this->notSeeCssSelector('button.open-modal-driver[value="'.$this->driverset[1]['_id'].'"]','edit driver 1 disabled');
-        $this->notSeeCssSelector('button.delete-driver[value="'.$this->driverset[1]['_id'].'"]','delete driver 1 disabled');
+        $this->notSeeCssSelector('button.open-modal-driver[value="'.$this->driverSet[0]['_id'].'"]','edit driver 0 disabled');
+        $this->notSeeCssSelector('button.delete-driver[value="'.$this->driverSet[0]['_id'].'"]','delete driver 0 disabled');
+        $this->notSeeCssSelector('button.open-modal-driver[value="'.$this->driverSet[1]['_id'].'"]','edit driver 1 disabled');
+        $this->notSeeCssSelector('button.delete-driver[value="'.$this->driverSet[1]['_id'].'"]','delete driver 1 disabled');
         $this->notSeeId('btn-add-vehicle','add vehicle enabled');
-        $this->notSeeCssSelector('button.open-modal-vehicle[value="'.$this->vehicleset[0]['_id'].'"]','edit vehicle 0 disabled');
-        $this->notSeeCssSelector('button.delete-vehicle[value="'.$this->vehicleset[0]['_id'].'"]','delete vehicle 0 disabled');
-        $this->notSeeCssSelector('button.open-modal-vehicle[value="'.$this->vehicleset[1]['_id'].'"]','edit vehicle 1 disabled');
-        $this->notSeeCssSelector('button.delete-vehicle[value="'.$this->vehicleset[1]['_id'].'"]','delete vehicle 1 disabled');
+        $this->notSeeCssSelector('button.open-modal-vehicle[value="'.$this->vehicleSet[0]['_id'].'"]','edit vehicle 0 disabled');
+        $this->notSeeCssSelector('button.delete-vehicle[value="'.$this->vehicleSet[0]['_id'].'"]','delete vehicle 0 disabled');
+        $this->notSeeCssSelector('button.open-modal-vehicle[value="'.$this->vehicleSet[1]['_id'].'"]','edit vehicle 1 disabled');
+        $this->notSeeCssSelector('button.delete-vehicle[value="'.$this->vehicleSet[1]['_id'].'"]','delete vehicle 1 disabled');
 
     }
 

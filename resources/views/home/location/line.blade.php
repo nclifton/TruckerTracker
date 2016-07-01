@@ -6,9 +6,13 @@ $sent_at = $location ? $location->sent_at : '';
 ?>
 <li id="location{{$id}}" class="row" style="{{$styleAttr}}">
     <span class="view-button pull-left">
-        @if($user->can('view-location') && ($status == 'received') )
-            <button class="btn btn-xs btn-detail open-modal-location-view   " value="{{$id}}">View</button>
-        @endif
+        @can('view-location')
+            @if ($status == 'received'))
+                <button class="btn btn-xs btn-detail open-modal-location-view" value="{{$id}}">View</button>
+            @else
+                <button class="btn btn-xs btn-detail open-modal-location-view" value="{{$id}}" style="display:none">View</button>
+            @endif
+        @endcan
     </span>
     <span class="">
         <span class="registration_number">
