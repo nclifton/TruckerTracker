@@ -87,10 +87,11 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $expectedMessage['queued_at'] = (new \DateTime($expectedMessage['queued_at']))->format($org['datetime_format']);
         $expectedMessage['sent_at'] = (new \DateTime($expectedMessage['sent_at']))->format($org['datetime_format']);
         $expectedPostData = [
-            'json' => [
-                'event' => 'MessageUpdate',
-                'data' => $expectedMessage
-            ]
+            'headers' => [
+                'Accept'                => 'text/json',
+                'X-EventSource-Event'   => 'MessageUpdate'
+            ],
+            'json' => $expectedMessage
         ];
         $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
         $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
@@ -146,10 +147,11 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $expectedLocation['queued_at'] = (new \DateTime($expectedLocation['queued_at']))->format($org['datetime_format']);
         $expectedLocation['sent_at'] = (new \DateTime($expectedLocation['sent_at']))->format($org['datetime_format']);
         $expectedPostData = [
-            'json' => [
-                'event' => 'LocationUpdate',
-                'data' => $expectedLocation
-            ]
+            'headers' => [
+                'Accept'                => 'text/json',
+                'X-EventSource-Event'   => 'LocationUpdate'
+            ],
+            'json' => $expectedLocation
         ];
         $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
         $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
@@ -250,10 +252,11 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $expectedMessage['status']='received';
         $expectedMessage['received_at'] = (new \DateTime())->format($org['datetime_format']);
         $expectedPostData = [
-            'json' => [
-                'event' => 'MessageReceived',
-                'data' => $expectedMessage
-            ]
+            'headers' => [
+                'Accept'                => 'text/json',
+                'X-EventSource-Event'   => 'MessageReceived'
+            ],
+            'json' => $expectedMessage
         ];
         $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
         $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
@@ -361,10 +364,11 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $expectedMessage['status']='received';
         $expectedMessage['received_at'] = (new \DateTime())->format($org['datetime_format']);
         $expectedPostData = [
-            'json' => [
-                'event' => 'MessageReceived',
-                'data' => $expectedMessage
-            ]
+            'headers' => [
+                'Accept'                => 'text/json',
+                'X-EventSource-Event'   => 'MessageReceived'
+            ],
+            'json' => $expectedMessage
         ];
         $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
         $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
@@ -449,10 +453,11 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $expectedData['sent_at'] = (new \DateTime($location['sent_at']))->format($org['datetime_format']);
         $expectedData['datetime'] = $expectedData['datetime']->format($org['datetime_format']);
         $expectedPostData = [
-            'json' => [
-                'event' => 'LocationReceived',
-                'data' => $expectedData
-            ]
+            'headers' => [
+                'Accept'                => 'text/json',
+                'X-EventSource-Event'   => 'LocationReceived'
+            ],
+            'json' => $expectedData
         ];
         $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
         $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
