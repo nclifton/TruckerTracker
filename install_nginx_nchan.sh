@@ -2,11 +2,12 @@
 
 # TODO
 
+
 mkdir nginx
 cd nginx
 
 wget http://nginx.org/download/nginx-1.9.15.tar.gz
-get clone https://github.com/slact/nchan.git
+git clone https://github.com/slact/nchan.git
 
 tar -xvf nginx-1.9.15.tar.gz
 cd nginx-1.9.15/
