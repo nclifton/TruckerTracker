@@ -7,7 +7,7 @@ $sent_at = $location ? $location->sent_at : '';
 <li id="location{{$id}}" class="row" style="{{$styleAttr}}">
     <span class="view-button pull-left">
         @can('view-location')
-            @if ($status == 'received'))
+            @if ($status == 'received')
                 <button class="btn btn-xs btn-detail open-modal-location-view" value="{{$id}}">View</button>
             @else
                 <button class="btn btn-xs btn-detail open-modal-location-view" value="{{$id}}" style="display:none">View</button>
