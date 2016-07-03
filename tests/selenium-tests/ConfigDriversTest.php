@@ -76,14 +76,9 @@ class ConfigDriversTest extends IntegratedTestCase
         // check driver info displayed
         $this
             ->assertThat($this
-                ->byCssSelector('#driver'.$id.' .first_name')
+                ->byCssSelector('#driver'.$id.' .description')
                 ->text(),$this
-                ->equalTo($driver['first_name']));
-        $this
-            ->assertThat($this
-                ->byCssSelector('#driver'.$id.' .last_name')
-                ->text(),$this
-                ->equalTo($driver['last_name']));
+                ->equalTo($driver['first_name'].' '.$driver['last_name']));
 
         // check added driver line buttons
         $this->byCssSelector('#driver' . $id .' .open-modal-message')->click();

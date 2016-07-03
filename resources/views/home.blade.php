@@ -37,6 +37,6 @@
             subscribe_sse = false;
         @endif
     </script>
-    <script src="{{ asset('js/home.js') }}"></script>
+    <script src="{{ elixir('js/home.js') }}"></script>
 
 @endsection

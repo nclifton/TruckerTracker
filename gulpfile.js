@@ -12,20 +12,30 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function (mix) {
-    mix.sass('app.scss')
-        .scripts([
-            'common.js',
-            'driver.js',
-            'vehicle.js',
-            'organisation.js',
-            'message.js',
-            'location.js',
-            'user.js',
-            'pushstream.js'
-        ], 'public/js/home.js')
+    mix
+        .sass('app.scss')
+        .scripts(
+            [
+                'common.js',
+                'driver.js',
+                'vehicle.js',
+                'organisation.js',
+                'message.js',
+                'location.js',
+                'user.js'
+            ],
+            'public/js/home.js')
+        .version(
+            [
+                './public/css/app.css',
+                './public/js/home.js'
+            ])
         .copy(
             'resources/assets/images',
             'public/images')
+        .copy(
+            'resources/assets/js/jQuery.hoverForMore.js',
+            'public/js/jQuery.hoverForMore.js')
         .copy(
             'resources/assets/bower/jquery/dist/jquery.js',
             'public/js/jquery.js')

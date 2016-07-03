@@ -19,6 +19,8 @@
         return o;
     };
 })(jQuery);
+
+
 function handleStatusCode500(data) {
     var newDoc = document.open("text/html", "replace");
     newDoc.write(data.responseText);
@@ -71,3 +73,64 @@ function setClickableTooltip(target, content){
         }
     });
 }
+/**
+ *     Adjust width of row elements using the line-fluid-column class.
+ *     For this to work properly there must be only one per line
+ **/
+function adjust_fluid_columns () {
+
+    $('.row > .line_fluid_column').each(function(){
+        var colWidth = $(this).closest('.row').outerWidth();
+        $(this).closest('.row').children().each(function(){
+            if (!$(this).hasClass('line_fluid_column') && $(this).is(':visible'))
+                {
+                    var width = $(this).outerWidth( true ) * 1.08;
+                    colWidth -= width ;
+                }
+        });
+        if (colWidth >= 100){
+            $(this).width(colWidth - 8);
+        }
+    });
+}
+
+/**
+ * show hide event
+ */
+(function ($) {
+    $.each(['show', 'hide'], function (i, ev) {
+        var el = $.fn[ev];
+        $.fn[ev] = function () {
+            this.trigger(ev);
+            return el.apply(this, arguments);
+        };
+    });
+})(jQuery);
+
+$(document).ready(function () {
+
+    adjust_fluid_columns();
+    $(window).resize(function() {
+        adjust_fluid_columns();
+    });
+
+    $(".overflow_ellipsis").hoverForMore({
+        speed: 60.0,		// Measured in pixels-per-second
+        loop: true,		// Scroll to the end and stop, or loop continuously?
+        gap: 20,		// When looping, insert this many pixels of blank space
+        target: false,		// Hover on this CSS selector instead of the text line itself
+        removeTitle: true,	// By default, remove the title attribute, as a tooltip is redundant
+        snapback: true,		// Animate when de-activating, as opposed to instantly reverting
+        addStyles: true,	// Auto-add CSS; leave this on unless you need to override default styles
+        alwaysOn: false,	// If you're insane, you can turn this into a <marquee> tag. (Please don't.)
+
+        // In case you want to alter the events which activate and de-activate the effect:
+        startEvent: "mouseenter",
+        stopEvent: "mouseleave"
+    });
+
+    $('.list_panel_line').on('show', function() {
+        adjust_fluid_columns();
+    });
+    
+});

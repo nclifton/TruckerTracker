@@ -72,17 +72,13 @@ $(document).ready(function () {
                 msg = $('#message').clone(false).prependTo('#message_list').attr("id", "message" + data._id);
                 msg.find('button.open-modal-view-message').val(data._id);
                 msg.find('button.delete-message').val(data._id);
-                msg.find('span.first_name').text(data.driver.first_name);
-                msg.find('span.last_name').text(data.driver.last_name);
-                msg.find('span.sent_at').text(data.queued_at);
-                if(data.sent_at)
-                    msg.find('span.sent_at').text(data.sent_at);
-                msg.find('span.status').text(data.status);
+                msg.find('span.description').text(data.driver.first_name+' '+data.driver.last_name+' '+data.status+' '+data.queued_at);
                 msg.attr('title',data.message_text);
                 msg.show();
 
                 setup_delete_message();
                 setup_view_conversation();
+                adjust_fluid_columns();
 
             },
             error: function (data) {

@@ -135,13 +135,14 @@ $(document).ready(function () {
                     $("#vehicle" + data._id + ' button.delete-vehicle').val(data._id);
                     $("#vehicle" + data._id).css('display', '');
                 }
-                $("#vehicle" + data._id + " .registration_number").text(data.registration_number);
+                $("#vehicle" + data._id + " .description").text(data.registration_number);
 
                 $('#vehicleForm').trigger("reset");
                 $('#vehicleModal').modal('hide');
                 setup_locate_vehicle();
                 setup_edit_vehicle();
                 setup_delete_vehicle();
+                adjust_fluid_columns();
 
             },
             error: function (data) {

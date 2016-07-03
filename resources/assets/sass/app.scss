@@ -14,12 +14,42 @@
       }
     }
 
-    span.message-button, span.locate-button{
+    span.message-button, span.locate-button, span.view-button, span.edit-delete-button , span.line_fluid_column{
+      vertical-align: top;
+    }
+
+    span.line_fluid_column{
+      overflow: hidden;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      span.overflow_ellipsis{
+        overflow: hidden;
+        position: relative;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        margin:0;
+
+        /* Starting transition */
+        left: 0%;
+        width: 100%;
+
+        /* animation parameters */
+        -webkit-transition: left 3s, width 3s;
+        -moz-transition: left 3s, width 3s;
+        transition: left 3s, width 3s;
+
+      }
+
+      &:hover span.overflow_ellipsis {
+        /* This is not completely accurate. It will resize to 2x the current width. */
+        left: -100%;
+        width: 200%;
+      }
 
     }
-    span.edit-delete-button{
 
-    }
+
 
   }
   li:nth-child(odd) {
@@ -78,4 +108,3 @@ span.edit-btn{
     border-bottom-left-radius: 0;
   }
 }
-

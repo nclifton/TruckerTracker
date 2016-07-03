@@ -1,4 +1,4 @@
-<li id="user{{$user?$user->id:''}}" class="row" style="{{$styleAttr}}">
+<li id="user{{$user?$user->id:''}}" class="row list_panel_line" style="{{$styleAttr}}">
     <span class="col-md-1 col-xs-1 col-sm-1 col-lg-1 edit-btn">
     @can('edit-users',$org)
         <button class="btn btn-warning btn-xs btn-detail open-modal-user pull-left"

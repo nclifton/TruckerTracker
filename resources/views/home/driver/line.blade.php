@@ -1,11 +1,9 @@
-<li id="driver{{$driver?$driver->id:''}}" class="row" style="{{$styleAttr}}">
-    <span class="message-button pull-left">
-        <button class="btn btn-xs btn-detail open-modal-message" value="{{$driver?$driver->id:''}}">message</button>
-    </span>
-    <span class="">
-        <span class="name">
-            <span class="first_name">{{$driver?$driver->first_name:''}}</span>
-            <span class="last_name">{{$driver?$driver->last_name:''}}</span>
+<li id="driver{{$driver?$driver->id:''}}" class="row list_panel_line" style="{{$styleAttr}}">
+    <button class="btn btn-xs btn-detail open-modal-message message-button" value="{{$driver?$driver->id:''}}">message</button>
+    <span class="line_fluid_column">
+        <span class="overflow_ellipsis description">
+            {{$driver?$driver->first_name:''}}
+            {{$driver?$driver->last_name:''}}
         </span>
     </span>
     <span class="edit-delete-button pull-right">

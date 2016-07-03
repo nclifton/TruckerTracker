@@ -5,24 +5,25 @@ $(document).ready(function () {
 
     function update_location_line(data) {
         var loc = $('#location' + data._id);
-        loc.find('span.status').text(data.status);
+        var description = data.vehicle.registration_number + ' ' + data.status;
         switch (data.status) {
             case 'queued':
-                loc.find('span.sent_at').text(data.queued_at);
+                description += ' '+data.queued_at;
                 break;
             case 'sent':
-                loc.find('span.sent_at').text(data.sent_at);
+                description += ' '+data.sent_at;
                 break;
             case 'delivered':
-                loc.find('span.sent_at').text(data.delivered_at);
+                description += ' '+data.delivered_at;
                 break;
             case 'received':
-                loc.find('span.sent_at').text(data.received_at);
+                description += ' '+data.received_at;
                 loc.find('button.open-modal-location-view').val(data._id);
                 loc.find('button.open-modal-location-view').show();
                 break;
         }
-
+        loc.find('span.description').text(description);
+        adjust_fluid_columns();
     }
     function setup_subscribe_location(){
         if (!sse){
@@ -55,38 +56,7 @@ $(document).ready(function () {
                 }
             });
             sse.start();
-            //(function poll(){
-            //     setTimeout(function(){
-            //         $.ajax({
-            //             type: "GET",
-            //             url: "/location/updates/subscribe",
-            //             dataType: "json",
-            //             headers: {
-            //                 'X-Accel-Buffering':'no'
-            //             },
-            //             success: function(data){
-            //                 console.log(data);
-            //                 update_location_line(data);
-            //             },
-            //             error: function(data){
-            //                 console.log(data);
-            //             },
-            //             complete: function(data) {
-            //                 poll();
-            //             }
-            //         });
-            //     }, 3000);
-            // })();
 
-            // locationUpdatesEventSource = new EventSource('/location/updates/subscribe');
-            // locationUpdatesEventSource.addEventListener("message", function(e) {
-            //     console.log(e.data);
-            //     update_location_line(e.data);
-            // }, false);
-            //
-            // $(window).unload(function() {
-            //     locationUpdatesEventSource.close();
-            // });
         }
     }
     if (subscribe_sse){
@@ -201,16 +171,13 @@ $(document).ready(function () {
                 var loc = $('#location').clone(false).appendTo('#location_list').attr("id", "location" + data._id);
                 loc.find('button.open-modal-view-location').val(data._id);
                 loc.find('button.delete-location').val(data._id);
-                loc.find('span.registration_number').text(data.vehicle.registration_number);
-                loc.find('span.sent_at').text(data.queued_at);
-                if (data.sent_at)
-                    loc.find('span.sent_at').text(data.sent_at);
-                loc.find('span.status').text(data.status);
+                loc.find('span.description').text(data.vehicle.registration_number+' '+data.status+' '+data.queued_at);
                 loc.show();
 
                 setup_view_location();
                 setup_delete_location();
                 setup_subscribe_location();
+                adjust_fluid_columns();
 
             },
             error: function (data) {

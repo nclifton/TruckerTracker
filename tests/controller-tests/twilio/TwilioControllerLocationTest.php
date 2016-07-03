@@ -119,8 +119,12 @@ class TwilioControllerLocationTest extends TwilioControllerTestCase
         $this->assertResponseOk();
         $this->seeJsonStructure(['_id', 'queued_at', 'status', 'vehicle' => ['registration_number']]);
         $this->seeJson(
+        [
+            'status' => $expectedStatus
+        ]);
+        $this->seeJson(
             [
-                'status' => $expectedStatus
+                'registration_number' => $vehicle['registration_number']
             ]);
         $this->seeInDatabase('locations', [
             '_id' => $data['_id'],

@@ -15,6 +15,13 @@ $(document).ready(function ($) {
         $('#orgModal').modal('show');
     });
 
+    $('#orgConfigForm').on('reset',function(){
+        $('#orgConfigForm span.help-block').remove();
+    });
+    $('#orgTwilioForm').on('reset',function(){
+        $('#orgTwilioForm span.help-block').remove();
+    });
+
     //display modal form for org editing
 
     $('.open-modal-org').click(function (e) {
@@ -39,8 +46,7 @@ $(document).ready(function ($) {
                         }
                         $('user' + user._id + ' span.name').text(user.name);
                         $('user' + user._id + ' span.email').text(user.email);
-                        $('user' + user._id + ' button.delete-user').val(user._id);
-                        $('user' + user._id + ' button.delete-user').show();
+                        $('user' + user._id + ' button.delete-user').val(user._id).show();
 
                     }
                 } else if (i == "_id") {

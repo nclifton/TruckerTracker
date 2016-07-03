@@ -48,7 +48,7 @@ sudo systemctl start mongodb
 sudo systemctl enable mongodb
 
 # wait for listening message in log
-tail -f /var/log/mongodb/mongod.log | while read LOGLINE
+tail -500f /var/log/mongodb/mongod.log | while read LOGLINE
 do
     echo "${LOGLINE}"
    [[ "${LOGLINE}" == *"[initandlisten] waiting for connections on port 27017"* ]] && pkill -P $$ tail

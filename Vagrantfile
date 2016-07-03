@@ -26,9 +26,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         config.vm.provision "shell", path: afterScriptPath
     end
     config.vm.provision "shell", inline: <<-SHELL
-        /bin/bash /vagrant/mongodb.sh
         /bin/bash /vagrant/install_nginx_nchan.sh
         /bin/bash /vagrant/configure_nginx_nchan.sh
+        /bin/bash /vagrant/mongodb.sh
         echo "xdebug.remote_enable = 1" >> /etc/php/7.0/mods-available/xdebug.ini
         echo "xdebug.remote_connect_back = 1" >> /etc/php/7.0/mods-available/xdebug.ini
         echo "xdebug.remote_port = 9000" >> /etc/php/7.0/mods-available/xdebug.ini

@@ -86,6 +86,11 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $expectedMessage['delivered_at'] = (new \DateTime())->format($org['datetime_format']);
         $expectedMessage['queued_at'] = (new \DateTime($expectedMessage['queued_at']))->format($org['datetime_format']);
         $expectedMessage['sent_at'] = (new \DateTime($expectedMessage['sent_at']))->format($org['datetime_format']);
+        $expectedDriver = $driver;
+        unset($expectedDriver['organisation_id']);
+        $expectedMessage['driver'] = $expectedDriver;
+
+
         $expectedPostData = [
             'headers' => [
                 'Accept'                => 'text/json',
@@ -146,6 +151,11 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $expectedLocation['delivered_at'] = (new \DateTime())->format($org['datetime_format']);
         $expectedLocation['queued_at'] = (new \DateTime($expectedLocation['queued_at']))->format($org['datetime_format']);
         $expectedLocation['sent_at'] = (new \DateTime($expectedLocation['sent_at']))->format($org['datetime_format']);
+        $expectedVehicle = $vehicle;
+        unset($expectedVehicle['organisation_id']);
+        unset($expectedVehicle['tracker_password']);
+        $expectedLocation['vehicle'] = $expectedVehicle;
+
         $expectedPostData = [
             'headers' => [
                 'Accept'                => 'text/json',
@@ -251,6 +261,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $expectedMessage['driver'] = $expectedDriver;
         $expectedMessage['status']='received';
         $expectedMessage['received_at'] = (new \DateTime())->format($org['datetime_format']);
+
         $expectedPostData = [
             'headers' => [
                 'Accept'                => 'text/json',
@@ -363,6 +374,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $expectedMessage['driver'] = $expectedDriver;
         $expectedMessage['status']='received';
         $expectedMessage['received_at'] = (new \DateTime())->format($org['datetime_format']);
+
         $expectedPostData = [
             'headers' => [
                 'Accept'                => 'text/json',
@@ -452,6 +464,10 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $expectedData['queued_at'] = (new \DateTime($location['queued_at']))->format($org['datetime_format']);
         $expectedData['sent_at'] = (new \DateTime($location['sent_at']))->format($org['datetime_format']);
         $expectedData['datetime'] = $expectedData['datetime']->format($org['datetime_format']);
+        $expectedVehicle = $vehicle;
+        unset($expectedVehicle['organisation_id']);
+        unset($expectedVehicle['tracker_password']);
+        $expectedData['vehicle'] = $expectedVehicle;
         $expectedPostData = [
             'headers' => [
                 'Accept'                => 'text/json',

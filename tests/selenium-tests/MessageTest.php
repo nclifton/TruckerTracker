@@ -60,29 +60,14 @@ class MessageTest extends IntegratedTestCase
         $this->assertGreaterThan(0,$maxCnt,'timed out waiting for database to update');
         $this->assertThat($this->byId('message'.$message['_id'])->displayed(),$this->isTrue());
 
-        $this
-            ->assertThat($this
-                ->byCssSelector('#message'.$message['_id'].' .first_name')
-                ->text(),$this
-                ->equalTo($driver['first_name']));
-        $this
-            ->assertThat($this
-                ->byCssSelector('#message'.$message['_id'].' .last_name')
-                ->text(),$this
-                ->equalTo($driver['last_name']));
-        $this
-            ->assertThat($this
-                ->byCssSelector('#message'.$message['_id'].' .status')
-                ->text(),$this
-                ->equalTo('queued'));
         $toDateTime = $message['queued_at']->toDateTime();
         $toDateTime->setTimezone(new \DateTimezone('Australia/Sydney'));
         $dateString = $toDateTime->format($this->orgSet[0]['datetime_format']);
         $this
             ->assertThat($this
-                ->byCssSelector('#message'.$message['_id'].' .sent_at')
+                ->byCssSelector('#message'.$message['_id'].' .description')
                 ->text(),$this
-                ->equalTo($dateString));
+                ->equalTo($driver['first_name'].' '.$driver['last_name'].' queued '.$dateString));
         $this
             ->assertThat($this
             ->byId('message'.$message['_id'])
@@ -93,7 +78,7 @@ class MessageTest extends IntegratedTestCase
         // test delete
         $this
             ->byCssSelector('#message'.$message['_id'].' button.delete-message')->click();
-        $this->wait(1000);
+        $this->wait();
 
         $this->notSeeId('message'.$message['_id']);
 

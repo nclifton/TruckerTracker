@@ -51,29 +51,14 @@ class HomePageAppearanceTest extends IntegratedTestCase
                 ->byId('#message' . $message['_id'])
                 ->attribute('title'), $this
                 ->equalTo($message['message_text']));
-        $this
-            ->assertThat($this
-                ->byCssSelector('#message'.$message['_id'].' .first_name')
-                ->text(),$this
-                ->equalTo($driver['first_name']));
-        $this
-            ->assertThat($this
-                ->byCssSelector('#message'.$message['_id'].' .last_name')
-                ->text(),$this
-                ->equalTo($driver['last_name']));
-        $this
-            ->assertThat($this
-                ->byCssSelector('#message'.$message['_id'].' .status')
-                ->text(),$this
-                ->equalTo('sent'));
         $dateTime = new \DateTime($message['sent_at']);
         $dateTime->setTimezone(new \DateTimezone('Australia/Sydney'));
         $dateString = $dateTime->format($this->orgSet[0]['datetime_format']);
         $this
             ->assertThat($this
-                ->byCssSelector('#message'.$message['_id'].' .sent_at')
+                ->byCssSelector('#message'.$message['_id'].' .description')
                 ->text(),$this
-                ->equalTo($dateString));
+                ->equalTo($driver['first_name'].' '.$driver['last_name'].' sent '.$dateString));
 
     }
 

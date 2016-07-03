@@ -73,8 +73,6 @@ class ConfigVehiclesTest extends IntegratedTestCase
         $this->login()->addVehicle($vehicle);
 
         // Assert
-
-
         $cursor = $this->getMongoConnection()
             ->collection('vehicles')
             ->find($this->bind_vehicle($vehicle));
@@ -86,7 +84,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
         }
         $this->assertEquals(1, $cnt);
         $this->assertNotNull($id);
-
+        $this->wait();
 
         $this->assertThat($this->byId('vehicleModalLabel')->displayed(), $this->isFalse());
         $this->assertThat($this->byId('vehicle'.$id)->displayed(), $this->isTrue());
@@ -94,7 +92,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
         // check vehicle info displayed
         $this
             ->assertThat($this
-                ->byCssSelector('#vehicle'.$id.' .registration_number')
+                ->byCssSelector('#vehicle'.$id.' .description')
                 ->text(),$this
                 ->equalTo($vehicle['registration_number']));
 

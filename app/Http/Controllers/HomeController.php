@@ -51,6 +51,8 @@ class HomeController extends Controller
         
         $tz = new Timezone();
 
+        Log::debug($org?$org->toJson():'new user');
+
         return View::make('home')
             ->with('user', $user)
             ->with('org', $org)

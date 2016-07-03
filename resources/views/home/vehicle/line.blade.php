@@ -1,13 +1,11 @@
-<li id="vehicle{{$vehicle?$vehicle->id:''}}" class="row" style="{{$styleAttr}}">
-    <span class="locate-button pull-left">
-        @can('send-location')
-        <button class="btn btn-xs btn-detail open-modal-location" value="{{$vehicle?$vehicle->id:''}}">
-            locate
-        </button>
-        @endcan
-    </span>
-    <span class="">
-        <span class="registration_number">
+<li id="vehicle{{$vehicle?$vehicle->id:''}}" class="row list_panel_line" style="{{$styleAttr}}">
+    @can('send-location')
+    <button class="btn btn-xs btn-detail open-modal-location locate-button pull-left" value="{{$vehicle?$vehicle->id:''}}">
+        locate
+    </button>
+    @endcan
+    <span class="line_fluid_column">
+        <span class="overflow_ellipsis description">
             {{$vehicle?$vehicle->registration_number:''}}
         </span>
     </span>

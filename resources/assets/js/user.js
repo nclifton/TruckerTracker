@@ -131,6 +131,7 @@ $(document).ready(function ($) {
                 $('#userModal').modal('hide');
                 setup_edit_user();
                 setup_delete_user();
+                adjust_fluid_columns();
 
             },
             error: function (data) {

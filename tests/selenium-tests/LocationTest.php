@@ -68,20 +68,9 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
         $this->assertThat($this->byId('location'.$id)->displayed(),$this->isTrue());
         $this
             ->assertThat($this
-                ->byCssSelector('#location'.$id.' span.registration_number')
+                ->byCssSelector('#location'.$id.' span.description')
                 ->text(), $this
-                ->equalTo($vehicle['registration_number']));
-        $this
-            ->assertThat($this
-                ->byCssSelector('#location'.$id.' span.status')
-                ->text(), $this
-                ->equalTo('queued'));
-        $this
-            ->assertThat($this
-                ->byCssSelector('#location'.$id.' span.sent_at')
-                ->text(), $this
-                ->equalTo($queued_at));
-
+                ->equalTo($vehicle['registration_number'].' queued '.$queued_at));
 
         $dbOrg = $this->connection->collection('organisations')->findOne(['_id'=>$org['_id']]);
         $twilioUser = $this->connection->collection('users')->findOne(['_id'=>$dbOrg['twilio_user_id']]);
@@ -91,7 +80,7 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
         ]);
 
         $sent_at = (new \DateTime())->format($org['datetime_format']);
-        Guzzle::post($url,[
+        $response = Guzzle::post($url,[
             'auth'=>[$twilioUser['username'],$dbOrg['twilio_user_password']],
             'body' => [
                 'MessageSid' => $sid,
@@ -102,25 +91,24 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
             ]
         ]);
 
-        $this->wait(6000);
+        $this->assertEquals($response->getStatusCode(),200,'test sending status updatec to incoming comtroller');
+
+        $this->wait(10000);
 
         $this
             ->assertThat($this
-                ->byCssSelector('#location'.$id.' span.registration_number')
+                ->byCssSelector('#location' . $id . ' span.description')
                 ->text(), $this
-                ->equalTo($vehicle['registration_number']));
-        $this
-            ->assertThat($this
-                ->byCssSelector('#location'.$id.' span.status')
-                ->text(), $this
-                ->equalTo('sent'));
-        $actualDate = \DateTime::createFromFormat($org['datetime_format'],$this
-            ->byCssSelector('#location' . $id . ' span.sent_at')
-            ->text())->getTimestamp();
+                ->stringStartsWith($vehicle['registration_number'].' sent'));
+        $actualDateString = substr($this
+            ->byCssSelector('#location' . $id . ' span.description')
+            ->text(), 12);
+        $actualDate = \DateTime::createFromFormat($org['datetime_format'],
+            $actualDateString)->getTimestamp();
         $at = \DateTime::createFromFormat($org['datetime_format'],$sent_at)->getTimestamp();
         $this
             ->assertThat($actualDate, $this
-                ->equalTo($at,5));
+                ->equalTo($at,5),'actual: $actualDateString expected: $sent_at');
 
         $this->wait(6000);
 
@@ -138,18 +126,21 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
 
         $this->wait(6000);
 
+        $prefix = $vehicle['registration_number'] . ' delivered ';
         $this
             ->assertThat($this
-                ->byCssSelector('#location'.$id.' span.status')
+                ->byCssSelector('#location' . $id . ' span.description')
                 ->text(), $this
-                ->equalTo('delivered'));
-        $actualDate = \DateTime::createFromFormat($org['datetime_format'],$this
-            ->byCssSelector('#location' . $id . ' span.sent_at')
-            ->text())->getTimestamp();
+                ->stringStartsWith($prefix));
+        $actualDateString = substr($this
+            ->byCssSelector('#location' . $id . ' span.description')
+            ->text(), strlen($prefix));
+        $actualDate = \DateTime::createFromFormat($org['datetime_format'],
+            $actualDateString)->getTimestamp();
         $at = \DateTime::createFromFormat($org['datetime_format'],$delivered_at)->getTimestamp();
         $this
             ->assertThat($actualDate, $this
-                ->equalTo($at,5));
+                ->equalTo($at,5),"actual: $actualDateString expected: $delivered_at");
 
         $this->wait(6000);
 
@@ -173,18 +164,22 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
 
         $this->wait(6000);
 
+        $prefix = $vehicle['registration_number'] . ' received ';
         $this
             ->assertThat($this
-                ->byCssSelector('#location'.$id.' span.status')
+                ->byCssSelector('#location' . $id . ' span.description')
                 ->text(), $this
-                ->equalTo('received'));
-        $actualDate = \DateTime::createFromFormat($org['datetime_format'],$this
-            ->byCssSelector('#location' . $id . ' span.sent_at')
-            ->text())->getTimestamp();
+                ->stringStartsWith($prefix));
+        $actualDateString = substr($this
+            ->byCssSelector('#location' . $id . ' span.description')
+            ->text(), strlen($prefix));
+        $actualDate = \DateTime::createFromFormat($org['datetime_format'],
+            $actualDateString)->getTimestamp();
         $at = \DateTime::createFromFormat($org['datetime_format'],$received_at)->getTimestamp();
         $this
             ->assertThat($actualDate, $this
-                ->equalTo($at,5));
+                ->equalTo($at,5),"actual: $actualDateString expected: $received_at");
+
         $this
             ->assertThat($this
                 ->byCssSelector('#location'.$id.' .open-modal-location-view')

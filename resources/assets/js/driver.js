@@ -130,14 +130,13 @@ $(document).ready(function ($) {
                     $("#driver" + data._id + ' button.delete-driver').val(data._id);
                     $("#driver" + data._id).css('display','');
                 }
-                $("#driver" + data._id + ' span.first_name').text(data.first_name);
-                $("#driver" + data._id + ' span.last_name').text(data.last_name);
-
+                $("#driver" + data._id + ' .description').text(data.first_name+' '+data.last_name);
                 $('#driverForm').trigger("reset");
                 $('#driverModal').modal('hide');
                 setup_edit_driver();
                 setup_delete_driver();
                 setup_message_driver();
+                adjust_fluid_columns();
 
             },
             error: function (data) {

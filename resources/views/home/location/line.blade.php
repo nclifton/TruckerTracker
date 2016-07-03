@@ -4,32 +4,24 @@ $registration_number = $location && $location->vehicle && $location->vehicle->re
 $status = $location ? $location->status : '';
 $sent_at = $location ? $location->sent_at : '';
 ?>
-<li id="location{{$id}}" class="row" style="{{$styleAttr}}">
-    <span class="view-button pull-left">
-        @can('view-location')
-            @if ($status == 'received')
-                <button class="btn btn-xs btn-detail open-modal-location-view" value="{{$id}}">View</button>
-            @else
-                <button class="btn btn-xs btn-detail open-modal-location-view" value="{{$id}}" style="display:none">View</button>
-            @endif
-        @endcan
-    </span>
-    <span class="">
-        <span class="registration_number">
-            {{$registration_number}}
-        </span>
-        <span class="status">
-            {{$status}}
-        </span>
-        <span class="sent_at">
-            {{$sent_at}}
+<li id="location{{$id}}" class="row list_panel_line" style="{{$styleAttr}}">
+
+    @can('view-location')
+        @if ($status == 'received')
+            <button class="btn btn-xs btn-detail open-modal-location-view view-button" value="{{$id}}">View</button>
+        @else
+            <button class="btn btn-xs btn-detail open-modal-location-view view-button" value="{{$id}}" style="display:none">View</button>
+        @endif
+    @endcan
+
+    <span class="line_fluid_column">
+        <span class="overflow_ellipsis description">
+            {{"$registration_number $status $sent_at"}}
         </span>
     </span>
-    <span class="delete-button pull-right">
         @can('delete-location')
-            <button class="btn btn-danger btn-xs btn-delete delete-location pull-right" value="{{$id}}">
+            <button class="btn btn-danger btn-xs btn-delete delete-location pull-right delete-button" value="{{$id}}">
             Delete
         </button>
         @endcan
-    </span>
 </li>

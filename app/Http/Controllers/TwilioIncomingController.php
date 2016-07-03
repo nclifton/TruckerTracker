@@ -113,15 +113,18 @@ class TwilioIncomingController extends Controller
 
             if ($message = $org->messages()
                 ->where('sid', $sid)
+                ->with('driver')
                 ->first()) {
 
-                $this->handleMessageStatus($status, $sid, $message, $org);
+
+                $this->handleMessageStatus($status, $message, $org);
 
             } elseif ($location = $org->locations()
                 ->where('sid', $sid)
+                ->with('vehicle')
                 ->first()) {
 
-                $this->handleLocationStatus($status, $sid, $location, $org);
+                $this->handleLocationStatus($status, $location, $org);
 
             }
 
@@ -134,16 +137,6 @@ class TwilioIncomingController extends Controller
         return Response::json(['status' => 'received']);
     }
 
-
-    /**
-     * @return UTCDatetime
-     */
-    protected function now()
-    {
-        return new UTCDateTime(round(microtime(true) * 1000));
-    }
-
-
     /**
      * @param Request $request
      * @param $org
@@ -155,7 +148,7 @@ class TwilioIncomingController extends Controller
         $message = Message::create([
             'sid' => $request->MessageSid,
             'message_text' => $request->Body,
-            'received_at' => $this->getUTCDatetimeNow(),
+            'received_at' => new \DateTime(),
             'status' => 'received'
         ]);
         $org->messages()->save($message);
@@ -222,11 +215,10 @@ class TwilioIncomingController extends Controller
      * @param $message
      * @param $org
      */
-    protected function handleMessageStatus($status, $sid, $message, $org)
+    protected function handleMessageStatus($status, $message, $org)
     {
-        Log::debug(sprintf("status update (%s) received for message: %s", $status, $sid));
-        $message[$status . '_at'] = new \DateTime();
-        $message->update(['status' => $status]);
+        Log::debug(sprintf("status update (%s) received for message: %s", $status, $message->_id));
+        $message->update(['status' => $status, $status . '_at' => new \DateTime()]);
         $url = Config::get('url',env('APP_URL')) . '/pub/messages' . $org->_id;
         Log::debug("url: $url");
         $this->publish($url, $message->toArray(), 'MessageUpdate');
@@ -239,11 +231,10 @@ class TwilioIncomingController extends Controller
      * @param $location
      * @param $org
      */
-    protected function handleLocationStatus($status, $sid, $location, $org)
+    protected function handleLocationStatus($status, $location, $org)
     {
         Log::debug(sprintf("status update (%s) received for location: %s", $status, $location->_id));
-        $location[$status . '_at'] = new \DateTime();
-        $location->update(['status' => $status]);
+        $location->update(['status' => $status, $status . '_at' => new \DateTime()]);
         $url = Config::get('url',env('APP_URL')) . '/pub/locations' . $org->_id;
         Log::debug("url: $url");
         $this->publish($url, $location->toArray(),'LocationUpdate');
