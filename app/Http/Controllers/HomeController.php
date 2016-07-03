@@ -38,7 +38,7 @@ class HomeController extends Controller
         }
 
         if($org) {
-            $org->load('users', 'drivers', 'vehicles', 'messages', 'locations');
+            $org->load('users', 'drivers', 'vehicles', 'messages.driver', 'locations.vehicle');
             $twilio_username = $org->twilioUser->username;
             $twilio_user_password = $org->twilio_user_password;
         } else {

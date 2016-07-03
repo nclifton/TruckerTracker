@@ -1,7 +1,11 @@
 <?php
 if ($message){
     $id = $message->_id;
-    $description = $message->driver->first_name . ' ' . $message->driver->last_name. ' ' . $message->status . ' ';
+    if ($message->driver){
+        $description = $message->driver->first_name . ' ' . $message->driver->last_name. ' ' . $message->status . ' ';
+    } else {
+        $description = 'unknown driver '.$message->status . ' ';
+    }
     switch ($message->status){
         case 'queued':
             $description .= $message->queued_at;
