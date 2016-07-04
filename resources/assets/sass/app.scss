@@ -23,12 +23,11 @@
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
-      span.overflow_ellipsis{
+      span.overflow_ellipsis_active{
         overflow: hidden;
         position: relative;
         white-space: nowrap;
         text-overflow: ellipsis;
-        margin:0;
 
         /* Starting transition */
         left: 0%;
@@ -41,7 +40,7 @@
 
       }
 
-      &:hover span.overflow_ellipsis {
+      &:hover span.overflow_ellipsis_active {
         /* This is not completely accurate. It will resize to 2x the current width. */
         left: -100%;
         width: 200%;

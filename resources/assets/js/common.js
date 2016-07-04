@@ -108,7 +108,10 @@ function adjust_fluid_columns () {
             });
             var width = $(this).children('.overflow_ellipsis').first().width();
             if (width > colWidth) {
-                $(this).children('.overflow_ellipsis').hoverForMore(hoverForMoreOptions)
+                $(this).children('.overflow_ellipsis').addClass('overflow_ellipsis_active');
+                $(this).children('.overflow_ellipsis_active').hoverForMore(hoverForMoreOptions);
+            } else {
+                $(this).children('.overflow_ellipsis').removeClass('overflow_ellipsis_active');
             }
             $(this).width(colWidth - 8);
         }
@@ -130,14 +133,23 @@ function adjust_fluid_columns () {
 
 
 $(document).ready(function () {
+    var resizeTimer;
+    var showTimer;
+
 
     adjust_fluid_columns();
-    $(window).resize(function() {
-        adjust_fluid_columns();
+    $(window).on('resize',function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            adjust_fluid_columns();
+        }, 250);
     });
 
     $('.list_panel_line').on('show', function() {
-        adjust_fluid_columns();
+        clearTimeout(showTimer);
+        showTimer = setTimeout(function() {
+            adjust_fluid_columns();
+        }, 250);
     });
     
 });
