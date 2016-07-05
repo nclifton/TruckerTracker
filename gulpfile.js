@@ -34,9 +34,6 @@ elixir(function (mix) {
             'resources/assets/images',
             'public/images')
         .copy(
-            'resources/assets/js/jQuery.hoverForMore.js',
-            'public/js/jQuery.hoverForMore.js')
-        .copy(
             'resources/assets/bower/jquery/dist/jquery.js',
             'public/js/jquery.js')
         .copy(

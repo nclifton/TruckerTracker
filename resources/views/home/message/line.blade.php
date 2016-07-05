@@ -1,40 +1,52 @@
 <?php
+$id = '';
+$first_name = '';
+$last_name = '';
+$status = '';
+$status_at = '';
+$message_text_title = '';
 if ($message){
     $id = $message->_id;
     if ($message->driver){
-        $description = $message->driver->first_name . ' ' . $message->driver->last_name. ' ' . $message->status . ' ';
+        $first_name = $message->driver->first_name;
+        $last_name = $message->driver->last_name;
+        $status = $message->status;
     } else {
-        $description = 'unknown driver '.$message->status . ' ';
+        $first_name = 'unknown';
+        $last_name = 'driver';
     }
     switch ($message->status){
         case 'queued':
-            $description .= $message->queued_at;
+            $status_at = $message->queued_at;
             break;
         case 'sent':
-            $description .= $message->sent_at;
+            $status_at = $message->sent_at;
             break;
         case 'delivered':
-            $description .= $message->delivered_at;
+            $status_at = $message->delivered_at;
             break;
         case 'received':
-            $description .= $message->received_at;
+            $status_at = $message->received_at;
             break;
     }
     $message_text_title = ' title='.$message->message_text.'';
-} else {
-    $id = '';
-    $description = '';
-    $message_text_title = '';
 }
 ?>
-<li id="message{{$id}}" class="row list_panel_line" style="{{$styleAttr}}"{{$message_text_title}}>
-    <button class="btn btn-xs btn-detail open-modal-view-message view-button pull-left"  value="{{$id}}">View</button>
+<li id="message{{$id}}" class="row list_panel_line" style="{{$styleAttr}}"{!! $message_text_title !!}>
+    <!--<button class="btn btn-xs btn-detail open-modal-view-message view-button pull-left"  value="{{$id}}">View</button> -->
     <span class="line_fluid_column">
-        <span class="overflow_ellipsis description">
-            {{"$description"}}
+        <span class="name">
+            <span class="first_name">{!! $first_name !!}</span>
+            <span class="last_name">{!! $last_name !!}</span>
+        </span>
+        <span class="status">{!! $status !!}</span>
+        <span class="overflow_container">
+            <span class="overflow_ellipsis status_at">{!! $status_at !!}</span>
         </span>
     </span>
+    @can('delete-message')
     <button class="btn btn-danger btn-xs btn-delete delete-message pull-right delete-button" value="{{$id}}">
         Delete
     </button>
+    @endcan
 </li>

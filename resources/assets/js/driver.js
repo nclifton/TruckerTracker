@@ -130,7 +130,7 @@ $(document).ready(function ($) {
                     $("#driver" + data._id + ' button.delete-driver').val(data._id);
                     $("#driver" + data._id).css('display','');
                 }
-                $("#driver" + data._id + ' .description').text(data.first_name+' '+data.last_name);
+                $("#driver" + data._id + ' .name').text(data.first_name+' '+data.last_name);
                 $('#driverForm').trigger("reset");
                 $('#driverModal').modal('hide');
                 setup_edit_driver();

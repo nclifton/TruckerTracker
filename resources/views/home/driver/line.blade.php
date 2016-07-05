@@ -1,7 +1,11 @@
 <li id="driver{{$driver?$driver->id:''}}" class="row list_panel_line" style="{{$styleAttr}}">
-    <button class="btn btn-xs btn-detail open-modal-message message-button" value="{{$driver?$driver->id:''}}">message</button>
+    @can('send-message')
+    <span>
+        <button class="btn btn-xs btn-detail open-modal-message message-button" value="{{$driver?$driver->id:''}}">message</button>
+    </span>
+    @endcan
     <span class="line_fluid_column">
-        <span class="overflow_ellipsis description">
+        <span class="overflow_container name">
             {{$driver?$driver->first_name:''}}
             {{$driver?$driver->last_name:''}}
         </span>

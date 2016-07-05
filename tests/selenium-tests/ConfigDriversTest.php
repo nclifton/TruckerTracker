@@ -76,7 +76,7 @@ class ConfigDriversTest extends IntegratedTestCase
         // check driver info displayed
         $this
             ->assertThat($this
-                ->byCssSelector('#driver'.$id.' .description')
+                ->byCssSelector('#driver'.$id.' .name')
                 ->text(),$this
                 ->equalTo($driver['first_name'].' '.$driver['last_name']));
 

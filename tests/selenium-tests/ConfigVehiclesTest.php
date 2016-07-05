@@ -92,7 +92,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
         // check vehicle info displayed
         $this
             ->assertThat($this
-                ->byCssSelector('#vehicle'.$id.' .description')
+                ->byCssSelector('#vehicle'.$id.' .registration_number')
                 ->text(),$this
                 ->equalTo($vehicle['registration_number']));
 

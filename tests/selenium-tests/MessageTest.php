@@ -36,7 +36,7 @@ class MessageTest extends IntegratedTestCase
         $message_text = 'Hello';
         $this->type($message_text,'#message_text');
         $this->byId('btn-save-message')->click();
-        $this->wait(4000);
+        $this->wait();
 
         // Assert
         $maxCnt = 10;
@@ -65,9 +65,24 @@ class MessageTest extends IntegratedTestCase
         $dateString = $toDateTime->format($this->orgSet[0]['datetime_format']);
         $this
             ->assertThat($this
-                ->byCssSelector('#message'.$message['_id'].' .description')
+                ->byCssSelector('#message'.$message['_id'].' .first_name')
                 ->text(),$this
-                ->equalTo($driver['first_name'].' '.$driver['last_name'].' queued '.$dateString));
+                ->equalTo($driver['first_name']));
+        $this
+            ->assertThat($this
+                ->byCssSelector('#message'.$message['_id'].' .last_name')
+                ->text(),$this
+                ->equalTo($driver['last_name']));
+        $this
+            ->assertThat($this
+                ->byCssSelector('#message'.$message['_id'].' .status')
+                ->text(),$this
+                ->equalTo('queued'));
+        $this
+            ->assertThat($this
+                ->byCssSelector('#message'.$message['_id'].' .status_at')
+                ->text(),$this
+                ->equalTo($dateString));
         $this
             ->assertThat($this
             ->byId('message'.$message['_id'])

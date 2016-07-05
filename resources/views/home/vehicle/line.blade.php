@@ -5,7 +5,7 @@
     </button>
     @endcan
     <span class="line_fluid_column">
-        <span class="overflow_ellipsis description">
+        <span class="overflow_ellipsis registration_number">
             {{$vehicle?$vehicle->registration_number:''}}
         </span>
     </span>

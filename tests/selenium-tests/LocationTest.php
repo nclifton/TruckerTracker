@@ -60,96 +60,125 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
         $this->assertNotNull($dbLoc);
         $id = $dbLoc['_id'];
         $sid = $dbLoc['sid'];
-        $dt = $dbLoc['queued_at']->toDateTime();
-        $dt->setTimeZone(new \DateTimeZone('Australia/Sydney'));
-        $queued_at = $dt->format($org['datetime_format']);
+        $queued_at = $dbLoc['queued_at']->toDateTime()->setTimeZone(new \DateTimeZone('Australia/Sydney'));
 
         $this->assertNotNull($id);
         $this->assertThat($this->byId('location'.$id)->displayed(),$this->isTrue());
-        $this
-            ->assertThat($this
-                ->byCssSelector('#location'.$id.' span.description')
-                ->text(), $this
-                ->equalTo($vehicle['registration_number'].' queued '.$queued_at));
+
+        $this->assert_location_line($id, $vehicle, 'queued', $org, $queued_at);
 
         $dbOrg = $this->connection->collection('organisations')->findOne(['_id'=>$org['_id']]);
         $twilioUser = $this->connection->collection('users')->findOne(['_id'=>$dbOrg['twilio_user_id']]);
 
+        $this->wait();
+
+        $sent_at = new \DateTime();
+        $this->postStatusUpdate($twilioUser,$dbOrg,$sid,'sent',$vehicle);
+
+        $this->wait();
+
+        $this->assert_location_line($id, $vehicle, 'sent', $org, $sent_at);
+
+        $delivered_at = new \DateTime();
+        $this->postStatusUpdate($twilioUser, $dbOrg, $sid, 'delivered', $vehicle);
+
+        $this->wait();
+
+        $this->assert_location_line($id, $vehicle, 'delivered', $org, $delivered_at);
+
+        $received_at = new \DateTime();
+        $this->postLocationResponse($twilioUser, $dbOrg, $org, $vehicle);
+
+        $this->wait();
+
+        $this->assert_location_line($id, $vehicle, 'received', $org, $received_at);
+
+        $this
+            ->assertThat($this
+                ->byCssSelector('#location'.$id.' .open-modal-location-view')
+                ->displayed(),$this
+                ->isTrue());
+        
+        $this->wait();
+        
+        $this->byCssSelector('#location'.$id.' button.delete-location')->click();
+        $this->wait();
+        
+        $this->notSeeId('location'.$id);
+
+    }
+
+    /**
+     * @param $id
+     * @param $vehicle
+     * @param $expected_status
+     * @param $org
+     * @param $delivered_at
+     */
+    protected function assert_location_line($id, $vehicle, $expected_status, $org, \Datetime $delivered_at)
+    {
+        $this
+            ->assertThat($this
+                ->byCssSelector('#location' . $id . ' span.registration_number')
+                ->text(), $this
+                ->equalTo($vehicle['registration_number']));
+        $this
+            ->assertThat($this
+                ->byCssSelector('#location' . $id . ' span.status')
+                ->text(), $this
+                ->equalTo($expected_status));
+        $actualDateString = $this
+            ->byCssSelector('#location' . $id . ' span.status_at')
+            ->text();
+        $this
+            ->assertThat(
+                \DateTime::createFromFormat($org['datetime_format'], $actualDateString)
+                    ->getTimestamp(), $this
+                ->equalTo($delivered_at
+                    ->getTimestamp(), 5),
+                "actual: $actualDateString expected: ".$delivered_at->format($org['datetime_format']));
+    }
+
+    /**
+     * @param $url
+     * @param $twilioUser
+     * @param $dbOrg
+     * @param $sid
+     * @param $status
+     * @param $vehicle
+     */
+    protected function postStatusUpdate($twilioUser, $dbOrg, $sid, $status, $vehicle)
+    {
         $url = http_build_url($this->baseUrl,[
             'path'=>'/incoming/message/status'
         ]);
-
-        $sent_at = (new \DateTime())->format($org['datetime_format']);
-        $response = Guzzle::post($url,[
-            'auth'=>[$twilioUser['username'],$dbOrg['twilio_user_password']],
+        $response = Guzzle::post($url, [
+            'auth' => [$twilioUser['username'], $dbOrg['twilio_user_password']],
             'body' => [
                 'MessageSid' => $sid,
                 'AccountSid' => $dbOrg['twilio_account_sid'],
-                'MessageStatus' => 'sent',
+                'MessageStatus' => $status,
                 'To' => $vehicle['mobile_phone_number'],
                 'From' => $dbOrg['twilio_phone_number']
             ]
         ]);
-
         $this->assertEquals($response->getStatusCode(),200,'test sending status updatec to incoming comtroller');
 
-        $this->wait(10000);
+    }
 
-        $this
-            ->assertThat($this
-                ->byCssSelector('#location' . $id . ' span.description')
-                ->text(), $this
-                ->stringStartsWith($vehicle['registration_number'].' sent'));
-        $actualDateString = substr($this
-            ->byCssSelector('#location' . $id . ' span.description')
-            ->text(), 12);
-        $actualDate = \DateTime::createFromFormat($org['datetime_format'],
-            $actualDateString)->getTimestamp();
-        $at = \DateTime::createFromFormat($org['datetime_format'],$sent_at)->getTimestamp();
-        $this
-            ->assertThat($actualDate, $this
-                ->equalTo($at,5),'actual: $actualDateString expected: $sent_at');
-
-        $this->wait(6000);
-
-        $delivered_at = (new \DateTime())->format($org['datetime_format']);
-        Guzzle::post($url,[
-            'auth'=>[$twilioUser['username'],$dbOrg['twilio_user_password']],
-            'body' => [
-                'MessageSid' => $sid,
-                'AccountSid' => $dbOrg['twilio_account_sid'],
-                'MessageStatus' => 'delivered',
-                'To' => $vehicle['mobile_phone_number'],
-                'From' => $dbOrg['twilio_phone_number']
-            ]
+    /**
+     * @param $twilioUser
+     * @param $dbOrg
+     * @param $org
+     * @param $vehicle
+     */
+    protected function postLocationResponse($twilioUser, $dbOrg, $org, $vehicle)
+    {
+        $url = http_build_url($this->baseUrl, [
+            'path' => '/incoming/message'
         ]);
-
-        $this->wait(6000);
-
-        $prefix = $vehicle['registration_number'] . ' delivered ';
-        $this
-            ->assertThat($this
-                ->byCssSelector('#location' . $id . ' span.description')
-                ->text(), $this
-                ->stringStartsWith($prefix));
-        $actualDateString = substr($this
-            ->byCssSelector('#location' . $id . ' span.description')
-            ->text(), strlen($prefix));
-        $actualDate = \DateTime::createFromFormat($org['datetime_format'],
-            $actualDateString)->getTimestamp();
-        $at = \DateTime::createFromFormat($org['datetime_format'],$delivered_at)->getTimestamp();
-        $this
-            ->assertThat($actualDate, $this
-                ->equalTo($at,5),"actual: $actualDateString expected: $delivered_at");
-
-        $this->wait(6000);
-
-        $url = http_build_url($this->baseUrl,[
-            'path'=>'/incoming/message'
-        ]);
-        $received_at = (new \DateTime())->format($org['datetime_format']);
-        Guzzle::post($url,[
-            'auth'=>[$twilioUser['username'],$dbOrg['twilio_user_password']],
+        $response = Guzzle::post($url, [
+            'auth' => [$twilioUser['username'], $dbOrg['twilio_user_password']],
             'body' => [
                 'MessageSid' => '9999999',
                 'SmsSid' => '9999999',
@@ -161,38 +190,7 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
                 'NumMedia' => '0'
             ]
         ]);
-
-        $this->wait(6000);
-
-        $prefix = $vehicle['registration_number'] . ' received ';
-        $this
-            ->assertThat($this
-                ->byCssSelector('#location' . $id . ' span.description')
-                ->text(), $this
-                ->stringStartsWith($prefix));
-        $actualDateString = substr($this
-            ->byCssSelector('#location' . $id . ' span.description')
-            ->text(), strlen($prefix));
-        $actualDate = \DateTime::createFromFormat($org['datetime_format'],
-            $actualDateString)->getTimestamp();
-        $at = \DateTime::createFromFormat($org['datetime_format'],$received_at)->getTimestamp();
-        $this
-            ->assertThat($actualDate, $this
-                ->equalTo($at,5),"actual: $actualDateString expected: $received_at");
-
-        $this
-            ->assertThat($this
-                ->byCssSelector('#location'.$id.' .open-modal-location-view')
-                ->displayed(),$this
-                ->isTrue());
-        
-        $this->wait(6000);
-        
-        $this->byCssSelector('#location'.$id.' button.delete-location')->click();
-        $this->wait();
-        
-        $this->notSeeId('location'.$id);
-
+        $this->assertEquals($response->getStatusCode(), 200, 'test sending location response to incoming controller');
     }
 
 }

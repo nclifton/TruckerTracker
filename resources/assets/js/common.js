@@ -80,7 +80,7 @@ hoverForMoreOptions =
     loop: true,		// Scroll to the end and stop, or loop continuously?
     gap: 20,		// When looping, insert this many pixels of blank space
     target: false,		// Hover on this CSS selector instead of the text line itself
-    removeTitle: true,	// By default, remove the title attribute, as a tooltip is redundant
+    removeTitle: false,	// By default, remove the title attribute, as a tooltip is redundant
     snapback: true,		// Animate when de-activating, as opposed to instantly reverting
     addStyles: true,	// Auto-add CSS; leave this on unless you need to override default styles
     alwaysOn: false,	// If you're insane, you can turn this into a <marquee> tag. (Please don't.)
@@ -97,23 +97,37 @@ hoverForMoreOptions =
 function adjust_fluid_columns () {
 
     $('.row > .line_fluid_column').each(function(){
-        if ($(this).is(':visible')){
-            var colWidth = $(this).closest('.row').outerWidth() - 8;
-            $(this).closest('.row').children().each(function(){
-                if (!$(this).hasClass('line_fluid_column') && $(this).is(':visible'))
-                {
-                    var width = $(this).outerWidth( true ) * 1.08;
-                    colWidth -= width ;
+        var $fcol = $(this);
+        if ($fcol.is(':visible')){
+            var colWidth = $fcol.closest('.row').innerWidth() - 6;
+            $fcol.siblings().each(function(){
+                var $sib = $(this);
+                if ($sib.is(':visible')) {
+                    var sibWidth = $sib.outerWidth(true);
+                    colWidth -= sibWidth;
                 }
             });
-            var width = $(this).children('.overflow_ellipsis').first().width();
+            var width = 0;
+            var fixedWidth = 0
+            $fcol.children().each(function(){
+                var $this = $(this);
+                var w = $this.outerWidth(true) + 9 ;
+                width += w;
+                if ( ! $this.hasClass('overflow_container')){
+                    fixedWidth += w ;
+                }
+            });
+            var $overflowContainer = $fcol.children('.overflow_container').first();
             if (width > colWidth) {
-                $(this).children('.overflow_ellipsis').addClass('overflow_ellipsis_active');
-                $(this).children('.overflow_ellipsis_active').hoverForMore(hoverForMoreOptions);
+                $overflowContainer.width(colWidth - fixedWidth);
+                $overflowContainer.children().each(function(){
+                    $(this).addClass('overflow_ellipsis_active');
+                });
             } else {
-                $(this).children('.overflow_ellipsis').removeClass('overflow_ellipsis_active');
+                $overflowContainer.width('auto');
+                $fcol.find('.overflow_ellipsis_active').removeClass('overflow_ellipsis_active');
             }
-            $(this).width(colWidth);
+            $fcol.width(colWidth);
         }
     });
 }
@@ -138,6 +152,7 @@ $(document).ready(function () {
 
 
     adjust_fluid_columns();
+
     $(window).on('resize',function() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function() {

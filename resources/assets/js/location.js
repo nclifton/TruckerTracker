@@ -6,24 +6,22 @@ $(document).ready(function () {
 
     function update_location_line(data) {
         var loc = $('#location' + data._id);
-        var description = data.vehicle.registration_number + ' ' + data.status;
+        loc.find('span.status').text(data.status);
+        var status_at = data.queued_at;
         switch (data.status) {
-            case 'queued':
-                description += ' '+data.queued_at;
-                break;
             case 'sent':
-                description += ' '+data.sent_at;
+                status_at = data.sent_at;
                 break;
             case 'delivered':
-                description += ' '+data.delivered_at;
+                status_at = data.delivered_at;
                 break;
             case 'received':
-                description += ' '+data.received_at;
+                status_at = data.received_at;
                 loc.find('button.open-modal-location-view').val(data._id);
-                loc.find('button.open-modal-location-view').show();
+                loc.find('.view-button').show();
                 break;
-        }
-        loc.find('span.description').text(description);
+         }
+        loc.find('span.status_at').text(status_at);
         adjust_fluid_columns();
     }
     function setup_subscribe_location(){
@@ -233,7 +231,9 @@ $(document).ready(function () {
                 var loc = $('#location').clone(false).appendTo('#location_list').attr("id", "location" + data._id);
                 loc.find('button.open-modal-view-location').val(data._id);
                 loc.find('button.delete-location').val(data._id);
-                loc.find('span.description').text(data.vehicle.registration_number+' '+data.status+' '+data.queued_at);
+                loc.find('span.registration_number').text(data.vehicle.registration_number);
+                loc.find('span.status').text(data.status);
+                loc.find('span.status_at').text(data.queued_at);
                 loc.show();
 
                 setup_view_location();
