@@ -12,6 +12,7 @@
 namespace TruckerTracker;
 
 use DB;
+
 use Zumba\PHPUnit\Extensions\Mongo\Client\Connector;
 use Zumba\PHPUnit\Extensions\Mongo\DataSet\DataSet;
 
@@ -179,42 +180,129 @@ Trait TestTrait
         ]
     ];
 
-    protected $viewLocationSet =[
-        [
-            '_id' => '300001',
-            'organisation_id' => '10001',
-            'vehicle_id' => '120001',
-            'queued_at' => '2016-06-09T20:55:10+10:00',
-            'sent_at' => '2016-06-09T20:56:10+10:00',
-            'delivered_at' => '2016-06-09T20:57:10+10:00',
-            'received_at' => '2016-06-09T21:07:10+10:00',
-            'sid' => '2222222',
-            'sid_response' => '9999999',
-            'latitude' => -34.04387,
-            'longitude' => 150.84342419999996,
-            'course' => 0.00,
-            'speed' => 0.5204,
-            'datetime' => '2016-07-02T21:05:43+10:00',
-            'status' => 'received'
-        ],[
-            '_id' => '300002',
-            'organisation_id' => '10001',
-            'vehicle_id' => '120001',
-            'queued_at' => '2016-06-09T21:00:10+10:00',
-            'sent_at' => '2016-06-09T21:01:10+10:00',
-            'delivered_at' => '2016-06-09T21:10:10+10:00',
-            'received_at' => '2016-06-09T21:17:10+10:00',
-            'sid' => '3333333',
-            'sid_response' => '88888888',
-            'latitude' => -34.01387,
-            'longitude' => 150.8434242,
-            'course' => 275.00,
-            'speed' => 40.3304,
-            'datetime' => '2016-07-02T21:15:43+10:00',
-            'status' => 'received'
-    ]
-
-    ];
+    protected $viewLocationSetJson = '[
+	{
+		"_id": "577378400d82750b6e1ff331",
+		"organisation_id": "10001",
+		"vehicle_id": "120001",
+		"queued_at": "2016-06-29 17:26:57",
+		"status": "received",
+		"sid": "SM12e90c98cd4f42a494950d28220ae13d",
+		"sent_at": "2016-06-29 17:26:58",
+		"delivered_at": "2016-06-29 17:27:07",
+		"sid_response": "SM0e2ef503a738065c9f15cf2dbca3d43a",
+		"latitude": -34.04402,
+		"longitude": 150.84327,
+		"course": 0,
+		"speed": 0.037,
+		"datetime": "2016-06-29 15:27:00",
+		"received_at": "2016-06-29 17:27:12"
+	},
+	{
+		"_id": "5773a58e0d82750c8d2dafa1",
+		"organisation_id": "10001",
+		"vehicle_id": "120001",
+		"queued_at": "2016-06-29 20:40:15",
+		"status": "received",
+		"sid": "SM524040f723af41618cc7b51859949ce4",
+		"sent_at": "2016-06-29 20:40:16",
+		"delivered_at": "2016-06-29 20:40:26",
+		"sid_response": "SM96d1dedbc8713c009ceca931e011afdb",
+		"latitude": -34.08347,
+		"longitude": 150.81274,
+		"course": 123.15,
+		"speed": 0,
+		"datetime": "2016-06-29 18:40:00",
+		"received_at": "2016-06-29 20:40:31"
+	},
+	{
+		"_id": "57772ed60d827504676df431",
+		"organisation_id": "10001",
+		"vehicle_id": "120001",
+		"queued_at": "2016-07-02 13:02:47",
+		"status": "received",
+		"sid": "SMca3c9a10f6174bc98b7e6e19e85ca958",
+		"sent_at": "2016-07-02 13:02:48",
+		"delivered_at": "2016-07-02 13:03:00",
+		"sid_response": "SMf94a51bec9b7a40ab6b666e25f444aa1",
+		"latitude": -34.04404,
+		"longitude": 150.8433,
+		"course": 244.94,
+		"speed": 0.0074,
+		"datetime": "2016-06-30 16:23:00",
+		"received_at": "2016-07-02 13:03:04"
+	},
+	{
+		"_id": "57772edb0d8275046657d4e1",
+		"organisation_id": "10001",
+		"vehicle_id": "120002",
+		"queued_at": "2016-07-02 13:02:52",
+		"status": "received",
+		"sid": "SM2f3fc762f4514b3d947642c664912f89",
+		"sent_at": "2016-07-02 13:02:53",
+		"sid_response": "SMfd14ee7fae976d125c6c832634ed8c2e",
+		"latitude": -34.07045,
+		"longitude": 150.63681,
+		"course": 8.97,
+		"speed": 0.3556,
+		"datetime": "2016-07-02 11:04:00",
+		"received_at": "2016-07-02 13:04:31",
+		"delivered_at": "2016-07-02 13:04:28"
+	},
+	{
+		"_id": "5779121d0d8275046657d4e2",
+		"organisation_id": "10001",
+		"vehicle_id": "120001",
+		"queued_at": "2016-07-03 23:24:46",
+		"status": "received",
+		"sid": "SMd873136b738647baa47ce88b0dd68536",
+		"sent_at": "2016-07-03 23:24:47",
+		"delivered_at": "2016-07-03 23:24:58",
+		"sid_response": "SM6e9c01a806b1372130fa3ea739b64a67",
+		"latitude": -34.04404,
+		"longitude": 150.84322,
+		"course": 299.23,
+		"speed": 0.2334,
+		"datetime": "2016-07-03 21:24:00",
+		"received_at": "2016-07-03 23:25:04"
+	},
+	{
+		"_id": "577a0d7a0d8275046657d4e4",
+		"organisation_id": "10001",
+		"vehicle_id": "120001",
+		"queued_at": "2016-07-04 17:17:16",
+		"status": "received",
+		"sid": "SMda71ee93ee034c43b95b956fd469822f",
+		"sent_at": "2016-07-04 17:17:17",
+		"delivered_at": "2016-07-04 17:17:27",
+		"sid_response": "SMa1f1c45478573178568482f44787391c",
+		"latitude": -34.06582,
+		"longitude": 150.84198,
+		"course": 172.82,
+		"speed": 0.0185,
+		"datetime": "2016-07-04 15:17:00",
+		"received_at": "2016-07-04 17:17:33"
+	},
+	{
+		"_id": "577a17390d8275046657d4e5",
+		"organisation_id": "10001",
+		"vehicle_id": "120001",
+		"queued_at": "2016-07-04 17:58:50",
+		"status": "received",
+		"sid": "SMf85318ba2db7436db38036e1d4ac26b3",
+		"sent_at": "2016-07-04 17:58:51",
+		"delivered_at": "2016-07-04 17:58:57",
+		"sid_response": "SM308a4a94c8786dd84a77aa42c6c1def1",
+		"latitude": -34.0625,
+		"longitude": 150.84487,
+		"course": 195.19,
+		"speed": 40.1773,
+		"datetime": "2016-07-04 15:58:00",
+		"received_at": "2016-07-04 17:59:02"
+	}
+]';
+        
+  
 
 
     /**
@@ -240,10 +328,25 @@ Trait TestTrait
 
         if (empty($this->dataSet)) {
             $this->dataSet = new DataSet($this->getMongoConnection());
-            $this->dataSet->setFixture($this->setMongoDates($this->getFixture()));
+            $this->dataSet
+                ->setFixture($this
+                    ->setIds($this
+                        ->setMongoDates($this
+                            ->getFixture())));
         }
         $this->twilioUser = null;
         return $this->dataSet;
+    }
+
+    protected function setIds($fixture){
+        foreach ($fixture as $key => $value) {
+            if (is_array($value)) {
+                $fixture[$key] = $this->setIds($value);
+            } else if ($key == '_id' && strlen($fixture[$key]) == 24 && ctype_xdigit($fixture[$key]) ) {
+                $fixture[$key] = new \MongoId($fixture[$key]);
+            }
+        }
+        return $fixture;
     }
 
     abstract protected function getFixture();
@@ -316,11 +419,21 @@ Trait TestTrait
                 $fixture[$key] = $this->setMongoDates($value);
             } else if (in_array($key, ['queued_at', 'sent_at', 'received_at', 'delivered_at', 'datetime'])) {
                 $fixture[$key] = ($value instanceof \DateTime)
-                    ? $this->localDateTimeToMongoUTCDateTime($value)
+                    ? $this->localDateTimeToMongoDate($value)
                     : $this->iso8601LocalStringToMongoDate($value);
             }
         }
         return $fixture;
+    }
+
+
+    /**
+     * @param $value
+     * @return MongoDate
+     */
+    protected function localDateTimeToMongoDate($value)
+    {
+        return new \MongoDate($this->localDateTimeToMongoUTCDateTime($value));
     }
 
     /**
@@ -332,12 +445,26 @@ Trait TestTrait
         return new \MongoDate($this->iso8601LocalStringToMongoUTCDatetime($value));
     }
 
+    /**
+     * @param $value
+     * @return \MongoDB\BSON\UTCDatetime
+     */
     protected function iso8601LocalStringToMongoUTCDatetime($value)
     {
         $dateTime = new \DateTime($value);
         return $this->localDateTimeToMongoUTCDateTime($dateTime);
     }
 
+    /**
+     * @param $dateTime
+     * @return \MongoDB\BSON\UTCDatetime
+     */
+    protected function localDateTimeToMongoUTCDateTime($dateTime)
+    {
+        $dateTime->setTimezone(new \DateTimeZone('UTC'));
+        $mongoDate = new \MongoDB\BSON\UTCDatetime(round($dateTime->getTimestamp() * 1000));
+        return $mongoDate;
+    }
 
     /**
      * Assert that a given where condition exists in the database.
@@ -379,15 +506,5 @@ Trait TestTrait
         return $this;
     }
 
-    /**
-     * @param $dateTime
-     * @return \MongoDB\BSON\UTCDatetime
-     */
-    protected function localDateTimeToMongoUTCDateTime($dateTime)
-    {
-        $dateTime->setTimezone(new \DateTimeZone('UTC'));
-        $mongoDate = new \MongoDB\BSON\UTCDatetime(round($dateTime->getTimestamp() * 1000));
-        return $mongoDate;
-    }
 
 }

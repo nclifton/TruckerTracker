@@ -98,7 +98,7 @@ function adjust_fluid_columns () {
 
     $('.row > .line_fluid_column').each(function(){
         if ($(this).is(':visible')){
-            var colWidth = $(this).closest('.row').outerWidth();
+            var colWidth = $(this).closest('.row').outerWidth() - 8;
             $(this).closest('.row').children().each(function(){
                 if (!$(this).hasClass('line_fluid_column') && $(this).is(':visible'))
                 {
@@ -113,7 +113,7 @@ function adjust_fluid_columns () {
             } else {
                 $(this).children('.overflow_ellipsis').removeClass('overflow_ellipsis_active');
             }
-            $(this).width(colWidth - 8);
+            $(this).width(colWidth);
         }
     });
 }

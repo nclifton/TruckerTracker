@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use TruckerTracker\Twilio\TwilioInterface;
 
-class LocationControllerViewLocationTest extends LocationControllerTestCase
+class LocationControllerViewLocationsTest extends LocationControllerTestCase
 {
 
     /**
@@ -23,31 +23,33 @@ class LocationControllerViewLocationTest extends LocationControllerTestCase
      *
      * @test
      */
-    public function suppliesSpecificVehicleLocationDataPoint()
+    public function suppliesVehicleLocationDataPoints()
     {
         // Arrange
         $org = $this->orgSet[0];
         $user = $this->user();
-        $loc = $this->viewLocationSet[0];
         $vehicle = $this->vehicleSet[0];
-        $expectedLoc = $loc;
-        unset($expectedLoc['organisation_id']);
-        unset($expectedLoc['vehicle_id']);
-        unset($expectedLoc['sid']);
+        $expectedLocSet = [];
+        foreach (json_decode($this->viewLocationSetJson,true) as $loc){
+            $expectedLoc = $loc;
+            unset($expectedLoc['organisation_id']);
+            unset($expectedLoc['vehicle_id']);
+            unset($expectedLoc['sid']);
+            $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format($org['datetime_format']);
+            $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format($org['datetime_format']);
+            $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format($org['datetime_format']);
+            $expectedLoc['delivered_at'] = (new \DateTime($expectedLoc['delivered_at']))->format($org['datetime_format']);
+            $expectedLoc['received_at'] = (new \DateTime($expectedLoc['received_at']))->format($org['datetime_format']);
+            $expectedLoc['vehicle'] = [
+                '_id'=>$vehicle['_id'],
+                'registration_number'=>$vehicle['registration_number']
+            ];
+            $expectedLocSet[] = $expectedLoc;
+        }
 
-        $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format($org['datetime_format']);
-        $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format($org['datetime_format']);
-        $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format($org['datetime_format']);
-        $expectedLoc['delivered_at'] = (new \DateTime($expectedLoc['delivered_at']))->format($org['datetime_format']);
-        $expectedLoc['received_at'] = (new \DateTime($expectedLoc['received_at']))->format($org['datetime_format']);
-
-        $vehicle = array_filter($vehicle, function($key) {
-            return !in_array($key,['mobile_phone_number','tracker_imei_number','tracker_password','organisation_id']);
-        },ARRAY_FILTER_USE_KEY);
-        $expectedLoc = array_merge($expectedLoc,['vehicle'=>$vehicle]);
 
         // Act
-        $this->actingAs($user)->json('get','vehicle/location/'. $loc['_id']);
+        $this->actingAs($user)->json('get','vehicle/locations');
 
         // Assert
         $this->assertResponseOk();
@@ -56,7 +58,40 @@ class LocationControllerViewLocationTest extends LocationControllerTestCase
 
     }
 
- 
+    /**
+     * get location data
+     *
+     * @test
+     */
+    public function suppliesOneVehicleLocationDataPoint()
+    {
+        // Arrange
+        $org = $this->orgSet[0];
+        $user = $this->user();
+        $vehicle = $this->vehicleSet[0];
+        $expectedLoc = json_decode($this->viewLocationSetJson,true)[0];
+        unset($expectedLoc['organisation_id']);
+        unset($expectedLoc['vehicle_id']);
+        unset($expectedLoc['sid']);
+        $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format($org['datetime_format']);
+        $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format($org['datetime_format']);
+        $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format($org['datetime_format']);
+        $expectedLoc['delivered_at'] = (new \DateTime($expectedLoc['delivered_at']))->format($org['datetime_format']);
+        $expectedLoc['received_at'] = (new \DateTime($expectedLoc['received_at']))->format($org['datetime_format']);
+        $expectedLoc['vehicle'] = [
+            '_id'=>$vehicle['_id'],
+            'registration_number'=>$vehicle['registration_number']
+        ];
+
+        // Act
+        $this->actingAs($user)->json('get','vehicle/location/'.$expectedLoc['_id']);
+
+        // Assert
+        $this->assertResponseOk();
+
+        $this->seeJson($expectedLoc);
+
+    }
 
 
  

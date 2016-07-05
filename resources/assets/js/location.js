@@ -3,6 +3,7 @@
  */
 $(document).ready(function () {
 
+
     function update_location_line(data) {
         var loc = $('#location' + data._id);
         var description = data.vehicle.registration_number + ' ' + data.status;
@@ -65,41 +66,102 @@ $(document).ready(function () {
 
     //display modal form viewing a location
     function setup_view_location() {
+
+        var locationMap = null;
+        var markerArray = [];
+        var infoWindowArray = [];
+        var currMapCenter;
+
         $('.open-modal-location-view').click(function () {
             var location_id = $(this).val();
 
-            $.get('/vehicle/location/' + location_id, function (data) {
+            $.get('/vehicle/location/' + location_id, function (loc) {
                 //success data
-                console.log(data);
+                console.log(loc);
 
-                $('#location_id').val(data._id);
-                $('#datetime').text(data.vehicle.datetime);
-                $('#view_location_vehicle_registration_number').text(data.vehicle.registration_number);
-                $('#view_location_datetime').text(data.datetime);
+                $('#location_id').val(loc._id);
+                $('#datetime').text(loc.vehicle.datetime);
+                $('#view_location_vehicle_registration_number').text(loc.vehicle.registration_number);
+                $('#view_location_datetime').text(loc.datetime);
 
                 $('#location-viewModal').on('shown.bs.modal', function (e) {
+                    $('#location-viewModal').off('shown.bs.modal');
+
                     // map stuff here after the modal is finished forming
-                    var location = [data.latitude, data.longitude];
-                    var latLng = new google.maps.LatLng(data.latitude, data.longitude);
-                    $('#map')
-                        .gmap3({
-                            center: latLng,
-                            zoom: 10,
-                            mapTypeId: google.maps.MapTypeId.ROADMAP,
-                            disableDefaultUI: true,
-                            zoomControl: true,
-                            scaleControl: true,
-                            fullscreenControl: true
+                    var mapCenter = {lat: loc.latitude, lng: loc.longitude};
+
+                    var markerOptions = {
+                        position: mapCenter,
+                        tag: loc._id,
+                        title: loc.vehicle.registration_number,
+                        icon: {
+                            path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                            scale: 3
+                        }
+                    };
+                    var infoWindowOptions = {
+                        position: mapCenter,
+                        tag: loc._id,
+                        content: loc.vehicle.registration_number + ' '+ loc.course + '° at ' + loc.speed + ' km/h'
+                    };
+
+                    if (locationMap == null) {
+                        $('#map')
+                            .gmap3({
+                                center: mapCenter,
+                                zoom: 15,
+                                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                                disableDefaultUI: true,
+                                zoomControl: true,
+                                scaleControl: true,
+                                fullscreenControl: true })
+                            .then(function(map){
+                                locationMap = map;
+                            });
+                        $(window).on('resize',function(){
+                            google.maps.event.trigger(locationMap, 'resize');
                         })
-                        .marker({
-                            position: location,
-                            icon: {
-                                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                                scale: 3
-                            },
-                            title: data.vehicle.registration_number + ' '+ data.course + '° at ' + data.speed + ' km/h'
+
+                    } else {
+                        $.each(markerArray,function(i,marker){
+                            marker.setMap(null);
+                            markerArray.splice(i,1);
                         });
-                });
+                        $.each(infoWindowArray,function(i,infoWindow){
+                            infoWindow.setMap(null);
+                            infoWindowArray.splice(i,1);
+                        });
+                    }
+                    $('#map').gmap3()
+                        .marker(markerOptions)
+                        .then(function(marker){
+                            markerArray[markerArray.length] = marker;
+                        })
+                        .infowindow(infoWindowOptions)
+                        .then(function(infoWindow){
+                            infoWindowArray[infoWindowArray.length] = infoWindow;
+                            var map = this.get(0);
+                            var marker = this.get(1);
+                            marker.addListener('click',function(){
+                                infoWindow.open(map,marker);
+                            });
+                            map.panTo(markerOptions.position);
+                            return map;
+                        })
+                        .on({
+                            idle:
+                                function (map, e) {
+                                    currMapCenter = map.getCenter();
+                                },
+                            resize:
+                                function (map, e){
+                                    map.setCenter(currMapCenter);
+                                }
+                        })
+                    
+                    ;
+
+                });  // end on show modal
 
                 $('#location-viewModal').modal('show');
 

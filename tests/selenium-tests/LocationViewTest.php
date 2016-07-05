@@ -21,7 +21,7 @@ class LocationViewTest extends IntegratedTestCase
             'drivers' => $this->driverSet,
             'vehicles' => $this->vehicleSet,
             'messages' => $this->messageSet,
-            'locations' => $this->viewLocationSet
+            'locations' => json_decode($this->viewLocationSetJson,true)
         ];
     }
 
@@ -38,7 +38,7 @@ class LocationViewTest extends IntegratedTestCase
         // Arrange
         $this->login();
         $org = $this->orgSet[0];
-        $loc = $this->viewLocationSet[0];
+        $loc = json_decode($this->viewLocationSetJson,true)[0];
         $vehicle = $this->vehicleSet[0];
         $expectedDatetime = (new \DateTime($loc['datetime']))->format($org['datetime_format']);
 
@@ -61,7 +61,7 @@ class LocationViewTest extends IntegratedTestCase
             ->assertThat($this
                 ->byCssSelector('.gmnoprint[title^="'.$vehicle['registration_number'].'"]')
                 ->attribute('title'), $this
-                ->equalTo($vehicle['registration_number'].' 0° at 0.5204 km/h'));
+                ->equalTo($vehicle['registration_number']));
 
     }
 }

@@ -28,12 +28,11 @@ class LocationControllerDeleteLocationTest extends LocationControllerTestCase
         // Arrange
         $org = $this->orgSet[0];
         $user = $this->firstUser();
-        $loc = $this->viewLocationSet[0];
-        $expectedLoc = $loc;
+
+        $expectedLoc = json_decode($this->viewLocationSetJson,true)[0];
         unset($expectedLoc['organisation_id']);
         unset($expectedLoc['vehicle_id']);
         unset($expectedLoc['sid']);
-
         $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format($org['datetime_format']);
         $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format($org['datetime_format']);
         $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format($org['datetime_format']);
@@ -42,14 +41,14 @@ class LocationControllerDeleteLocationTest extends LocationControllerTestCase
 
 
         // Act
-        $this->actingAs($user)->json('delete','vehicle/location/'. $loc['_id']);
+        $this->actingAs($user)->json('delete','vehicle/location/'. $expectedLoc['_id']);
 
         // Assert
         $this->assertResponseOk();
 
         $this->seeJson($expectedLoc);
 
-        $this->notSeeInDatabase('locations',['_id'=>$loc['_id']]);
+        $this->notSeeInDatabase('locations',['_id'=>$expectedLoc['_id']]);
 
     }
 

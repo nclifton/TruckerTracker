@@ -55,9 +55,9 @@ Route::delete('/vehicles/{vehicle}',            'ConfigController@deleteVehicle'
 Route::post('/driver/{driver}/message',         'TwilioController@messageDriver');
 Route::post('/vehicle/{vehicle}/location',      'TwilioController@locateVehicle');
 
+Route::get('/vehicle/locations',                'LocationController@getLocations');
 Route::get('/vehicle/location/{location}',      'LocationController@getLocation');
 Route::delete('/vehicle/location/{location}',   'LocationController@deleteLocation');
-
 
 Route::get('/driver/message/{message}',         'MessageController@getMessage');
 Route::delete('/driver/message/{message}',      'MessageController@deleteMessage');

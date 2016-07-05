@@ -40,7 +40,7 @@ class LocationControllerTestCase extends TestCase
             'drivers' => [],
             'vehicles' => $this->vehicleSet,
             'messages' => [],
-            'locations' => $this->viewLocationSet
+            'locations' => json_decode($this->viewLocationSetJson,true)
         ];
     }
 
