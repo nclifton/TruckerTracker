@@ -30,7 +30,7 @@
     <script src="{{ asset('/js/jquery-ui.js') }}"></script>
     <script src="{{ asset('/js/gmap3.js') }}"></script>
     <script src="{{ asset('/js/jquery.sse.js') }}"></script>
-    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBPDj8tgIxOYgafbLRbFE_wonogRcFF4XY&signed_in=true&libraries=geometry,places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPDj8tgIxOYgafbLRbFE_wonogRcFF4XY&signed_in=true&libraries=geometry,places"></script>
 
 </head>
 <body id="app-layout">
