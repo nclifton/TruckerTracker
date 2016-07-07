@@ -103,7 +103,7 @@ function adjust_fluid_columns () {
             $fcol.siblings().each(function(){
                 var $sib = $(this);
                 if ($sib.is(':visible')) {
-                    var sibWidth = $sib.outerWidth(true) + 2;
+                    var sibWidth = $sib.outerWidth(true) + 4;
                     colWidth -= sibWidth;
                 }
             });
