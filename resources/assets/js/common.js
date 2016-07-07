@@ -94,7 +94,7 @@ function remove_style_widths(){
 }
 
 function adjust_fluid_columns () {
-
+    remove_style_widths();
     $('.row > .line_fluid_column').each(function(){
         var $fluidCol = $(this);
         if ($fluidCol.is(':visible')){
