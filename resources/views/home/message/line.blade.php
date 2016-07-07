@@ -45,8 +45,10 @@ if ($message){
         </span>
     </span>
     @can('delete-message')
-    <button class="btn btn-danger btn-xs btn-delete delete-message pull-right delete-button" value="{{$id}}">
-        Delete
-    </button>
+        <span class="delete-button">
+            <button class="btn btn-danger btn-xs btn-delete delete-message pull-right delete-button" value="{{$id}}">
+                Delete
+            </button>
+        </span>
     @endcan
 </li>

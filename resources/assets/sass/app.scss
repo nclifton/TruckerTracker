@@ -12,9 +12,26 @@
       padding: 0 2px 0 0;
       vertical-align: top;
       margin: 0;
-    }
-    span.pull-right{
-      padding:0;
+      border-width: 0;
+
+      &.pull-right, &.delete-button, &.edit-button, &.locate-button, &.message-button, &.view-button{
+        padding:0;
+      }
+      &.delete-button{
+        width:48px;
+      }
+      &.edit-button{
+        width:34px;
+      }
+      &.locate-button{
+        width:45px;
+      }
+      &.message-button{
+        width:58px;
+      }
+      &.view-button{
+        width:39px;
+      }
     }
 
     .line_fluid_column{
@@ -27,6 +44,7 @@
       .overflow_container {
         overflow: hidden;
         white-space: nowrap;
+        padding: 0 2px 0 2px;
         .overflow_ellipsis_active{
           position: relative;
           white-space: nowrap;

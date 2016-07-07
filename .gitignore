@@ -19,3 +19,4 @@ Homestead.json
 /redis-stable
 /resources/assets/bower/
 /nginx/
+/storage/framework/dbbackups/

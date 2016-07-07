@@ -1,27 +1,31 @@
 <li id="driver{{$driver?$driver->id:''}}" class="row list_panel_line" style="{{$styleAttr}}">
     @can('send-message')
-    <span>
-        <button class="btn btn-xs btn-detail open-modal-message message-button" value="{{$driver?$driver->id:''}}">message</button>
-    </span>
+        <span class="message-button">
+            <button class="btn btn-xs btn-detail open-modal-message message-button" value="{{$driver?$driver->id:''}}">message</button>
+        </span>
     @endcan
     <span class="line_fluid_column">
-        <span class="overflow_container name">
-            {{$driver?$driver->first_name:''}}
-            {{$driver?$driver->last_name:''}}
+        <span class="overflow_container">
+            <span class="overflow_ellipsis name">
+                {{$driver?$driver->first_name:''}}
+                {{$driver?$driver->last_name:''}}
+            </span>
         </span>
     </span>
-    <span class="edit-delete-button pull-right">
-        @can('delete-driver',$org)
-            <button class="btn btn-danger btn-xs btn-delete delete-driver pull-right"
-                    value="{{$driver?$driver->id:''}}">
+    @can('delete-driver',$org)
+        <span class="delete-button">
+            <button class="btn btn-danger btn-xs btn-delete delete-button delete-driver pull-right"
+                value="{{$driver?$driver->id:''}}">
                 Delete
             </button>
-        @endcan
-        @can('update-driver',$org)
-            <button class="btn btn-warning btn-xs btn-detail open-modal-driver pull-right"
-                  value="{{$driver?$driver->id:''}}">
+        </span>
+    @endcan
+    @can('update-driver',$org)
+        <span class="edit-button">
+            <button class="btn btn-warning btn-xs btn-detail edit-button open-modal-driver pull-right"
+              value="{{$driver?$driver->id:''}}">
                 Edit
             </button>
-        @endcan
-    </span>
+        </span>
+    @endcan
 </li>

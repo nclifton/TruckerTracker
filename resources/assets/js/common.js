@@ -74,60 +74,77 @@ function setClickableTooltip(target, content){
     });
 }
 
-hoverForMoreOptions =
-{
-    speed: 60.0,		// Measured in pixels-per-second
-    loop: true,		// Scroll to the end and stop, or loop continuously?
-    gap: 20,		// When looping, insert this many pixels of blank space
-    target: false,		// Hover on this CSS selector instead of the text line itself
-    removeTitle: false,	// By default, remove the title attribute, as a tooltip is redundant
-    snapback: true,		// Animate when de-activating, as opposed to instantly reverting
-    addStyles: true,	// Auto-add CSS; leave this on unless you need to override default styles
-    alwaysOn: false,	// If you're insane, you can turn this into a <marquee> tag. (Please don't.)
-
-    // In case you want to alter the events which activate and de-activate the effect:
-    startEvent: "mouseenter",
-    stopEvent: "mouseleave"
-};
-
 /**
  *     Adjust width of row elements using the line-fluid-column class.
  *     For this to work properly there must be only one per line
  **/
+function remove_style_widths(){
+    $('.row > .line_fluid_column').each(function(){
+        var $fluidCol = $(this);
+        if ($fluidCol.is(':visible')) {
+            $fluidCol.siblings().each(function () {
+                $(this).css('width', '');
+            });
+            $fluidCol.css('width', '');
+            $fluidCol.children().each(function () {
+                $(this).css('width', '');
+            });
+        }
+    });
+}
+
 function adjust_fluid_columns () {
 
     $('.row > .line_fluid_column').each(function(){
-        var $fcol = $(this);
-        if ($fcol.is(':visible')){
-            var colWidth = $fcol.closest('.row').innerWidth() - 6;
-            $fcol.siblings().each(function(){
+        var $fluidCol = $(this);
+        if ($fluidCol.is(':visible')){
+            var fluidWidth = $fluidCol.closest('.row').width();
+            //$fcol.closest('.row').width(colWidth);
+            $fluidCol.siblings().each(function(){
                 var $sib = $(this);
                 if ($sib.is(':visible')) {
-                    var sibWidth = $sib.outerWidth(true) + 4;
-                    colWidth -= sibWidth;
+                    var sibWidth = $sib.width();
+                    $sib.width(sibWidth);
+                    fluidWidth -= sibWidth;
                 }
             });
+            $fluidCol.width(fluidWidth);
             var width = 0;
-            var fixedWidth = 0
-            $fcol.children().each(function(){
+            var ofWidth = 0;
+            // how wide can we make the overflow_container? will be fluid col width less fixed width col widths
+            // colWidth is fluid col width
+            $fluidCol.children().each(function(){
                 var $this = $(this);
-                var w = $this.outerWidth(true) + 9 ;
-                width += w;
-                if ( ! $this.hasClass('overflow_container')){
-                    fixedWidth += w ;
+                var w = $this.width();
+                var pw = parseInt($this.css("padding-right")) + parseInt($this.css("padding-left"));
+                var mw = parseInt($this.css("margin-right")) + parseInt($this.css("margin-left"));
+                $this.width(w + pw + mw);
+                width += w + pw + mw;
+                if ($this.hasClass('overflow_container')){
+                    ofWidth = 0;
+                    $this.children().each(function(){
+                        var pw = parseInt($(this).css("padding-right")) + parseInt($(this).css("padding-left"));
+                        var mw = parseInt($(this).css("margin-right")) + parseInt($(this).css("margin-left"));
+                        ofWidth += $(this).width() + pw + mw;
+                    });
                 }
             });
-            var $overflowContainer = $fcol.children('.overflow_container').first();
-            if (width > colWidth) {
-                $overflowContainer.width(colWidth - fixedWidth);
-                $overflowContainer.children().each(function(){
-                    $(this).addClass('overflow_ellipsis_active');
-                });
-            } else {
-                $overflowContainer.width('auto');
-                $fcol.find('.overflow_ellipsis_active').removeClass('overflow_ellipsis_active');
+            var fixedWidth = width - ofWidth;
+            if (fixedWidth < fluidWidth){
+                var $overflowContainer = $fluidCol.children('.overflow_container').first();
+                var ofcWidth = fluidWidth - fixedWidth;
+                $overflowContainer.width(ofcWidth);
+                if ((ofWidth + 10) > ofcWidth) {
+                    $overflowContainer.children().each(function () {
+                        $(this).addClass('overflow_ellipsis_active');
+                    });
+                } else {
+                    //$overflowContainer.width('auto');
+                    $fluidCol.find('.overflow_ellipsis_active').removeClass('overflow_ellipsis_active');
+                }
+
             }
-            $fcol.width(colWidth);
+
         }
     });
 }
@@ -317,11 +334,12 @@ function setup_sse(){
 $(document).ready(function () {
     var resizeTimer;
     var showTimer;
-    var sse;
 
     adjust_fluid_columns();
 
-    $(window).on('resize',function() {
+    $(window).on('resize',function(e) {
+        remove_style_widths();
+
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function() {
             adjust_fluid_columns();
@@ -329,6 +347,8 @@ $(document).ready(function () {
     });
 
     $('.list_panel_line').on('show', function() {
+        remove_style_widths();
+
         clearTimeout(showTimer);
         showTimer = setTimeout(function() {
             adjust_fluid_columns();

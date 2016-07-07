@@ -26,7 +26,6 @@ if ($location) {
 <li id="location{{$id}}" class="row list_panel_line" style="{{$styleAttr}}">
 
     @can('view-location')
-
         @if ($status == 'received')
             <span class="view-button">
                 <button class="btn btn-xs btn-detail open-modal-location-view view-button" value="{{$id}}">View</button>
@@ -46,10 +45,10 @@ if ($location) {
         </span>
     </span>
     @can('delete-location')
-    <span class="pull-right">
-    <button class="btn btn-danger btn-xs btn-delete delete-location pull-right delete-button" value="{{$id}}">
-        Delete
-    </button>
+    <span class="delete-button">
+        <button class="btn btn-danger btn-xs btn-delete delete-location pull-right delete-button" value="{{$id}}">
+            Delete
+        </button>
     </span>
     @endcan
 </li>
