@@ -9,6 +9,21 @@ $(document).ready(function ($) {
     function setup_message_driver() {
         $('.open-modal-message').click(function () {
             var driver_id = $(this).val();
+
+            // $.get('/conversation/driver/' + driver_id, function(data) {
+            //     //success data
+            //     console.log(data);
+            //     $.each(data.messages, function(){
+            //
+            //     })
+            //
+            // }).fail(function(data){
+            //     var newDoc = document.open("text/html", "replace");
+            //     newDoc.write(data.responseText);
+            //     newDoc.close();
+            // });
+            
+
             $('#btn-save-message').val("send");
             $('#message_id').val(driver_id);
             $('#messageModal').modal('show');
@@ -43,6 +58,7 @@ $(document).ready(function ($) {
     }
 
     setup_edit_driver();
+
 
     //display modal form for creating new driver
     $('#btn-add-driver').click(function () {
@@ -133,10 +149,12 @@ $(document).ready(function ($) {
                 $("#driver" + data._id + ' .name').text(data.first_name+' '+data.last_name);
                 $('#driverForm').trigger("reset");
                 $('#driverModal').modal('hide');
+                
                 setup_edit_driver();
                 setup_delete_driver();
                 setup_message_driver();
                 adjust_fluid_columns();
+                setup_sse();
 
             },
             error: function (data) {

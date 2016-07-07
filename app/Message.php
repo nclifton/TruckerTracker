@@ -21,6 +21,12 @@ class Message extends Moloquent
 
     use OrganisationDateFormatingTrait;
 
+
+    const STATUS_QUEUED     = 'queued';
+    const STATUS_SENT       = 'sent';
+    const STATUS_DELIVERED  = 'delivered';
+    const STATUS_RECEIVED   = 'received';
+
     protected $fillable =
         [
             'message_text',

@@ -2,6 +2,7 @@
 
 namespace TruckerTracker\Http\Controllers;
 
+use Auth;
 use Config;
 use Gate;
 use Guzzle;
@@ -62,9 +63,7 @@ class TwilioIncomingController extends Controller
             Log::debug(sprintf("text message received from driver: %s" , $driver->first_name.' '.$driver->last_name));
             $org = $driver->organisation;
             $message = $this->storeMessageFromDriver($request, $org, $driver);
-            $url = Config::get('url',env('APP_URL')) . '/pub/messages' . $org->_id;
-            Log::debug("url: $url");
-            $this->publish($url, $message->toArray(),'MessageReceived');
+            $this->publish($message->toArray(),'MessageReceived');
             Log::debug('published message');
             if ($org->auto_reply)
                 $twiml->message('Thank you ' . $driver['first_name'] . ', message received');
@@ -74,10 +73,7 @@ class TwilioIncomingController extends Controller
             Log::debug(sprintf("location text message received from vehicle: %s" , $vehicle->registration_number));
             $location = $this->updateVehicleLocation($request, $vehicle);
             if ($location) {
-                $org = $vehicle->organisation;
-                $url = Config::get('url',env('APP_URL')) . '/pub/locations' . $org->_id;
-                Log::debug("url: $url");
-                $this->publish($url, $location->toArray(),'LocationReceived');
+                $this->publish($location->toArray(),'LocationReceived');
                 Log::debug('published location');
             }
         } else {
@@ -134,7 +130,7 @@ class TwilioIncomingController extends Controller
             throw $e;
         }
 
-        return Response::json(['status' => 'received']);
+        return Response::json(['status' => Message::STATUS_RECEIVED]);
     }
 
     /**
@@ -180,7 +176,7 @@ class TwilioIncomingController extends Controller
                     'course' => floatval($data['Course']),
                     'speed' => floatval($data['Speed']),
                     'datetime' => $this->readTrackerDatetime($data['DateTime'], $org),
-                    'status' => 'received',
+                    'status' => Message::STATUS_RECEIVED,
                     'received_at' => new \DateTime()
                 ]);
         }
@@ -219,9 +215,7 @@ class TwilioIncomingController extends Controller
     {
         Log::debug(sprintf("status update (%s) received for message: %s", $status, $message->_id));
         $message->update(['status' => $status, $status . '_at' => new \DateTime()]);
-        $url = Config::get('url',env('APP_URL')) . '/pub/messages' . $org->_id;
-        Log::debug("url: $url");
-        $this->publish($url, $message->toArray(), 'MessageUpdate');
+        $this->publish($message->toArray(), 'MessageUpdate');
 
     }
 
@@ -235,9 +229,7 @@ class TwilioIncomingController extends Controller
     {
         Log::debug(sprintf("status update (%s) received for location: %s", $status, $location->_id));
         $location->update(['status' => $status, $status . '_at' => new \DateTime()]);
-        $url = Config::get('url',env('APP_URL')) . '/pub/locations' . $org->_id;
-        Log::debug("url: $url");
-        $this->publish($url, $location->toArray(),'LocationUpdate');
+        $this->publish($location->toArray(),'LocationUpdate');
 
     }
 
@@ -246,8 +238,11 @@ class TwilioIncomingController extends Controller
      * @param $pubMsg
      * @param $event
      */
-    protected function publish($url, $pubMsg, $event)
+    protected function publish($pubMsg, $event)
     {
+        $org = Auth::getUser()->organisation;
+        $url = Config::get('url',env('APP_URL')) . '/pub/' . $org->_id;
+        Log::debug("publish url: $url");
         Log::debug("publish event: $event data: ".json_encode($pubMsg));
         try{
             $response = Guzzle::post(

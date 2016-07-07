@@ -73,21 +73,26 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
         $this->wait();
 
         $sent_at = new \DateTime();
-        $this->postStatusUpdate($twilioUser,$dbOrg,$sid,'sent',$vehicle);
+        $this->postStatusUpdate($twilioUser,$dbOrg,$sid,'sent',$vehicle['mobile_phone_number']);
 
         $this->wait();
 
         $this->assert_location_line($id, $vehicle, 'sent', $org, $sent_at);
 
         $delivered_at = new \DateTime();
-        $this->postStatusUpdate($twilioUser, $dbOrg, $sid, 'delivered', $vehicle);
+        $this->postStatusUpdate($twilioUser, $dbOrg, $sid, 'delivered', $vehicle['mobile_phone_number']);
 
         $this->wait();
 
         $this->assert_location_line($id, $vehicle, 'delivered', $org, $delivered_at);
 
         $received_at = new \DateTime();
-        $this->postLocationResponse($twilioUser, $dbOrg, $org, $vehicle);
+        $this->postMessageToIncomingController(
+            $twilioUser,
+            $dbOrg,
+            $org,
+            $vehicle['mobile_phone_number'],
+            'Lat:S34.04387,Lon:E150.84342419999996,Course:0.00,Speed:0.5204,DateTime:16 -07 -02 21:05:43');
 
         $this->wait();
 
@@ -135,62 +140,9 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
                 \DateTime::createFromFormat($org['datetime_format'], $actualDateString)
                     ->getTimestamp(), $this
                 ->equalTo($delivered_at
-                    ->getTimestamp(), 5),
+                    ->getTimestamp(), 10),
                 "actual: $actualDateString expected: ".$delivered_at->format($org['datetime_format']));
     }
 
-    /**
-     * @param $url
-     * @param $twilioUser
-     * @param $dbOrg
-     * @param $sid
-     * @param $status
-     * @param $vehicle
-     */
-    protected function postStatusUpdate($twilioUser, $dbOrg, $sid, $status, $vehicle)
-    {
-        $url = http_build_url($this->baseUrl,[
-            'path'=>'/incoming/message/status'
-        ]);
-        $response = Guzzle::post($url, [
-            'auth' => [$twilioUser['username'], $dbOrg['twilio_user_password']],
-            'body' => [
-                'MessageSid' => $sid,
-                'AccountSid' => $dbOrg['twilio_account_sid'],
-                'MessageStatus' => $status,
-                'To' => $vehicle['mobile_phone_number'],
-                'From' => $dbOrg['twilio_phone_number']
-            ]
-        ]);
-        $this->assertEquals($response->getStatusCode(),200,'test sending status updatec to incoming comtroller');
-
-    }
-
-    /**
-     * @param $twilioUser
-     * @param $dbOrg
-     * @param $org
-     * @param $vehicle
-     */
-    protected function postLocationResponse($twilioUser, $dbOrg, $org, $vehicle)
-    {
-        $url = http_build_url($this->baseUrl, [
-            'path' => '/incoming/message'
-        ]);
-        $response = Guzzle::post($url, [
-            'auth' => [$twilioUser['username'], $dbOrg['twilio_user_password']],
-            'body' => [
-                'MessageSid' => '9999999',
-                'SmsSid' => '9999999',
-                'AccountSid' => $org['twilio_account_sid'],
-                'MessagingServiceSid' => 'MG123456789012345678901234',
-                'From' => $vehicle['mobile_phone_number'],
-                'To' => $org['twilio_phone_number'],
-                'Body' => 'Lat:S34.04387,Lon:E150.84342419999996,Course:0.00,Speed:0.5204,DateTime:16 -07 -02 21:05:43',
-                'NumMedia' => '0'
-            ]
-        ]);
-        $this->assertEquals($response->getStatusCode(), 200, 'test sending location response to incoming controller');
-    }
 
 }

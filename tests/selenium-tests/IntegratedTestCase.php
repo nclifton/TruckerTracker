@@ -14,6 +14,7 @@ namespace TruckerTracker;
 include_once __DIR__ . '/../TestTrait.php';
 
 use Closure;
+use Guzzle;
 use Illuminate\Contracts\Console\Kernel;
 use InvalidArgumentException;
 use Laracasts\Integrated\Emulator;
@@ -95,7 +96,7 @@ abstract class IntegratedTestCase extends \Laracasts\Integrated\Extensions\Selen
             ->type($this->loginUserSet[$userKey]['email'], '#email')
             ->type($this->loginUserSet[$userKey]['password'], '#password')
             ->findByCssSelector('button.btn-primary')->click();
-        sleep(2);
+        $this->wait(2000);
         return $this;
     }
 
@@ -364,5 +365,60 @@ abstract class IntegratedTestCase extends \Laracasts\Integrated\Extensions\Selen
                 "Element not visible, '{$element}', with a name or class attribute of '{$name}'."
             );
         }
+    }
+
+    /**
+     * @param $url
+     * @param $twilioUser
+     * @param $dbOrg
+     * @param $sid
+     * @param $status
+     * @param $hasMobilePhoneNumber
+     */
+    protected function postStatusUpdate($twilioUser, $dbOrg, $sid, $status, $mobile_phone_number)
+    {
+        $url = http_build_url($this->baseUrl, [
+            'path' => '/incoming/message/status'
+        ]);
+        $response = Guzzle::post($url, [
+            'auth' => [$twilioUser['username'], $dbOrg['twilio_user_password']],
+            'body' => [
+                'MessageSid' => $sid,
+                'AccountSid' => $dbOrg['twilio_account_sid'],
+                'MessageStatus' => $status,
+                'To' => $mobile_phone_number,
+                'From' => $dbOrg['twilio_phone_number']
+            ]
+        ]);
+        $this->assertEquals($response->getStatusCode(), 200, 'test sending status updatec to incoming comtroller');
+
+    }
+
+    /**
+    * @param $twilioUser
+    * @param $dbOrg
+    * @param $org
+    * @param $mobile_phone_number
+    * @param $messageBody
+    */
+    protected function postMessageToIncomingController($twilioUser, $dbOrg, $org, $mobile_phone_number, $messageBody)
+    {
+        $url = http_build_url($this->baseUrl, [
+            'path' => '/incoming/message'
+        ]);
+        $response = Guzzle::post($url, [
+            'auth' => [$twilioUser['username'], $dbOrg['twilio_user_password']],
+            'body' => [
+                'MessageSid' => '9999999',
+                'SmsSid' => '9999999',
+                'AccountSid' => $org['twilio_account_sid'],
+                'MessagingServiceSid' => 'MG123456789012345678901234',
+                'From' => $mobile_phone_number,
+                'To' => $org['twilio_phone_number'],
+                'Body' => $messageBody,
+                'NumMedia' => '0'
+            ]
+        ]);
+        $this->assertEquals($response->getStatusCode(), 200, 'sending message to incoming controller');
     }
 }

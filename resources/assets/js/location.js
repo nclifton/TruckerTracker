@@ -4,63 +4,6 @@
 $(document).ready(function () {
 
 
-    function update_location_line(data) {
-        var loc = $('#location' + data._id);
-        loc.find('span.status').text(data.status);
-        var status_at = data.queued_at;
-        switch (data.status) {
-            case 'sent':
-                status_at = data.sent_at;
-                break;
-            case 'delivered':
-                status_at = data.delivered_at;
-                break;
-            case 'received':
-                status_at = data.received_at;
-                loc.find('button.open-modal-location-view').val(data._id);
-                loc.find('.view-button').show();
-                break;
-         }
-        loc.find('span.status_at').text(status_at);
-        adjust_fluid_columns();
-    }
-    function setup_subscribe_location(){
-        if (!sse){
-            var sse = $.SSE('/sub/locations'+organisation_id, {
-                onOpen: function(e) {
-                    console.log("SSE Open");
-                    console.log(e);
-                },
-                onEnd: function(e) {
-                    console.log("SSE Closed");
-                    console.log(e);
-                },
-                onError: function(e) {
-                    console.log("SSE Error");
-                    console.log(e);
-                },
-                onMessage: function(e){
-                    console.log("SSE Message");
-                    console.log(e);
-                },
-                events: {
-                    LocationUpdate: function(e) {
-                        console.log(e);
-                        update_location_line($.parseJSON(e.data));
-                    },
-                    LocationReceived: function(e) {
-                        console.log(e);
-                        update_location_line($.parseJSON(e.data));
-                    }
-                }
-            });
-            sse.start();
-
-        }
-    }
-    if (subscribe_sse){
-        setup_subscribe_location();
-    }
 
     //display modal form viewing a location
     function setup_view_location() {
@@ -174,34 +117,6 @@ $(document).ready(function () {
 
     setup_view_location();
 
-    //delete location and remove it from list
-    function setup_delete_location() {
-        $('button.delete-location').click(function (e) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            });
-
-            e.preventDefault();
-
-            var location_id = $(this).val();
-
-            $.ajax({
-
-                type: "DELETE",
-                url: '/vehicle/location/' + location_id,
-                success: function (data) {
-                    console.log(data);
-                    $("#location" + location_id).remove();
-                },
-                error: function (data) {
-                    handleAjaxError(data);
-                }
-            });
-        });
-    }
-
     setup_delete_location();
 
     //send location request to vehicle
@@ -235,10 +150,11 @@ $(document).ready(function () {
                 loc.find('span.status').text(data.status);
                 loc.find('span.status_at').text(data.queued_at);
                 loc.show();
+                loc[0].scrollIntoView();
 
                 setup_view_location();
                 setup_delete_location();
-                setup_subscribe_location();
+                setup_sse();
                 adjust_fluid_columns();
 
             },

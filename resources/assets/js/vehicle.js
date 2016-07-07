@@ -139,10 +139,12 @@ $(document).ready(function () {
 
                 $('#vehicleForm').trigger("reset");
                 $('#vehicleModal').modal('hide');
+
                 setup_locate_vehicle();
                 setup_edit_vehicle();
                 setup_delete_vehicle();
                 adjust_fluid_columns();
+                setup_sse();
 
             },
             error: function (data) {

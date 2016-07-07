@@ -103,7 +103,7 @@ function adjust_fluid_columns () {
             $fcol.siblings().each(function(){
                 var $sib = $(this);
                 if ($sib.is(':visible')) {
-                    var sibWidth = $sib.outerWidth(true);
+                    var sibWidth = $sib.outerWidth(true) + 1;
                     colWidth -= sibWidth;
                 }
             });
@@ -132,6 +132,174 @@ function adjust_fluid_columns () {
     });
 }
 
+function update_location_line(data) {
+    var loc = $('#location' + data._id);
+    loc.find('span.status').text(data.status);
+    var status_at = data.queued_at;
+    switch (data.status) {
+        case 'sent':
+            status_at = data.sent_at;
+            break;
+        case 'delivered':
+            status_at = data.delivered_at;
+            break;
+        case 'received':
+            status_at = data.received_at;
+            loc.find('button.open-modal-location-view').val(data._id);
+            loc.find('.view-button').show();
+            break;
+    }
+    loc.find('span.status_at').text(status_at);
+}
+
+//delete message and remove it from list
+function setup_delete_message() {
+    $('button.delete-message').click(function (e) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        });
+
+        e.preventDefault();
+
+        var message_id = $(this).val();
+
+        $.ajax({
+
+            type: "DELETE",
+            url: '/driver/message/' + message_id,
+            success: function (data) {
+                console.log(data);
+                $("#message" + message_id).remove();
+            },
+            error: function (data) {
+                handleAjaxError(data);
+            }
+        });
+    });
+}
+
+//delete location and remove it from list
+function setup_delete_location() {
+    $('button.delete-location').click(function (e) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        });
+        e.preventDefault();
+        var location_id = $(this).val();
+        $.ajax({
+            type: "DELETE",
+            url: '/vehicle/location/' + location_id,
+            success: function (data) {
+                console.log(data);
+                $("#location" + location_id).remove();
+            },
+            error: function (data) {
+                handleAjaxError(data);
+            }
+        });
+    });
+}
+
+function add_message_line(data) {
+    if ($('#message' + data._id).length){
+        return update_message_line(data);
+    }
+
+    var msg = $('#message').clone(false).appendTo('#message_list').attr("id", "message" + data._id);
+    msg.find('button.open-modal-view-message').val(data._id);
+    msg.find('button.delete-message').val(data._id);
+    msg.find('span.first_name').text(data.driver.first_name);
+    msg.find('span.last_name').text(data.driver.last_name);
+    msg.find('span.status').text(data.status);
+    var status_at = data.queued_at;
+    switch (data.status) {
+        case 'sent':
+            status_at = data.sent_at;
+            break;
+        case 'delivered':
+            status_at = data.delivered_at;
+            break;
+        case 'received':
+            status_at = data.received_at;
+            break;
+    }
+    msg.find('span.status_at').text(status_at);
+    msg.attr('title', data.message_text);
+    msg.show();
+    msg[0].scrollIntoView();
+    setup_delete_message()
+}
+
+function update_message_line(data) {
+    var msg = $('#message' + data._id);
+    msg.find('span.status').text(data.status);
+    var status_at = data.queued_at;
+    switch (data.status) {
+        case 'sent':
+            status_at = data.sent_at;
+            break;
+        case 'delivered':
+            status_at = data.delivered_at;
+            break;
+    }
+    msg.find('span.status_at').text(status_at);
+}
+
+function setup_sse(){
+    if (!sse){
+        if (!organisation_id){
+            console.log('No Organisation ID - No SSE!');
+            return;
+        }
+        var sse = $.SSE('/sub/'+organisation_id, {
+            onOpen: function(e) {
+                console.log("SSE Open");
+                console.log(e);
+            },
+            onEnd: function(e) {
+                console.log("SSE Closed");
+                console.log(e);
+            },
+            onError: function(e) {
+                console.log("SSE Error");
+                console.log(e);
+            },
+            onMessage: function(e){
+                console.log("SSE Message");
+                console.log(e);
+            },
+            events: {
+                MessageUpdate: function(e) {
+                    console.log(e);
+                    update_message_line($.parseJSON(e.data));
+                    adjust_fluid_columns();
+                },
+                MessageReceived: function(e) {
+                    console.log(e);
+                    add_message_line($.parseJSON(e.data));
+                    adjust_fluid_columns();
+                },
+                LocationUpdate: function(e) {
+                    console.log(e);
+                    update_location_line($.parseJSON(e.data));
+                    adjust_fluid_columns();
+                },
+                LocationReceived: function(e) {
+                    console.log(e);
+                    update_location_line($.parseJSON(e.data));
+                    adjust_fluid_columns();
+                }
+            }
+        });
+        sse.start();
+
+    }
+}
+
 /**
  * show hide event
  */
@@ -149,7 +317,7 @@ function adjust_fluid_columns () {
 $(document).ready(function () {
     var resizeTimer;
     var showTimer;
-
+    var sse;
 
     adjust_fluid_columns();
 
@@ -167,4 +335,8 @@ $(document).ready(function () {
         }, 250);
     });
     
+    if (subscribe_sse){
+        setup_sse();
+    }
+
 });

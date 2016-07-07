@@ -1,3 +1,6 @@
+<div id="driver_conversation">
+
+</div>
 <form id="messageForm" name="messageForm" class="form-horizontal" novalidate="">
     <div class="form-group error">
         <label for="input_message_text" class="col-sm-3 control-label">Message text</label>

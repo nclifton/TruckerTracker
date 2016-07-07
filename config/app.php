@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://truckertracker.services'),
 
     /*
     |--------------------------------------------------------------------------
@@ -239,7 +239,10 @@ return [
 
         'SSE' => Sse\Laravel\Facade\SSE::class,
 
-        'Guzzle' => Kozz\Laravel\Facades\Guzzle::class
+        'Guzzle' => Kozz\Laravel\Facades\Guzzle::class,
+
+        'Form' => Collective\Html\FormFacade::class,
+        'Html' => Collective\Html\HtmlFacade::class,
 
     ],
 
@@ -258,7 +261,7 @@ return [
     | authenticate this way. May be using a specific port as well.
     */
     'external_host' => env('EXTERNAL_HOST_NAME','external-host.com'),
-    'external_scheme' => env('EXTERNAL_SCHEME', 'http'),
+    'external_scheme' => env('EXTERNAL_SCHEME', 'https'),
     'external_port' => env('EXTERNAL_PORT', ''),
     
     /*

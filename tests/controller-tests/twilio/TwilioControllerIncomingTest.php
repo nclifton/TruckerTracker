@@ -77,7 +77,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $driver = $this->driverSet[0];
         $org = $this->orgSet[0];
         $this->datetime_format = $org['datetime_format'];
-        $expectedUrl = 'http://homestead.app/pub/messages'.$org['_id'];
+        $expectedUrl = 'http://homestead.app/pub/'.$org['_id'];
         $expectedMessage = $message;
         $expectedMessage['status']='delivered';
         unset($expectedMessage['organisation_id']);
@@ -89,8 +89,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $expectedDriver = $driver;
         unset($expectedDriver['organisation_id']);
         $expectedMessage['driver'] = $expectedDriver;
-
-
+        
         $expectedPostData = [
             'headers' => [
                 'Accept'                => 'text/json',
@@ -142,7 +141,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $org = $this->orgSet[0];
         $this->datetime_format = $org['datetime_format'];
 
-        $expectedUrl = 'http://homestead.app/pub/locations'.$org['_id'];
+        $expectedUrl = 'http://homestead.app/pub/'.$org['_id'];
         $expectedLocation = $location;
         $expectedLocation['status']='delivered';
         unset($expectedLocation['organisation_id']);
@@ -252,7 +251,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             'NumMedia' => '0'
         ];
 
-        $expectedUrl = 'http://homestead.app/pub/messages'.$org['_id'];
+        $expectedUrl = 'http://homestead.app/pub/'.$org['_id'];
 
         $expectedMessage['_id'] = '*';
         $expectedMessage['message_text'] = $message['Body'];
@@ -365,7 +364,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             'NumMedia' => '0'
         ];
 
-        $expectedUrl = 'http://homestead.app/pub/messages'.$org['_id'];
+        $expectedUrl = 'http://homestead.app/pub/'.$org['_id'];
 
         $expectedMessage['_id'] = '*';
         $expectedMessage['message_text'] = $message['Body'];
@@ -454,7 +453,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
 
         $this->datetime_format = $org['datetime_format'];
 
-        $expectedUrl = 'http://homestead.app/pub/locations'.$org['_id'];
+        $expectedUrl = 'http://homestead.app/pub/'.$org['_id'];
         $expectedData = $expectedLocationDb;
         unset($expectedData['sid_response']);
         unset($expectedData['vehicle_id']);
