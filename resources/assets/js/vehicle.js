@@ -129,7 +129,7 @@ $(document).ready(function () {
 
                 if (state == "add") { //if user added a new record
                     $('#btn-save-vehicle').text("Save Changes");
-                    $('#vehicle').clone(false).prependTo('#vehicle_list').attr("id", "vehicle" + data._id);
+                    $('#vehicle').clone(false).appendTo('#vehicle_list').attr("id", "vehicle" + data._id);
                     $("#vehicle" + data._id + ' button.open-modal-location').val(data._id);
                     $("#vehicle" + data._id + ' button.open-modal-vehicle').val(data._id);
                     $("#vehicle" + data._id + ' button.delete-vehicle').val(data._id);

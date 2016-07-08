@@ -8,7 +8,7 @@
     @can('add-driver',$org)
         @include('home.modal',['subject'=>'driver','title'=>'Driver Editor','subject_id_value'=>'','save_button_label'=>'Save Changes'])
     @endcan
-    @include('home.modal',['subject'=>'message','title'=>'Message Driver','subject_id_value'=>'','save_button_label'=>'Send'])
+    @include('home.modal',['subject'=>'messageDriver','title'=>'Message Driver','subject_id_value'=>'','save_button_label'=>'Send'])
     @can('add-vehicle',$org)
         @include('home.modal',['subject'=>'vehicle','title'=>'Vehicle Editor','subject_id_value'=>'','save_button_label'=>'Save Changes'])
     @endcan

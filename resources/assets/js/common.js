@@ -266,38 +266,55 @@ function update_message_line(data) {
     msg.find('span.status_at').text(status_at);
 }
 
+function update_conversation_message(data) {
+    if ($('#messageDriverModal:visible').length){
+        var $conversationContainer = $('#driver_conversation');
+        var $messagesContainer = $conversationContainer.find('.messages_container');
+        var $msg = $messagesContainer.find('#conversation_message' + data._id);
+
+        $msg.find(".message_text")
+            .removeClass('queued sent delivered')
+            .addClass(data.status);
+        $msg[0].scrollIntoView();
+
+    }
+}
+function add_message_to_conversation($messagesContainer, msgdata) {
+    var $msg = $messagesContainer.find('#conversation_message')
+        .clone(false)
+        .appendTo($messagesContainer).attr("id", "conversation_message" + msgdata._id);
+    $msg.find(".message_text").text(msgdata.message_text).addClass(msgdata.status);
+    $msg.show();
+    $msg[0].scrollIntoView();
+}
+function add_conversation_message(data) {
+    if ($('#messageDriverModal:visible').length){
+        var $conversationContainer = $('#driver_conversation');
+        var $messagesContainer = $conversationContainer.find('.messages_container');
+        add_message_to_conversation($messagesContainer, data);
+    }
+}
+
+var truckerTrackerSse;
+
 function setup_sse(){
-    if (!sse){
+    if (!truckerTrackerSse){
         if (!organisation_id){
             console.log('No Organisation ID - No SSE!');
             return;
         }
-        var sse = $.SSE('/sub/'+organisation_id, {
-            onOpen: function(e) {
-                console.log("SSE Open");
-                console.log(e);
-            },
-            onEnd: function(e) {
-                console.log("SSE Closed");
-                console.log(e);
-            },
-            onError: function(e) {
-                console.log("SSE Error");
-                console.log(e);
-            },
-            onMessage: function(e){
-                console.log("SSE Message");
-                console.log(e);
-            },
+        truckerTrackerSse = $.SSE('/sub/'+organisation_id, {
             events: {
                 MessageUpdate: function(e) {
                     console.log(e);
                     update_message_line($.parseJSON(e.data));
+                    update_conversation_message($.parseJSON(e.data))
                     adjust_fluid_columns();
                 },
                 MessageReceived: function(e) {
                     console.log(e);
                     add_message_line($.parseJSON(e.data));
+                    add_conversation_message($.parseJSON(e.data))
                     adjust_fluid_columns();
                 },
                 LocationUpdate: function(e) {
@@ -312,10 +329,23 @@ function setup_sse(){
                 }
             }
         });
-        sse.start();
+
+        truckerTrackerSse.start();
 
     }
 }
+
+//display modal form for messaging driver
+function setup_message_driver() {
+    $('.open-modal-message').click(function (e) {
+        var driver_id = $(this).val();
+        $('#btn-save-messageDriver').val("send");
+        $('#messageDriver_id').val(driver_id);
+        $('#messageDriverModal').modal('show');
+    });
+}
+
+
 
 /**
  * show hide event

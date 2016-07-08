@@ -51,6 +51,82 @@ Trait TestTrait
             'password' => 'mstgpwd1'
         ]
     ];
+    protected $conversationSet = [
+        [
+            '_id' => 'ffffffffff01',
+            'organisation_id' => '10001',
+            'driver_id' => '110001',
+            'message_text' => 'hello',
+            'queued_at' => '2016-06-09T20:45:10+10:00',
+            'sent_at' => '2016-06-09T20:46:10+10:00',
+            'delivered_at' => '2016-06-09T20:47:10+10:00',
+            'status' => 'delivered',
+            'sid' => '1111111'
+        ], [
+            '_id' => 'ffffffffff02',
+            'organisation_id' => '10001',
+            'driver_id' => '110001',
+            'message_text' => 'Good morning',
+            'received_at' => '2016-06-09T20:48:10+10:00',
+            'status' => 'received',
+            'sid' => '2222222'
+        ], [
+            '_id' => 'ffffffffff03',
+            'organisation_id' => '10001',
+            'driver_id' => '110001',
+            'message_text' => 'busy day today. Please proceed to point A and collect box X and drop off to address Y',
+            'queued_at' => '2016-06-09T20:49:10+10:00',
+            'sent_at' => '2016-06-09T20:50:10+10:00',
+            'delivered_at' => '2016-06-09T20:51:10+10:00',
+            'status' => 'delivered',
+            'sid' => '3333333'
+        ], [
+            '_id' => 'ffffffffff04',
+            'organisation_id' => '10001',
+            'driver_id' => '110001',
+            'message_text' => 'TRAVELLING',
+            'received_at' => '2016-06-09T20:55:10+10:00',
+            'status' => 'received',
+            'sid' => '4444444'
+        ], [
+            '_id' => 'ffffffffff05',
+            'organisation_id' => '10001',
+            'driver_id' => '110002',
+            'message_text' => 'Having a break',
+            'received_at' => '2016-06-09T21:30:10+10:00',
+            'status' => 'received',
+            'sid' => 'DDDDDDDDDD'
+        ], [
+            '_id' => 'ffffffffff06',
+            'organisation_id' => '10001',
+            'driver_id' => '110001',
+            'message_text' => 'THERE',
+            'received_at' => '2016-06-09T21:40:10+10:00',
+            'status' => 'received',
+            'sid' => '5555555'
+        ], [
+            '_id' => 'ffffffffff07',
+            'organisation_id' => '10001',
+            'driver_id' => '110001',
+            'message_text' => "Great, now when you're done there please proceed to point B and collect box Y and drop off to address Z",
+            'queued_at' => '2016-06-09T21:45:10+10:00',
+            'sent_at' => '2016-06-09T21:46:10+10:00',
+            'delivered_at' => '2016-06-09T21:47:10+10:00',
+            'status' => 'delivered',
+            'sid' => '6666666'
+        ], [
+            '_id' => 'ffffffffff08',
+            'organisation_id' => '10001',
+            'driver_id' => '110001',
+            'message_text' => "?",
+            'queued_at' => '2016-06-09T21:50:10+10:00',
+            'sent_at' => '2016-06-09T21:51:10+10:00',
+            'status' => 'sent',
+            'sid' => '7777777'
+        ]
+
+
+    ];
 
     private $twilioUser;
 

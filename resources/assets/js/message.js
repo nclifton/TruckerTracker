@@ -4,30 +4,78 @@
  */
 $(document).ready(function () {
 
-    // open some pop up type box for viewing and contributing to the conversation this message is a part of.
+    setup_message_driver();
+
+
     function setup_view_conversation() {
-        // TODO setup the view button click action
+        // This is shown on the message modal used to send messages
+        // we'll populate the conversation panel when the message modal is opened.
+        $('#messageDriverModal').on('shown.bs.modal', function() {
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+
+            var driver_id = $('#messageDriver_id').val();
+
+            $.get('/driver/' + driver_id + '/conversation', function(data) {
+                //success data
+                console.log(data);
+
+                var $conversationContainer = $('#driver_conversation');
+                $conversationContainer.find('.message_to_panel .header_text')
+                    .empty()
+                    .text(data[0].driver.first_name + ' ' + data[0].driver.last_name);
+
+                var $messagesContainer = $conversationContainer.find('.messages_container');
+                $messagesContainer.children(':visible').remove();
+
+                $.each(data, function(){
+                    var msgdata = this;
+                    add_message_to_conversation($messagesContainer, msgdata);
+
+                })
+
+            }).fail(function(data){
+                var newDoc = document.open("text/html", "replace");
+                newDoc.write(data.responseText);
+                newDoc.close();
+            });
+        })
     }
 
-
+    setup_view_conversation();
 
     setup_delete_message();
 
+    var add_message_to_conversation_display = function (data) {
+
+        if ($('#messageDriverModal:visible').length){
+            var $conversationContainer = $('#driver_conversation');
+            var $messagesContainer = $conversationContainer.find('.messages_container');
+            add_message_to_conversation($messagesContainer,data);
+        }
+
+    };
+
     //send message to driver
-    $("#btn-save-message").click(function (e) {
+
+    $("#btn-save-messageDriver").click(function (e) {
+        e.preventDefault();
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
             }
         });
 
-        e.preventDefault();
 
         var formData = {
             message_text: $('#message_text').val()
         };
 
-        var driver_id = $('#message_id').val();
+        var driver_id = $('#messageDriver_id').val();
 
         console.log(formData);
 
@@ -41,10 +89,11 @@ $(document).ready(function () {
                 console.log(data);
                 
                 $('#messageForm').trigger("reset");
-                $('#messageModal').modal('hide');
+                //$('#messageModal').modal('hide');
                 $('#message-list-panel').show();
                 
                 add_message_line(data);
+                add_message_to_conversation_display(data);
                 setup_delete_message();
                 setup_view_conversation();
                 setup_sse();

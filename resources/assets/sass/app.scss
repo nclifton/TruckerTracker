@@ -131,3 +131,100 @@ span.edit-btn{
     border-bottom-left-radius: 0;
   }
 }
+
+.conversation_container,.messages_container {
+  display:table;
+  width:100%;
+  .container_row {
+    display: table-row;
+    width:100%;
+  }
+}
+
+#driver_conversation {
+  padding: 0 0 20px 0;
+  height:200px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  .message_to_panel, .message_from_panel, .conversation_panel {
+    display: table-cell;
+  }
+  .message_to_panel, .message_from_panel {
+    width: 10%;
+  }
+  .conversation_panel {
+    width: 80%;
+
+  }
+
+  .message_text, .message_to_panel, .message_from_panel {
+    border-radius: 4px;
+    margin: 5px;
+  }
+  .message_to_panel, .message_from_panel {
+    border: silver solid 1px;
+    .rotation_container {
+      position: relative;
+      .header_text {
+        position: absolute;
+        transform: rotate(270deg);
+        white-space: nowrap;
+        transform-origin: left top;
+        top: 140px;
+        left: 12px;
+      }
+    }
+  }
+  .messages_container {
+
+    .message_text {
+      padding: 5px 10px;
+      position:relative
+    }
+    .received{
+      float: left;
+      background-color: palegoldenrod;
+      &:before{
+        content:'';
+        position:absolute;
+        width: 0;
+        height:0;
+        border-style: solid;
+        left: -15px;
+        top: 10px;
+        border-width: 4px 8px;
+        border-color: transparent palegoldenrod transparent transparent;
+      }
+    }
+    .delivered, .queued, .sent {
+      float: right;
+      border-color: lightblue;
+      &:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        right: -15px;
+        top: 10px;
+        border-width: 4px 8px;
+        border-color: transparent transparent transparent lightblue;
+      }
+    }
+    .queued{
+      background-color: white;
+      border: lightblue 1px dashed;
+    }
+    .sent{
+      background-color: aliceblue;
+      border: lightblue dotted 1px;
+
+    }
+    .delivered{
+      border: none;
+      background-color: lightblue;
+    }
+  }
+}
+

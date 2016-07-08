@@ -3,43 +3,23 @@
  */
 $(document).ready(function ($) {
 
-    var driver_url = "/drivers";
-
-    //display modal form for messaging driver
-    function setup_message_driver() {
-        $('.open-modal-message').click(function () {
-            var driver_id = $(this).val();
-
-            // $.get('/conversation/driver/' + driver_id, function(data) {
-            //     //success data
-            //     console.log(data);
-            //     $.each(data.messages, function(){
-            //
-            //     })
-            //
-            // }).fail(function(data){
-            //     var newDoc = document.open("text/html", "replace");
-            //     newDoc.write(data.responseText);
-            //     newDoc.close();
-            // });
-            
-
-            $('#btn-save-message').val("send");
-            $('#message_id').val(driver_id);
-            $('#messageModal').modal('show');
-            
-        });
-    }
     setup_message_driver();
-    
+
     //display modal form for driver editing
     function setup_edit_driver() {
-        $('.open-modal-driver').click(function () {
+        $('.open-modal-driver').click(function (e) {
+            e.preventDefault();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+
             var driver_id = $(this).val();
 
             $('#test-message-from-driver-button').show();
 
-            $.get(driver_url + '/' + driver_id, function (data) {
+            $.get( '/drivers/' + driver_id, function (data) {
                 //success data
                 console.log(data);
                 $('#driver_id').val(data._id);
@@ -71,7 +51,8 @@ $(document).ready(function ($) {
     //delete driver and remove it from list
 
     function setup_delete_driver() {
-        $('.delete-driver').click(function () {
+        $('.delete-driver').click(function (e) {
+            e.preventDefault();
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -83,7 +64,7 @@ $(document).ready(function ($) {
             $.ajax({
 
                 type: "DELETE",
-                url: driver_url + '/' + driver_id,
+                url:  '/drivers/' + driver_id,
                 success: function (data) {
                     console.log(data);
 
@@ -100,13 +81,13 @@ $(document).ready(function ($) {
 
     //create new driver / update existing driver
     $("#btn-save-driver").click(function (e) {
+        e.preventDefault();
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
             }
         });
 
-        e.preventDefault();
 
         var formData = {
             first_name: $('#first_name').val(),
@@ -120,7 +101,7 @@ $(document).ready(function ($) {
 
         var type = "POST"; //for creating new resource
         var driver_id = $('#driver_id').val();
-        var my_driver_url = driver_url;
+        var my_driver_url = '/drivers';
 
         if (state == "update") {
             type = "PUT"; //for updating existing resource
@@ -140,7 +121,7 @@ $(document).ready(function ($) {
 
                 if (state == "add") { //if user added a new record
                     $('#btn-save-driver').text("Save Changes");
-                    $('#driver').clone(false).prependTo('#driver_list').attr("id", "driver" + data._id);
+                    $('#driver').clone(false).appendTo('#driver_list').attr("id", "driver" + data._id);
                     $("#driver" + data._id + ' button.open-modal-message').val(data._id);
                     $("#driver" + data._id + ' button.open-modal-driver').val(data._id);
                     $("#driver" + data._id + ' button.delete-driver').val(data._id);

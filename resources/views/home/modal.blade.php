@@ -8,17 +8,17 @@
                     <span class="hide">close</span>
                 </button>
                 <h4 class="modal-title" id="{{str_replace('.','-',$subject)}}ModalLabel">{{$title}}</h4>
-                <div class="modal-body">
-                    @include('home.'.$subject.'.body')
-                </div>
-                <div class="modal-footer">
-                    @if(isset($save_button_label))
-                    <button type="button" class="btn btn-primary" id="btn-save-{{str_replace('.','-',$subject)}}" value="add">
-                        {!! $save_button_label !!}
-                    </button>
-                    @endif
-                    <input type="hidden" id="{{str_replace('.','-',$subject)}}_id" name="id" value="{{$subject_id_value}}">
-                </div>
+            </div>
+            <div class="modal-body">
+                @include('home.'.$subject.'.body')
+            </div>
+            <div class="modal-footer">
+                @if(isset($save_button_label))
+                <button type="button" class="btn btn-primary" id="btn-save-{{str_replace('.','-',$subject)}}" value="add">
+                    {!! $save_button_label !!}
+                </button>
+                @endif
+                <input type="hidden" id="{{str_replace('.','-',$subject)}}_id" name="id" value="{{$subject_id_value}}">
             </div>
         </div>
     </div>
