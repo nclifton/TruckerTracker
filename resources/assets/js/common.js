@@ -247,7 +247,6 @@ function add_message_line(data) {
     msg.find('span.status_at').text(status_at);
     msg.attr('title', data.message_text);
     msg.show();
-    msg[0].scrollIntoView();
     setup_delete_message()
 }
 
@@ -266,6 +265,12 @@ function update_message_line(data) {
     msg.find('span.status_at').text(status_at);
 }
 
+
+const jScrollPaneSettings = {
+    maintainPosition: true,
+    stickToBottom: true
+};
+
 function update_conversation_message(data) {
     if ($('#messageDriverModal:visible').length){
         var $conversationContainer = $('#driver_conversation');
@@ -275,23 +280,36 @@ function update_conversation_message(data) {
         $msg.find(".message_text")
             .removeClass('queued sent delivered')
             .addClass(data.status);
-        $msg[0].scrollIntoView();
 
+        var pane = $conversationContainer.find('.conversation_panel');
+        pane.jScrollPane(jScrollPaneSettings);
+        var api = pane.data('jsp');
+        api.reinitialise();
+        api.scrollTo(0, 9999);
     }
 }
+
+
 function add_message_to_conversation($messagesContainer, msgdata) {
     var $msg = $messagesContainer.find('#conversation_message')
         .clone(false)
         .appendTo($messagesContainer).attr("id", "conversation_message" + msgdata._id);
     $msg.find(".message_text").text(msgdata.message_text).addClass(msgdata.status);
     $msg.show();
-    $msg[0].scrollIntoView();
+
+
 }
 function add_conversation_message(data) {
     if ($('#messageDriverModal:visible').length){
         var $conversationContainer = $('#driver_conversation');
         var $messagesContainer = $conversationContainer.find('.messages_container');
         add_message_to_conversation($messagesContainer, data);
+
+        var pane = $conversationContainer.find('.conversation_panel');
+        pane.jScrollPane(jScrollPaneSettings);
+        var api = pane.data('jsp');
+        api.reinitialise();
+        api.scrollTo(0, 9999);
     }
 }
 

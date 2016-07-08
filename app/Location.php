@@ -28,7 +28,7 @@ use MongoDB\BSON\UTCDatetime;
 class Location extends Moloquent
 {
 
-    use OrganisationDateFormatingTrait;
+    use OrganisationDateFormattingTrait;
 
     protected $fillable = 
         [

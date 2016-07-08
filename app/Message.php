@@ -19,13 +19,16 @@ use Jenssegers\Mongodb\Eloquent\Model as Moloquent;
 class Message extends Moloquent
 {
 
-    use OrganisationDateFormatingTrait;
-
+    use OrganisationDateFormattingTrait;
 
     const STATUS_QUEUED     = 'queued';
     const STATUS_SENT       = 'sent';
     const STATUS_DELIVERED  = 'delivered';
     const STATUS_RECEIVED   = 'received';
+
+    const DATE_TIME_TYPE_RELATIVE = 'relative';
+    const DATE_TIME_TYPE_ABSOLUTE = 'absolute';
+
 
     protected $fillable =
         [

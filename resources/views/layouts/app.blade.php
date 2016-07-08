@@ -14,6 +14,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ elixir('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/jquery.jscrollpane.css') }}">
 
     <style>
         body {
@@ -25,12 +26,16 @@
         }
     </style>
 
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPDj8tgIxOYgafbLRbFE_wonogRcFF4XY&signed_in=true&libraries=geometry,places"></script>
+
     <script src="{{ asset('/js/jquery.js') }}"></script>
     <script src="{{ asset('/js/bootstrap.js') }}"></script>
     <script src="{{ asset('/js/jquery-ui.js') }}"></script>
     <script src="{{ asset('/js/gmap3.js') }}"></script>
     <script src="{{ asset('/js/jquery.sse.js') }}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPDj8tgIxOYgafbLRbFE_wonogRcFF4XY&signed_in=true&libraries=geometry,places"></script>
+    <script src="{{ asset('/js/jquery.mousewheel.js') }}"></script>
+    <script src="{{ asset('/js/jquery.jscrollpane.js') }}"></script>
+
 
 </head>
 <body id="app-layout">

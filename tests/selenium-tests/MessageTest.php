@@ -26,9 +26,11 @@ class MessageTest extends IntegratedTestCase
         // Act
         $this->login();
         $this->byCssSelector('#driver' . $driver['_id'] . ' button.open-modal-message')->click();
-        $this->wait(1000);
+        $this->wait();
         $this->type($message_text, '#message_text');
-        $this->byId('btn-save-message')->click();
+        $this->byId('btn-save-messageDriver')->click();
+        $this->wait();
+        $this->byCssSelector('#messageDriverModal .modal-header button.close')->click();
         $this->wait();
 
         // Assert

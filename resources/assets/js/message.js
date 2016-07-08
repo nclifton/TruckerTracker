@@ -5,9 +5,10 @@
 $(document).ready(function () {
 
     setup_message_driver();
-
-
+    
     function setup_view_conversation() {
+
+        
         // This is shown on the message modal used to send messages
         // we'll populate the conversation panel when the message modal is opened.
         $('#messageDriverModal').on('shown.bs.modal', function() {
@@ -25,18 +26,25 @@ $(document).ready(function () {
                 console.log(data);
 
                 var $conversationContainer = $('#driver_conversation');
+                var $messagesContainer = $conversationContainer.find('.messages_container');
+
                 $conversationContainer.find('.message_to_panel .header_text')
                     .empty()
-                    .text(data[0].driver.first_name + ' ' + data[0].driver.last_name);
+                    .text(data.first_name + ' ' + data.last_name);
 
-                var $messagesContainer = $conversationContainer.find('.messages_container');
                 $messagesContainer.children(':visible').remove();
-
-                $.each(data, function(){
+                var pane = $conversationContainer.find('.conversation_panel');
+                pane.jScrollPane(jScrollPaneSettings);
+                var api = pane.data('jsp');
+                   
+                $.each(data.messages, function(){
                     var msgdata = this;
                     add_message_to_conversation($messagesContainer, msgdata);
-
-                })
+                    api.reinitialise();
+                });
+                
+                api.reinitialise();
+                api.scrollTo(0, 9999);
 
             }).fail(function(data){
                 var newDoc = document.open("text/html", "replace");

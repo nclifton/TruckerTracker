@@ -50,22 +50,18 @@ class MessageControllerDriverConversationTest extends MessageControllerTestCase
 
         // Assert
         $this->assertResponseOk();
-        $response = $this->decodeResponseJson();
-        $this->assertCount(6,$response);
         $this->seeJsonContains([
-            'message_text' => $this->conversationSet[0]['message_text'],
-            'driver' => [
-                '_id' => $driver['_id'],
-                'first_name' => $driver['first_name'],
-                'last_name' => $driver['last_name'],
-                'mobile_phone_number' => $driver['mobile_phone_number'],
-                'drivers_licence_number' => $driver['drivers_licence_number']
-            ]
-        ]);
+            '_id' => $driver['_id'],
+            'first_name' => $driver['first_name'],
+            'last_name' => $driver['last_name'],
+            'mobile_phone_number' => $driver['mobile_phone_number'],
+            'drivers_licence_number' => $driver['drivers_licence_number']
+            ]);
         foreach ($this->conversationSet as $key => $message){
             if (! in_array($key,[4,7]))
                 $this->seeJsonContains([
                     'message_text' => $message['message_text'],
+                    'status' => $message['status']
                 ]);
         }
 

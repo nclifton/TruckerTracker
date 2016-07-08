@@ -8,7 +8,7 @@
                 <div class="panel-heading">Welcome</div>
 
                 <div class="panel-body">
-                    Start tracking your truckers.
+                    Let's track those truckers.
                 </div>
             </div>
         </div>

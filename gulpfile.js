@@ -50,7 +50,16 @@ elixir(function (mix) {
             'public/js/gmap3.js')
         .copy(
             'resources/assets/bower/jquery-sse/jquery.sse.js',
-            'public/js/jquery.sse.js');
+            'public/js/jquery.sse.js')
+        .copy(
+            'resources/assets/bower/jScrollPane/script/jquery.jscrollpane.js',
+            'public/js/jquery.jscrollpane.js')
+        .copy(
+            'resources/assets/bower/jScrollPane/script/jquery.mousewheel.js',
+            'public/js/jquery.mousewheel.js')
+        .copy(
+            'resources/assets/bower/jScrollPane/style/jquery.jscrollpane.css',
+            'public/css/jquery.jscrollpane.css');
 
 
 

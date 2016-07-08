@@ -39,12 +39,10 @@ class MessageController extends Controller
         if (Gate::denies('view-message', $driver->organisation)) {
             abort(403);
         }
-        $conversation = $driver
-            ->messages()
-            ->whereIn('status',[Message::STATUS_RECEIVED,Message::STATUS_DELIVERED])
-            ->with('driver')
-            ->get();
-        return Response::json($conversation);
+        $driver->load(['messages'=> function($query){
+            $query->whereIn('status',[Message::STATUS_RECEIVED,Message::STATUS_DELIVERED]);
+        }]);
+        return Response::json($driver);
     }
 
 }
