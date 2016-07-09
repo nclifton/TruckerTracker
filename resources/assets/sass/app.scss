@@ -141,6 +141,7 @@ span.edit-btn{
   }
 }
 
+
 #driver_conversation {
   padding: 0;
 
@@ -169,7 +170,7 @@ span.edit-btn{
 
   }
   .message_from_panel {
-    right: 35px;
+    right: 16px;
   }
   .message_from_panel, .delivered, .queued, .sent {
     background-color: lightblue;
@@ -200,6 +201,7 @@ span.edit-btn{
   }
   .messages_container {
     padding:0 26px;
+    width:100%;
 
     .message_text {
       padding: 5px 10px;

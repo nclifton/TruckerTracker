@@ -78,7 +78,7 @@ function setClickableTooltip(target, content){
  *     Adjust width of row elements using the line-fluid-column class.
  *     For this to work properly there must be only one per line
  **/
-function remove_style_widths(){
+function remove_fluid_column_style_widths(){
     $('.row > .line_fluid_column').each(function(){
         var $fluidCol = $(this);
         if ($fluidCol.is(':visible')) {
@@ -94,7 +94,7 @@ function remove_style_widths(){
 }
 
 function adjust_fluid_columns () {
-    remove_style_widths();
+    remove_fluid_column_style_widths();
     $('.row > .line_fluid_column').each(function(){
         var $fluidCol = $(this);
         if ($fluidCol.is(':visible')){
@@ -266,11 +266,30 @@ function update_message_line(data) {
 }
 
 
-const jScrollPaneSettings = {
-    maintainPosition: true,
-    stickToBottom: true
-};
+function jScrollPaneSettings() {
+    var contentWidth = $('messageDriveModal').innerWidth();
+    return {
+        maintainPosition: true,
+        stickToBottom: true,
+        horizontalGutter: 20
+    }
+}
 
+function reset_conversation_scrollPane() {
+
+    var $driverConversation = $('#driver_conversation');
+    var $pane = $driverConversation.find('.conversation_panel');
+    $pane.jScrollPane(jScrollPaneSettings());
+    var api = $pane.data('jsp');
+    api.reinitialise();
+    var $fromPanel = $driverConversation.find('.message_from_panel').first();
+    if (api.getIsScrollableV()){
+        $fromPanel.css('right',35);
+        api.scrollToBottom();
+    } else{
+        $fromPanel.css('right',16);
+    }
+}
 function update_conversation_message(data) {
     if ($('#messageDriverModal:visible').length){
         var $conversationContainer = $('#driver_conversation');
@@ -281,11 +300,8 @@ function update_conversation_message(data) {
             .removeClass('queued sent delivered')
             .addClass(data.status);
 
-        var pane = $conversationContainer.find('.conversation_panel');
-        pane.jScrollPane(jScrollPaneSettings);
-        var api = pane.data('jsp');
-        api.reinitialise();
-        api.scrollTo(0, 9999);
+        reset_conversation_scrollPane();
+
     }
 }
 
@@ -299,17 +315,14 @@ function add_message_to_conversation($messagesContainer, msgdata) {
 
 
 }
+
+
 function add_conversation_message(data) {
     if ($('#messageDriverModal:visible').length){
         var $conversationContainer = $('#driver_conversation');
         var $messagesContainer = $conversationContainer.find('.messages_container');
         add_message_to_conversation($messagesContainer, data);
-
-        var pane = $conversationContainer.find('.conversation_panel');
-        pane.jScrollPane(jScrollPaneSettings);
-        var api = pane.data('jsp');
-        api.reinitialise();
-        api.scrollTo(0, 9999);
+        reset_conversation_scrollPane();
     }
 }
 
@@ -386,20 +399,24 @@ $(document).ready(function () {
     adjust_fluid_columns();
 
     $(window).on('resize',function(e) {
-        remove_style_widths();
-
+        remove_fluid_column_style_widths();
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function() {
             adjust_fluid_columns();
+            if ($('#messageDriverModal:visible').length) {
+                reset_conversation_scrollPane();
+            }
         }, 250);
     });
 
     $('.list_panel_line').on('show', function() {
-        remove_style_widths();
+
+        remove_fluid_column_style_widths();
 
         clearTimeout(showTimer);
         showTimer = setTimeout(function() {
             adjust_fluid_columns();
+
         }, 250);
     });
     

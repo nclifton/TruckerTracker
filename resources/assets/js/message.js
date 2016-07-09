@@ -33,18 +33,10 @@ $(document).ready(function () {
                     .text(data.first_name + ' ' + data.last_name);
 
                 $messagesContainer.children(':visible').remove();
-                var pane = $conversationContainer.find('.conversation_panel');
-                pane.jScrollPane(jScrollPaneSettings);
-                var api = pane.data('jsp');
-                   
                 $.each(data.messages, function(){
-                    var msgdata = this;
-                    add_message_to_conversation($messagesContainer, msgdata);
-                    api.reinitialise();
+                    add_message_to_conversation($messagesContainer, this);
                 });
-                
-                api.reinitialise();
-                api.scrollTo(0, 9999);
+                reset_conversation_scrollPane();
 
             }).fail(function(data){
                 var newDoc = document.open("text/html", "replace");
