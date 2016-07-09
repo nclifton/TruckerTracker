@@ -23,6 +23,9 @@ $(document).ready(function ($) {
     }
 
     $('#btn-add-user').click(function (e) {
+        $('#userModalLabel').text('Register Organisation User');
+        $('#btn-save-user').text('Register');
+        $('#userForm').trigger('reset');
         switchModals(e);
     });
 
@@ -41,7 +44,8 @@ $(document).ready(function ($) {
                 $('#email').val(data.email);
                 $('#btn-save-user').val("update");
                 $('#current_password').show();
-
+                $('#userModalLabel').text('Edit Organisation User');
+                $('#btn-save-user').text('Save');
                 switchModals(e);
 
             }).fail(function(data){
@@ -124,8 +128,7 @@ $(document).ready(function ($) {
                     $("#user" + data._id + ' button.delete-user').val(data._id);
                     $("#user" + data._id).css('display','');
                 }
-                $("#user" + data._id + ' span.name').text(data.name);
-                $("#user" + data._id + ' span.email').text(data.email);
+                $("#user" + data._id + ' span.name_email').text(data.name + ' ' + data.email);
                 
                 $('#userForm').trigger("reset");
                 $('#userModal').modal('hide');

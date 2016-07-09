@@ -424,4 +424,9 @@ $(document).ready(function () {
         setup_sse();
     }
 
+    $('#locate_vehicles_collapsible,#message_drivers_collapsible').on('shown.bs.collapse', function(){
+        remove_fluid_column_style_widths();
+        adjust_fluid_columns();
+    })
+
 });

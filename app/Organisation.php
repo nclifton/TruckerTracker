@@ -81,4 +81,9 @@ class Organisation extends Moloquent
         return $this->hasMany(Location::class,'organisation_id','_id');
     }
 
+    public function scopeAddedUsers()
+    {
+        return $this->users()->whereNotIn('_id',[$this->first_user_id,$this->twilio_user_id]);
+    }
+    
 }

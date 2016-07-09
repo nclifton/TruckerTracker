@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('pageNav')
+    <li><a href="{{ url('/dash') }}">Dash</a></li>
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row">

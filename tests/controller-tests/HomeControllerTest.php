@@ -45,7 +45,7 @@ class HomeControllerTest extends TestCase {
         $tuser = $this->twilioUser();
 
         // Act
-        $this->actingAs($user)->get('/home');
+        $this->actingAs($user)->get('/dash');
 
         // Assert
         $this->assertResponseOk();
@@ -71,7 +71,7 @@ class HomeControllerTest extends TestCase {
         $this->twilioUser();
 
         // Act
-        $this->actingAs($user)->get('/home');
+        $this->actingAs($user)->get('/dash');
 
         // Assert
         $this->assertResponseOk();
@@ -95,7 +95,7 @@ class HomeControllerTest extends TestCase {
         $user = $this->twilioUser();
 
         // Act
-        $this->actingAs($user)->get('/home');
+        $this->actingAs($user)->get('/dash');
 
         // Assert
         $this->assertResponseStatus(403);
@@ -115,7 +115,7 @@ class HomeControllerTest extends TestCase {
         $user = factory(User::class)->create();
 
         // Act
-        $this->actingAs($user)->get('/home');
+        $this->actingAs($user)->get('/dash');
 
         // Assert
         $this->assertResponseOk();

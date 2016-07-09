@@ -1,5 +1,4 @@
-<li id="vehicle{{$vehicle?$vehicle->id:''}}" class="row list_panel_line" style="{{$styleAttr}}"
-    xmlns="http://www.w3.org/1999/html">
+<li id="vehicle{{$vehicle?$vehicle->id:''}}" class="row list_panel_line" style="{{$styleAttr}}">
     @can('send-location')
         <span class="locate-button">
             <button class="btn btn-xs btn-detail open-modal-location locate-button pull-left" value="{{$vehicle?$vehicle->id:''}}">

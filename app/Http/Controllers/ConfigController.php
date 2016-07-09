@@ -40,8 +40,7 @@ class ConfigController extends Controller
             abort(403);
         }
         return Response::json($this
-            ->prepareOrganisationResponse($this
-                ->loadOrg($org)));
+            ->prepareOrganisationResponse($org));
     }
 
     /**
@@ -67,8 +66,7 @@ class ConfigController extends Controller
         $this->addOrganisationTwilioUser($twilioUsername, $org);
 
         return Response::json($this
-            ->prepareOrganisationResponse($this
-                ->loadOrg($org)));
+            ->prepareOrganisationResponse($org));
     }
 
     /**
@@ -120,8 +118,7 @@ class ConfigController extends Controller
         $org->update($attributes);
 
         return Response::json($this
-            ->prepareOrganisationResponse($this
-                ->loadOrg($org)));
+            ->prepareOrganisationResponse($org));
     }
 
 
@@ -501,10 +498,11 @@ class ConfigController extends Controller
      * @param array|Organisation $org
      * @return array
      */
-    private function prepareOrganisationResponse($org)
+    private function prepareOrganisationResponse(Organisation $org)
     {
-        $orgArray = (is_a($org,Model::class)) ? $org->toArray() : $org;
-        unset($orgArray['first_user']);
+
+        $orgArray = $org->toArray();
+        $orgArray['users'] = $org->addedUsers()->get()->toArray();
         return array_merge($orgArray,[
             'twilio_inbound_message_request_url'=>TwilioHelper::MessageRequestUrl($org),
             'twilio_outbound_message_status_callback_url'=>TwilioHelper::MessageStatusCallbackUrl($org)]);
@@ -519,8 +517,7 @@ class ConfigController extends Controller
     private function loadOrg(Organisation $org)
     {
         $org->load(['users' => function ($query) use ($org) {
-            $query->where('_id', '<>', $org->twilio_user_id)
-                ->where('_id', '<>', $org->first_user_id);
+            $query->whereNotIn('_id', [$org->twilio_user_id,$org->first_user_id]);
         }]);
         return $org;
     }

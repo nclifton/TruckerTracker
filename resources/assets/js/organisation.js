@@ -23,9 +23,21 @@ $(document).ready(function ($) {
     });
 
     //display modal form for org editing
+    var resetTimer;
 
-    $('.open-modal-org').click(function (e) {
+    $('#org-users-tab-link').on('shown.bs.tab', function (e) {
+        adjust_fluid_columns();
+    });
+
+    $('#btn-edit-org').click(function (e) {
+        e.preventDefault();
         var org_id = $(this).val();
+        if (!org_id){
+            org_id = $(this).attr('value');
+        }
+        if (!org_id){
+            org_id = $(this).attr('data');
+        }
 
         $.get(org_url + '/' + org_id, function (data) {
             //success data
@@ -41,7 +53,7 @@ $(document).ready(function ($) {
                     for (var j in users) {
                         var user = users[j];
                         if (!$("#user" + user._id).length) {
-                            usr = $('#user').clone(false).prependTo('#user_list').attr("id", "user" + user._id);
+                            var usr = $('#user').clone(false).prependTo('#user_list').attr("id", "user" + user._id);
                             usr.show();
                         }
                         $('user' + user._id + ' span.name').text(user.name);
@@ -52,13 +64,12 @@ $(document).ready(function ($) {
                 } else if (i == "_id") {
                     $('#org_id').val(data[i]);
                 } else {
-                    $('#orgConfigForm [name="' + i + '"]').val(data[i]);
-                    $('#orgTwilioForm [name="' + i + '"]').val(data[i]);
+                    $('#orgConfigForm [name="' + i + '"], #orgTwilioForm [name="' + i + '"] ').val(data[i]);
                 }
             }
-
             $('#btn-save-org').val("update");
             $('#orgModal').modal('show');
+
         }).fail(function (data) {
             var newDoc = document.open("text/html", "replace");
             newDoc.write(data.responseText);
@@ -70,12 +81,12 @@ $(document).ready(function ($) {
     //create new organisation 
 
     $("#btn-save-org").click(function (e) {
+        e.preventDefault();
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
             }
         });
-        e.preventDefault();
         var formData = $('#orgConfigForm').serializeFormJSON();
         var twilioFormData = $('#orgTwilioForm').serializeFormJSON();
         for (var key in twilioFormData) {

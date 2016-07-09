@@ -35,6 +35,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         echo "xdebug.scream=0" >> /etc/php/7.0/mods-available/xdebug.ini
         echo "xdebug.cli_color=1" >> /etc/php/7.0/mods-available/xdebug.ini
         echo "xdebug.show_local_vars=1" >> /etc/php/7.0/mods-available/xdebug.ini
+        echo "xdebug.idekey=phpstorm" >> /etc/php/7.0/mods-available/xdebug.ini
+        echo "xdebug.max_nesting_level=300" >> /etc/php/7.0/mods-available/xdebug.ini
+
         echo "error_log = /var/log/php7.0-fpm-error.log" >> /etc/php/7.0/fpm/php.ini
+
     SHELL
 end

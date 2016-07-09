@@ -42,7 +42,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         // Arrange
         $user = $this->firstUser();
         $tUser = $this->twilioUser();
-        $this->user();
+        $oUser = $this->user();
         $org = $this->orgSet[0];
         $urlParts = [
             'scheme' => config('app.external_scheme'),
@@ -84,13 +84,25 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
                 ]
             ]
         ]);
-         $this->seeJson([
+        $this->seeJson([
             '_id' => $org['_id'],
             'name' => $org['name'],
             'twilio_inbound_message_request_url' =>
                 $expected_twilio_inbound_message_request_url,
             'twilio_outbound_message_status_callback_url' =>
                 $expected_twilio_outbound_message_status_callback_url,
+        ]);
+        $this->seeJson([
+            'name' => $oUser->name,
+            'email' => $oUser->email
+        ]);
+        $this->notSeeJason([
+            'name' => $user->name,
+            'email' => $user->email
+        ]);
+        $this->notSeeJason([
+            'name' => $tUser->name,
+            'email' => $tUser->email
         ]);
 /*
  *
@@ -772,6 +784,16 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         // Assert
         $this->seeStatusCode(422);
         $this->seeJson([$propertyName => [$text]]);
+    }
+
+    private function notSeeJason($array)
+    {
+        try{
+            $this->seeJson($array);
+            $this->fail("NOT see items in Json");
+        } catch (\Exception $e){
+
+        }
     }
 
 }

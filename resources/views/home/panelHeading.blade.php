@@ -7,13 +7,7 @@
         Dashboard
     </span>
     @if($org)
-        @if($user->can('view-organisation',$org))
-            <button id="btn-edit-org" name="btn-edit-org"
-                    class="btn btn-warning btn-xs btn-detail open-modal-org pull-right"
-                    value="{{$org->_id}}">
-                Edit Organisation
-            </button>
-        @endif
+
     @else
         <button id="btn-edit-org" name="btn-edit-org"
                 class="btn btn-warning btn-xs btn-detail open-modal-org pull-right"

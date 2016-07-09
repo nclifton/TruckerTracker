@@ -31,7 +31,7 @@ Route::get('/', function () {
 
 Route::auth();
 
-Route::get('/home', 'HomeController@index');
+Route::get('/dash', 'HomeController@index');
 
 Route::get('/organisation/{organisation}',      'ConfigController@getOrganisation');
 Route::post('/organisation',                    'ConfigController@addOrganisation');

@@ -39,7 +39,6 @@
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
-      overflow: hidden;
       white-space: nowrap;
       .overflow_container {
         overflow: hidden;
@@ -68,17 +67,11 @@
           width: 200%;
         }
       }
-
-
     }
-
-
-
   }
   li:nth-child(odd) {
     background-color: linen;
   }
-
 }
 .message-list,.location-list {
   width:100%;
@@ -91,13 +84,9 @@
 }
 .list-panel.scroll-panel {
   overflow:auto;
-  height:200px;
 }
 .tab-content .tab-pane {
   margin-top: 15px;
-}
-span.edit-btn{
-  min-width:35px;
 }
 
 .gm-map {

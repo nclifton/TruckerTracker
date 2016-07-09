@@ -1,7 +1,33 @@
 @extends('layouts.app')
 
-@section('content')
+@section('pageNav')
+    <?php
+            $org = Auth::getUser()->organisation;
+    ?>
+    @can('view-organisation')
+        <li>
+            <a id="btn-edit-org" name="btn-edit-org" href="#" class="open-modal-org" data="{{ $org->_id}}">
+                Edit Organisation
+            </a>
+        </li>
+    @endcan
+    @can('add-vehicle')
+        <li>
+            <a id="btn-add-vehicle" name="btn-add-vehicle" href="#" {{$org?:'disabled="disabled"'}}>
+                Add Vehicle
+            </a>
+        </li>
+    @endcan
+    @can('add-driver')
+        <li>
+            <a id="btn-add-driver" name="btn-add-driver" href="#" {{$org?:'disabled="disabled"'}}>
+                Add Driver
+            </a>
+        </li>
+    @endcan
+@endsection
 
+@section('content')
     @can('view-location',$org)
         @include('home.modal',['subject'=>'location.view','title'=>'Vehicle Location','subject_id_value'=>''])
     @endcan
