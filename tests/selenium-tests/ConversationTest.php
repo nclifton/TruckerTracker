@@ -39,6 +39,7 @@ class ConversationTest extends IntegratedTestCase
 
         // Act
         $this->login();
+        $this->byCssSelector('a[href="#message_drivers_collapsible"]')->click();
         $this->byCssSelector('#driver' . $driver['_id'] . ' button.open-modal-message')->click();
         $this->wait();
 
