@@ -39,10 +39,14 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
 
         // Act
         $this->login();
-        $this->byCssSelector('#vehicle'. $vehicle['_id'].' button.open-modal-location')->click();
-        $this->wait(4000);
+        $this->byCssSelector('#accordion a[href="#locate_vehicles_collapsible"]')->click();
+        $this->wait();
+        $this->byId('#vehicle'. $vehicle['_id'])->click();
+        $this->wait();
+        $this->byId('#btn-locateVehicle')->click();
+        $this->wait();
         $this->byId('btn-save-location')->click();
-        $this->wait(6000);
+        $this->wait();
 
         // Assert
         $count = 10;
@@ -98,17 +102,13 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
 
         $this->assert_location_line($id, $vehicle, 'received', $org, $received_at);
 
-        $this
-            ->assertThat($this
-                ->byCssSelector('#location'.$id.' .open-modal-location-view')
-                ->displayed(),$this
-                ->isTrue());
-        
         $this->wait();
-        
-        $this->byCssSelector('#location'.$id.' button.delete-location')->click();
+
+        // test delete
+        $this->byId('location' . $id )->click();
+        $this->byId('btn-delete-locations')->click();
         $this->wait();
-        
+
         $this->notSeeId('location'.$id);
 
     }

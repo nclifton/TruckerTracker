@@ -43,7 +43,11 @@ class LocationViewTest extends IntegratedTestCase
         $expectedDatetime = (new \DateTime($loc['datetime']))->format($org['datetime_format']);
 
         // Act
-        $this->findByCssSelector('#location'.$loc['_id'].' button.open-modal-location-view')->click();
+        $this->byCssSelector('#accordion a[href="#locate_vehicles_collapsible"]')->click();
+        $this->wait();
+        $this->byId('#location'.$loc['_id'])->click();
+        $this->wait();
+        $this->byCssSelector('button.open-modal-location-view')->click();
         $this->wait(8000);
 
         // Assert

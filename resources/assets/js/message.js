@@ -3,11 +3,20 @@
  * Created by nclifton on 29/05/2016.
  */
 $(document).ready(function () {
-
-    setup_message_driver();
     
-    function setup_view_conversation() {
+    setup_select('message');
 
+    //delete message and remove it from list
+    function setup_delete_messages() {
+        $('#btn-delete-messages').click(function (e) {
+            e.preventDefault();
+            delete_selected_message();
+        });
+    }
+
+    setup_delete_messages();
+
+    function setup_view_conversation() {
         
         // This is shown on the message modal used to send messages
         // we'll populate the conversation panel when the message modal is opened.
@@ -47,8 +56,6 @@ $(document).ready(function () {
     }
 
     setup_view_conversation();
-
-    setup_delete_message();
 
     var add_message_to_conversation_display = function (data) {
 
@@ -94,10 +101,10 @@ $(document).ready(function () {
                 
                 add_message_line(data);
                 add_message_to_conversation_display(data);
-                setup_delete_message();
                 setup_view_conversation();
                 setup_sse();
                 adjust_fluid_columns();
+
 
             },
             error: function (data) {

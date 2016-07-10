@@ -5,6 +5,9 @@ $(document).ready(function ($) {
 
     setup_message_driver();
 
+    setup_select('driver',true);
+
+
     //display modal form for driver editing
     function setup_edit_driver() {
         $('.open-modal-driver').click(function (e) {
@@ -14,11 +17,8 @@ $(document).ready(function ($) {
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
                 }
             });
-
             var driver_id = $(this).val();
-
             $('#test-message-from-driver-button').show();
-
             $.get( '/drivers/' + driver_id, function (data) {
                 //success data
                 console.log(data);
@@ -39,7 +39,6 @@ $(document).ready(function ($) {
 
     setup_edit_driver();
 
-
     //display modal form for creating new driver
     $('#btn-add-driver').click(function () {
         $('#btn-save-driver').val("add");
@@ -58,16 +57,12 @@ $(document).ready(function ($) {
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
                 }
             });
-
             var driver_id = $(this).val();
-
             $.ajax({
-
                 type: "DELETE",
                 url:  '/drivers/' + driver_id,
                 success: function (data) {
                     console.log(data);
-
                     $("#driver" + driver_id).remove();
                 },
                 error: function (data) {
@@ -87,7 +82,6 @@ $(document).ready(function ($) {
                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
             }
         });
-
 
         var formData = {
             first_name: $('#first_name').val(),
@@ -121,7 +115,11 @@ $(document).ready(function ($) {
 
                 if (state == "add") { //if user added a new record
                     $('#btn-save-driver').text("Save Changes");
-                    $('#driver').clone(false).appendTo('#driver_list').attr("id", "driver" + data._id);
+                    $('#driver')
+                        .clone(false)
+                        .appendTo('#driver_list')
+                        .attr("id", "driver" + data._id)
+                        .attr("data",data._id);
                     $("#driver" + data._id + ' button.open-modal-message').val(data._id);
                     $("#driver" + data._id + ' button.open-modal-driver').val(data._id);
                     $("#driver" + data._id + ' button.delete-driver').val(data._id);
@@ -133,6 +131,7 @@ $(document).ready(function ($) {
                 
                 setup_edit_driver();
                 setup_delete_driver();
+                setup_select('driver',true);
                 setup_message_driver();
                 adjust_fluid_columns();
                 setup_sse();

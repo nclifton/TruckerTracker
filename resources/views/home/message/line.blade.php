@@ -32,8 +32,8 @@ if ($message){
     $message_text_title = ' title='.$message->message_text.'';
 }
 ?>
-<li id="message{{$id}}" class="row list_panel_line" style="{{$styleAttr}}"{!! $message_text_title !!}>
-    <!--<button class="btn btn-xs btn-detail open-modal-view-message view-button pull-left"  value="{{$id}}">View</button> -->
+<li id="message{{$id}}" class="row list_panel_line message_line" style="{{$styleAttr}}"{!! $message_text_title !!}
+    data="{{$id}}">
     <span class="line_fluid_column">
         <span class="name">
             <span class="first_name">{!! $first_name !!}</span>
@@ -44,11 +44,4 @@ if ($message){
             <span class="overflow_ellipsis status_at">{!! $status_at !!}</span>
         </span>
     </span>
-    @can('delete-message')
-        <span class="delete-button">
-            <button class="btn btn-danger btn-xs btn-delete delete-message pull-right delete-button" value="{{$id}}">
-                Delete
-            </button>
-        </span>
-    @endcan
 </li>

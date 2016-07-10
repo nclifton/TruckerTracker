@@ -169,56 +169,71 @@ function update_location_line(data) {
     loc.find('span.status_at').text(status_at);
 }
 
-//delete message and remove it from list
-function setup_delete_message() {
-    $('button.delete-message').click(function (e) {
+function delete_selected_message() {
+    delete_selected('message', '/driver/message/');
+}
+
+function delete_selected_location(){
+    delete_selected('location','/vehicle/location/');
+}
+
+function delete_selected(classPrefix,urlPrefix) {
+
+    var $item = $('.' + classPrefix + '_line.selected').first()
+    if ($item.length) {
+        var item_id = $item.attr('data');
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
             }
         });
-
-        e.preventDefault();
-
-        var message_id = $(this).val();
-
         $.ajax({
-
             type: "DELETE",
-            url: '/driver/message/' + message_id,
+            url: urlPrefix + item_id,
             success: function (data) {
                 console.log(data);
-                $("#message" + message_id).remove();
+                $("#" + classPrefix + item_id).remove();
+                var selectedSelector = '.' + classPrefix + '_line' + '.selected';
+                $(selectedSelector).removeClass('selected');
+                enable_disable_controls(classPrefix);
+                delete_selected(classPrefix,urlPrefix);
             },
             error: function (data) {
                 handleAjaxError(data);
             }
         });
+    }
+}
+
+
+
+function enable_disable_controls(classPrefix) {
+    var selectedSelector = '.' + classPrefix + '_line' + '.selected';
+    var controlsSelector = '#' + classPrefix + '_controls';
+    if ($(selectedSelector).length) {
+        $(controlsSelector).find('button').removeAttr('disabled');
+    } else {
+        $(controlsSelector).find('button').attr('disabled', 'disabled')
+    }
+}
+function setup_select(classPrefix,onlyOne) {
+
+    var selectableSelector = '.' + classPrefix + '_line';
+    $(selectableSelector).off('click').click(function () {
+
+        if(onlyOne){
+            $(selectableSelector).removeClass('selected');
+        }
+        $(this).toggleClass('selected');
+        enable_disable_controls(classPrefix);
+
     });
 }
 
-//delete location and remove it from list
-function setup_delete_location() {
-    $('button.delete-location').click(function (e) {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-            }
-        });
-        e.preventDefault();
-        var location_id = $(this).val();
-        $.ajax({
-            type: "DELETE",
-            url: '/vehicle/location/' + location_id,
-            success: function (data) {
-                console.log(data);
-                $("#location" + location_id).remove();
-            },
-            error: function (data) {
-                handleAjaxError(data);
-            }
-        });
-    });
+function clear_selected(classPrefix){
+    var selectedSelector = '.' + classPrefix + '_line' + '.selected';
+    $(selectedSelector).removeClass('selected');
+    enable_disable_controls(classPrefix);
 }
 
 function add_message_line(data) {
@@ -226,7 +241,11 @@ function add_message_line(data) {
         return update_message_line(data);
     }
 
-    var msg = $('#message').clone(false).appendTo('#message_list').attr("id", "message" + data._id);
+    var msg = $('#message')
+        .clone(false)
+        .appendTo('#message_list')
+        .attr("id", "message" + data._id)
+        .attr('data',data._id);
     msg.find('button.open-modal-view-message').val(data._id);
     msg.find('button.delete-message').val(data._id);
     msg.find('span.first_name').text(data.driver.first_name);
@@ -247,7 +266,8 @@ function add_message_line(data) {
     msg.find('span.status_at').text(status_at);
     msg.attr('title', data.message_text);
     msg.show();
-    setup_delete_message()
+    setup_select('message');
+    
 }
 
 function update_message_line(data) {
@@ -369,14 +389,15 @@ function setup_sse(){
 //display modal form for messaging driver
 function setup_message_driver() {
     $('.open-modal-message').click(function (e) {
-        var driver_id = $(this).val();
-        $('#btn-save-messageDriver').val("send");
-        $('#messageDriver_id').val(driver_id);
-        $('#messageDriverModal').modal('show');
+        var driver_id = $('.driver_line.selected').attr('data');
+        if (driver_id){
+            clear_selected('driver');
+            $('#btn-save-messageDriver').val("send");
+            $('#messageDriver_id').val(driver_id);
+            $('#messageDriverModal').modal('show');
+        }
     });
 }
-
-
 
 /**
  * show hide event

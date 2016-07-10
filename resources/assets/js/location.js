@@ -3,7 +3,7 @@
  */
 $(document).ready(function () {
 
-
+    setup_select('location');
 
     //display modal form viewing a location
     function setup_view_location() {
@@ -14,7 +14,12 @@ $(document).ready(function () {
         var currMapCenter;
 
         $('.open-modal-location-view').click(function () {
-            var location_id = $(this).val();
+
+            var $location = $('.location_line.selected').first();
+            if (!$location.length) {
+                return;
+            }
+            var location_id = $location.attr('data');
 
             $.get('/vehicle/location/' + location_id, function (loc) {
                 //success data
@@ -99,7 +104,7 @@ $(document).ready(function () {
                                     map.setCenter(currMapCenter);
                                 }
                         })
-                    
+
                     ;
 
                 });  // end on show modal
@@ -117,7 +122,18 @@ $(document).ready(function () {
 
     setup_view_location();
 
-    setup_delete_location();
+
+    //delete location/s and remove it/tem from list
+    function setup_delete_locations() {
+        $('#btn-delete-locations').click(function (e) {
+            e.preventDefault();
+            delete_selected_location();
+        });
+    }
+
+    setup_delete_locations();
+
+
 
     //send location request to vehicle
     $("#btn-save-location").click(function (e) {
@@ -143,7 +159,11 @@ $(document).ready(function () {
                 $('#locationModal').modal('hide');
                 $('#location-list-panel').show();
 
-                var loc = $('#location').clone(false).appendTo('#location_list').attr("id", "location" + data._id);
+                var loc = $('#location')
+                    .clone(false)
+                    .appendTo('#location_list')
+                    .attr("id", "location" + data._id)
+                    .attr("data",data._id);
                 loc.find('button.open-modal-view-location').val(data._id);
                 loc.find('button.delete-location').val(data._id);
                 loc.find('span.registration_number').text(data.vehicle.registration_number);
@@ -153,7 +173,7 @@ $(document).ready(function () {
                 loc[0].scrollIntoView();
 
                 setup_view_location();
-                setup_delete_location();
+                setup_select('location');
                 setup_sse();
                 adjust_fluid_columns();
 

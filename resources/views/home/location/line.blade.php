@@ -23,20 +23,8 @@ if ($location) {
     }
 }
 ?>
-<li id="location{{$id}}" class="row list_panel_line" style="{{$styleAttr}}">
-
-    @can('view-location')
-        @if ($status == 'received')
-            <span class="view-button">
-                <button class="btn btn-xs btn-detail open-modal-location-view view-button" value="{{$id}}">View</button>
-            </span>
-        @else
-            <span class="view-button" style="display:none">
-                <button class="btn btn-xs btn-detail open-modal-location-view view-button" value="{{$id}}">View</button>
-            </span>
-        @endif
-    @endcan
-
+<li id="location{{$id}}" class="row list_panel_line location_line" style="{{$styleAttr}}"
+    data="{{$id}}">
     <span class="line_fluid_column">
         <span class="registration_number">{!! $registration_number !!}</span>
         <span class="status">{!! $status !!}</span>
@@ -44,11 +32,4 @@ if ($location) {
             <span class="overflow_ellipsis status_at">{!! $status_at !!}</span>
         </span>
     </span>
-    @can('delete-location')
-    <span class="delete-button">
-        <button class="btn btn-danger btn-xs btn-delete delete-location pull-right delete-button" value="{{$id}}">
-            Delete
-        </button>
-    </span>
-    @endcan
 </li>

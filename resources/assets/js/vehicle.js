@@ -5,19 +5,35 @@ $(document).ready(function () {
 
     var vehicles_url = "/vehicles";
 
+    
+    
+    
+    
+    
     $('#registration_number').keyup(function(){
         this.value = this.value.toUpperCase();
     });
 
 
+    
+    
+    
+    
+    setup_select('vehicle',true);
+
+
+
     //display modal form for sending locate request message to vehicle
     function setup_locate_vehicle() {
         $('.open-modal-location').click(function () {
-            var vehicle_id = $(this).val();
-            $('#btn-save-location').val("send");
-            $('#location_vehicle_id').val(vehicle_id);
-            $('#locationModal').modal('show');
 
+            var vehicle_id = $('.vehicle_line.selected').attr('data');
+            if (vehicle_id) {
+                clear_selected('vehicle');
+                $('#btn-save-location').val("send");
+                $('#location_vehicle_id').val(vehicle_id);
+                $('#locationModal').modal('show');
+            }
         });
     }
     setup_locate_vehicle();
@@ -129,7 +145,11 @@ $(document).ready(function () {
 
                 if (state == "add") { //if user added a new record
                     $('#btn-save-vehicle').text("Save Changes");
-                    $('#vehicle').clone(false).appendTo('#vehicle_list').attr("id", "vehicle" + data._id);
+                    $('#vehicle')
+                        .clone(false)
+                        .appendTo('#vehicle_list')
+                        .attr("id", "vehicle" + data._id)
+                        .attr("data",data._id);
                     $("#vehicle" + data._id + ' button.open-modal-location').val(data._id);
                     $("#vehicle" + data._id + ' button.open-modal-vehicle').val(data._id);
                     $("#vehicle" + data._id + ' button.delete-vehicle').val(data._id);
@@ -140,6 +160,7 @@ $(document).ready(function () {
                 $('#vehicleForm').trigger("reset");
                 $('#vehicleModal').modal('hide');
 
+                setup_select('vehicle',true);
                 setup_locate_vehicle();
                 setup_edit_vehicle();
                 setup_delete_vehicle();

@@ -9,13 +9,17 @@
                 </div>
                 <div id="locate_vehicles_collapsible" class="panel-collapse collapse">
                     <div class="container-fluid">
-                        <div class="">
+                        <div class="row" id="vehicle_controls">
+                            @include('home.vehicle.controls')
+                        </div>
+                        <div class="row">
                             @include('home.listPanel',['lines'=>$org?$org->vehicles:[],'subject'=>'vehicle','add_button_label'=>'Add Vehicle'])
                         </div>
+                        <div class="row" id="location_controls">
+                            @include('home.location.controls')
+                        </div>
                         <div class="">
-                            <div class="">
-                                @include('home.listPanel',array('lines'=>$org?$org->locations:[],'subject'=>'location'))
-                            </div>
+                            @include('home.listPanel',array('lines'=>$org?$org->locations:[],'subject'=>'location'))
                         </div>
                     </div>
                 </div>
@@ -28,13 +32,17 @@
                 </div>
                 <div id="message_drivers_collapsible" class=" panel-collapse collapse">
                     <div class="container-fluid">
-                        <div class="">
+                        <div class="row" id="driver_controls">
+                            @include('home.driver.controls')
+                        </div>
+                        <div class="row">
                             @include('home.listPanel',['lines'=>$org?$org->drivers:[],'subject'=>'driver','add_button_label'=>'Add Driver'])
                         </div>
-                        <div class="">
-                            <div class="">
-                                @include('home.listPanel',['lines'=>$org?$org->messages:[],'subject'=>'message'])
-                            </div>
+                        <div class="row" id="message_controls">
+                            @include('home.message.controls')
+                        </div>
+                        <div class="row">
+                            @include('home.listPanel',['lines'=>$org?$org->messages:[],'subject'=>'message'])
                         </div>
                     </div>
                 </div>

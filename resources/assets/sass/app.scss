@@ -6,6 +6,8 @@
   li{
     margin: 4px 0;
     white-space: nowrap;
+
+
     span {
       line-height: 20px;
       display: inline-block;
@@ -71,6 +73,9 @@
   }
   li:nth-child(odd) {
     background-color: linen;
+  }
+  li.selected {
+    background-color: lightblue;
   }
 }
 .message-list,.location-list {

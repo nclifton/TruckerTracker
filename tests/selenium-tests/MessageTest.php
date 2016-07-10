@@ -25,13 +25,21 @@ class MessageTest extends IntegratedTestCase
 
         // Act
         $this->login();
-        $this->byCssSelector('#driver' . $driver['_id'] . ' button.open-modal-message')->click();
+        $this->byCssSelector('#accordion a[href="#message_drivers_collapsible"]')->click();
+        $this->wait();
+        $this->byId('driver' . $driver['_id'])->click();
+        $this->wait();
+        $this->byId('btn-messageDriver')->click();
+
         $this->wait();
         $this->type($message_text, '#message_text');
+        $this->wait();
         $this->byId('btn-save-messageDriver')->click();
         $this->wait();
         $this->byCssSelector('#messageDriverModal .modal-header button.close')->click();
         $this->wait();
+
+        $this->assertEquals('true',$this->byId('btn-messageDriver')->attribute('disabled'));
 
         // Assert
         $dbMsg = $this->waitForDbUpdate($driver, $org, $message_text, Message::STATUS_QUEUED);
@@ -95,7 +103,8 @@ class MessageTest extends IntegratedTestCase
         $this->assertMessageStatus($dbMsg, Message::STATUS_RECEIVED, $received_at, $org);
 
         // test delete
-        $this->byCssSelector('#message' . $id . ' button.delete-message')->click();
+        $this->byId('message' . $id )->click();
+        $this->byId('btn-delete-messages')->click();
         $this->wait();
 
         $this->notSeeId('message' . $id);
@@ -104,12 +113,18 @@ class MessageTest extends IntegratedTestCase
 
         $id = $dbMsg['_id'];
 
-        $this->byCssSelector('#message' . $id . ' button.delete-message')->click();
+        $this->assertEquals('true',$this->byId('btn-delete-messages')->attribute('disabled'));
+
+        $this->byId('message' . $id )->click();
+        $this->byId('btn-delete-messages')->click();
         $this->wait();
 
         $this->notSeeId('message' . $id);
 
         $this->notSeeInDatabase('messages', ['_id' => $id]);
+
+        $this->assertEquals('true',$this->byId('btn-delete-messages')->attribute('disabled'));
+
 
     }
 

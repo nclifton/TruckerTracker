@@ -1,11 +1,5 @@
-<li id="vehicle{{$vehicle?$vehicle->id:''}}" class="row list_panel_line" style="{{$styleAttr}}">
-    @can('send-location')
-        <span class="locate-button">
-            <button class="btn btn-xs btn-detail open-modal-location locate-button pull-left" value="{{$vehicle?$vehicle->id:''}}">
-                locate
-            </button>
-        </span>
-    @endcan
+<li id="vehicle{{$vehicle?$vehicle->id:''}}" class="row list_panel_line vehicle_line" style="{{$styleAttr}}"
+        data="{{$vehicle?$vehicle->id:''}}">
     <span class="line_fluid_column">
         <span class="overflow_container">
             <span class="overflow_ellipsis registration_number">
@@ -13,18 +7,4 @@
             </span>
         </span>
     </span>
-    @can('delete-vehicle',$org)
-        <span class="delete-button">
-            <button class="btn btn-danger btn-xs btn-delete delete-button delete-vehicle pull-right" value="{{$vehicle?$vehicle->id:''}}">
-                Delete
-            </button>
-        </span>
-    @endcan
-    @can('update-vehicle',$org)
-        <span class="edit-button">
-            <button class="btn btn-warning btn-xs btn-detail edit-button open-modal-vehicle pull-right" value="{{$vehicle?$vehicle->id:''}}">
-                Edit
-            </button>
-        </span>
-    @endcan
 </li>

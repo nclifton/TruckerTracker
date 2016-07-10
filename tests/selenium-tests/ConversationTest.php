@@ -40,8 +40,12 @@ class ConversationTest extends IntegratedTestCase
         // Act
         $this->login();
         $this->byCssSelector('a[href="#message_drivers_collapsible"]')->click();
-        $this->byCssSelector('#driver' . $driver['_id'] . ' button.open-modal-message')->click();
         $this->wait();
+        $this->byId('driver' . $driver['_id'])->click();
+        $this->wait();
+        $this->byId('btn-messageDriver')->click();
+        $this->wait();
+
 
         // Assert that previous messages in conversation are displayed
         foreach ($this->conversationSet as $key => $message) {
@@ -66,7 +70,6 @@ class ConversationTest extends IntegratedTestCase
 
         $this->wait();
 
-        $sent_at = new \DateTime();
         $this->postStatusUpdate($twilioUser, $dbOrg, $sid, Message::STATUS_SENT, $driver['mobile_phone_number']);
         $dbMsg = $this->waitForDbUpdate($driver, $org, $message_text, Message::STATUS_SENT);
 
@@ -74,7 +77,6 @@ class ConversationTest extends IntegratedTestCase
 
         $this->assertMessageSeenOnMessageModal($dbMsg);
 
-        $delivered_at = new \DateTime();
         $this->postStatusUpdate($twilioUser, $dbOrg, $sid, Message::STATUS_DELIVERED, $driver['mobile_phone_number']);
         $dbMsg = $this->waitForDbUpdate($driver, $org, $message_text, Message::STATUS_DELIVERED);
 
@@ -82,7 +84,6 @@ class ConversationTest extends IntegratedTestCase
 
         $this->assertMessageSeenOnMessageModal($dbMsg);
 
-        $received_at = new \DateTime();
         $this->postMessageToIncomingController(
             $twilioUser,
             $dbOrg,
@@ -96,6 +97,19 @@ class ConversationTest extends IntegratedTestCase
 
         $this->assertMessageSeenOnMessageModal($dbMsg);
 
+        $this->wait();
+        $this->byCssSelector('#messageDriverModal .modal-header button.close')->click();
+        $this->wait();
+
+        $this->byId('message' . $id )->click();
+        $this->wait();
+
+        $id = $dbMsg['_id'];
+
+        $this->byId('message' . $id )->click();
+        
+        $this->byId('btn-delete-messages')->click();
+        $this->wait();
 
     }
 
