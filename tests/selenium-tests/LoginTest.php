@@ -133,16 +133,16 @@ class LoginTest extends IntegratedTestCase
 
         // Assert
         $this->assertThat($this->byId('btn-add-org')->displayed(), $this->isTrue());
-        $this->assertThat($this->byId('btn-edit-org')->displayed(), $this->isFalse());
+        $this->assertThat($this->byId('btn-add-org')->text(), $this->equalTo('Add Organisation'));
 
         $this->assertThat($this
             ->byId('btn-add-driver')
-            ->enabled(),$this
+            ->displayed(),$this
             ->isFalse());
 
         $this->assertThat($this
             ->byId('btn-add-vehicle')
-            ->enabled(), $this
+            ->displayed(), $this
             ->isFalse());
 
 

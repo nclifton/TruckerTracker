@@ -45,7 +45,7 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
         $this->wait();
         $this->byId('#btn-locateVehicle')->click();
         $this->wait();
-        $this->byId('btn-save-location')->click();
+        $this->byId('btn-save-locateVehicle')->click();
         $this->wait();
 
         // Assert

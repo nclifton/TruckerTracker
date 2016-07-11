@@ -46,6 +46,8 @@ class HomePageAppearanceTest extends IntegratedTestCase
         }
         $this->assertNotNull($id);
 
+        $this->byCssSelector('#accordion a[href="#message_drivers_collapsible"]')->click();
+        $this->wait();
         $this
             ->assertThat($this
                 ->byId('#message' . $message['_id'])

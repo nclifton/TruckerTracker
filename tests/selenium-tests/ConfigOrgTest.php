@@ -408,7 +408,7 @@ class ConfigOrgTest extends IntegratedTestCase
         // Act
         $this->login()->addOrg();
         $this->clickOnElement('btn-add-vehicle');
-        sleep(2); // wait for animation
+        $this->wait(); // wait for animation
 
         // Assert
         $this->assertThat($this->byId('vehicleModalLabel')->displayed(), $this->isTrue());
@@ -479,10 +479,19 @@ class ConfigOrgTest extends IntegratedTestCase
         // Arrange
         $this->login()->addOrg()->addOrgUser();
 
+        $results = $this->connection->collection('users')->find(['email'=>$this->newUserLogin['email']]);
+        $id ='';
+        foreach ($results as $item) {
+            $id = $item['_id'];
+        }
+
+
         // Act
         $this->byId('btn-edit-org')->click();
         $this->wait();
-        $this->byCssSelector('#user_list li:nth-child(1) > span > button.open-modal-user')->click();
+        $this->byId('user'.$id)->click();
+        $this->wait();
+        $this->byId('btn-edit-user')->click();
         $this->wait();
         $this->see('Edit Organisation User');
         $this->see($this->newUserLogin['name']);
@@ -508,16 +517,19 @@ class ConfigOrgTest extends IntegratedTestCase
         // Arrange
         $this->login()->addOrg()->addOrgUser();
 
+        $results = $this->connection->collection('users')->find(['email'=>$this->newUserLogin['email']]);
+        $id ='';
+        foreach ($results as $item) {
+            $id = $item['_id'];
+        }
+
         // Act
         $this->byId('btn-edit-org')->click();
         $this->wait();
-        $this->byCssSelector('#user_list li:nth-child(1) > span > button.delete-user')->click();
+        $this->byId('user'.$id)->click();
         $this->wait();
-        try{
-            $this->byCssSelector('#user_list li:nth-child(1) > span > button.delete-user');
-        } catch (\RuntimeException $e){
-            //
-        }
+        $this->byId('btn-delete-user')->click();
+        $this->wait();
         $this->byId('btn-save-org')->click();
         $this->waitForElement('btn-edit-org');
     }
@@ -550,6 +562,20 @@ class ConfigOrgTest extends IntegratedTestCase
             $this->contains('has-error'));
         $this->assertThat($this->byCssSelector('#orgConfigForm > div:nth-child(1) > div > span > strong')->text(),
             $this->equalTo('We do need a name for your organisation'));
+
+        // assert that error is reset away by closing the modal
+        $this->byCssSelector('#orgModal button.close')->click();
+        $this->wait();
+        $this->byId('btn-edit-org')->click();
+
+        $this->byId('org-users-tab-link')->click();
+        $this->wait();
+        $this->byId('btn-add-user')->click();
+        $this->wait();
+
+        $this->assertThat(explode(' ', $this->byCssSelector('#orgForm > div:nth-child(1)')->attribute('class')),
+            $this->logicalNot($this->contains('has-error')));
+
 
     }
 
@@ -636,7 +662,7 @@ class ConfigOrgTest extends IntegratedTestCase
         $this->byId('org-users-tab-link')->click();
         $this->wait();
         $this->byId('btn-add-user')->click();
-        $this->wait(6000);
+        $this->wait();
         $this->type($this->newUserLogin['name'], 'user_name');
         $this->type($this->newUserLogin['email'], 'email');
         $this->type($this->newUserLogin['password'], 'password');

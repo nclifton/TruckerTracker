@@ -3,6 +3,7 @@
 namespace TruckerTracker\Exceptions;
 
 use Exception;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -45,6 +46,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if ( $e instanceof TokenMismatchException ) {
+            return redirect()->route('login');
+        }
         return parent::render($request, $e);
     }
 }

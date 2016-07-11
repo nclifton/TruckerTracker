@@ -4,6 +4,16 @@
 $(document).ready(function ($) {
 
 
+    function setup_reset_driver_form(){
+        $('#driverForm').on("reset",function(){
+            var $form = $('#driverForm');
+            $form.find('.help-block').remove();
+            $form.find('.form-group').removeClass('has-error');
+        });
+    }
+    setup_reset_driver_form();
+
+
 //display modal form for messaging driver
     function setup_message_driver() {
         $('.open-modal-message').click(function (e) {

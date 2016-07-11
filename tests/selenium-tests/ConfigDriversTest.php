@@ -11,6 +11,8 @@
 
 namespace TruckerTracker;
 
+use PHPUnit_Framework_Exception;
+
 include_once 'IntegratedTestCase.php';
 
 
@@ -47,8 +49,10 @@ class ConfigDriversTest extends IntegratedTestCase
      * Can Add a driver and can delete driver
      *
      * @return void
+     *
+     * @test
      */
-    public function testAddsDriver()
+    public function adds_driver()
     {
         // Arrange
         $driver = $this->driverSet[0];
@@ -91,13 +95,11 @@ class ConfigDriversTest extends IntegratedTestCase
         $this->assertThat($this->byId('messageDriverModal')->displayed(), $this->isTrue());
         $this->byCssSelector('#messageDriverModal button.close')->click();
         $this->wait();
-        $this->byId('driver' . $id )->click();
         $this->byId('btn-edit-driver')->click();
-        $this->wait(6000);
+        $this->wait();
         $this->assertThat($this->byId('driverModal')->displayed(), $this->isTrue());
         $this->byCssSelector('#driverModal button.close')->click();
         $this->wait();
-        $this->byId('driver' . $id )->click();
         $this->byId('btn-delete-driver')->click();
         $this->wait();
         $cursor = $this->getMongoConnection()
@@ -113,7 +115,7 @@ class ConfigDriversTest extends IntegratedTestCase
      *
      * @test
      */
-    public function testBlankFirstNameValidationFail()
+    public function blank_first_name_validation_fail()
     {
         // Arrange
         $driver = $this->driverSet[0];
@@ -129,6 +131,16 @@ class ConfigDriversTest extends IntegratedTestCase
         $this->assertThat($this->byCssSelector('#driverForm div:first-child span.help-block')->text(),
             $this->equalTo('We do need to have first names for your drivers'));
 
+        // check that the validation error is reset away if we close the modal;
+        $this->byCssSelector('#driverModal button.close')->click();
+        $this->wait();
+        $this->clickOnElement('btn-add-driver');
+        $this->wait();
+        $this->assertThat(explode(' ', $this->byCssSelector('#driverForm div:first-child')->attribute('class')),
+            $this->logicalNot($this->contains('has-error')));
+        $this->notSeeCssSelector('span.help-block');
+
+
     }
 
 
@@ -138,7 +150,7 @@ class ConfigDriversTest extends IntegratedTestCase
      *
      * @test
      */
-    public function testBlankLastNameValidationFail()
+    public function blank_last_name_validation_fail()
     {
         // Arrange
         $driver = $this->driverSet[0];
@@ -164,7 +176,7 @@ class ConfigDriversTest extends IntegratedTestCase
      *
      * @test
      */
-    public function testPhoneNumberValidationFail()
+    public function phone_number_validation_fail()
     {
         // Arrange
         $driver = $this->driverSet[0];
@@ -188,7 +200,7 @@ class ConfigDriversTest extends IntegratedTestCase
      *
      * @test
      */
-    public function anotherPhoneNumberValidationFail()
+    public function another_phone_number_validation_fail()
     {
         // Arrange
         $driver = $this->driverSet[0];
@@ -212,7 +224,7 @@ class ConfigDriversTest extends IntegratedTestCase
      *
      * @test
      */
-    public function testDriversLicenceValidationFail()
+    public function drivers_licence_validation_fail()
     {
         // Arrange
         $driver = $this->driverSet[0];
@@ -234,8 +246,10 @@ class ConfigDriversTest extends IntegratedTestCase
      * Can Add a driver
      *
      * @return void
+     *
+     * @test
      */
-    public function testAddTwoDrivers()
+    public function add_two_drivers()
     {
         // Arrange
         $driver1 = $this->driverSet[0];
@@ -254,6 +268,34 @@ class ConfigDriversTest extends IntegratedTestCase
 
         $this->assertThat($this->byId('driverModalLabel')->displayed(), $this->isFalse());
 
+        $driverSet = $this
+            ->getMongoConnection()
+            ->collection('drivers')
+            ->find(['organisation_id' => $driver1['organisation_id']]);
+        $ids = [];
+        foreach ($driverSet as $driver){
+            $ids[] = $driver['_id'];
+        }
+
+        // select first driver then select second driver, first driver should be de-selected
+        $this->byCssSelector('a[href="#message_drivers_collapsible"]')->click();
+        $this->wait();
+        $this->byId('driver'.$ids[0])->click();
+        $this->wait();
+        $this->byIdHasClass('driver'.$ids[0],'selected');
+        $this->byId('driver'.$ids[1])->click();
+        $this->wait();
+        $this->byIdHasClass('driver'.$ids[1],'selected');
+        $this->byIdNotHasClass('driver'.$ids[0],'selected');
+
+        // select the selected driver and should de-select
+        $this->byId('driver'.$ids[1])->click();
+        $this->byIdNotHasClass('driver'.$ids[1],'selected');
+        $this->byIdNotHasClass('driver'.$ids[0],'selected');
+
+
+
+
     }
 
     /**
@@ -267,6 +309,24 @@ class ConfigDriversTest extends IntegratedTestCase
             'last_name' => $driver2['last_name'],
             'mobile_phone_number' => $driver2['mobile_phone_number'],
             'drivers_licence_number' => strtoupper($driver2['drivers_licence_number'])];
+    }
+
+    private function byIdHasClass($id, $array)
+    {
+        $classAttribute = $this->byId($id)->attribute('class');
+        $classes = explode(' ',$classAttribute);
+        if (!in_array($array,$classes)) {
+            throw new PHPUnit_Framework_Exception('Element does not have specified class/es');
+        }
+    }
+
+    private function byIdNotHasClass($id, $array)
+    {
+        $classAttribute = $this->byId($id)->attribute('class');
+        $classes = explode(' ',$classAttribute);
+        if (in_array($array,$classes)) {
+            throw new PHPUnit_Framework_Exception('Element does have specified class/es');
+        }
     }
 
 

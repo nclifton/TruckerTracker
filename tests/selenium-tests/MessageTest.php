@@ -39,8 +39,6 @@ class MessageTest extends IntegratedTestCase
         $this->byCssSelector('#messageDriverModal .modal-header button.close')->click();
         $this->wait();
 
-        $this->assertEquals('true',$this->byId('btn-messageDriver')->attribute('disabled'));
-
         // Assert
         $dbMsg = $this->waitForDbUpdate($driver, $org, $message_text, Message::STATUS_QUEUED);
 

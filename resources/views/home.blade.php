@@ -1,37 +1,7 @@
 @extends('layouts.app')
 
 @section('pageNav')
-        @if($org)
-            @can('view-organisation',$org)
-                <li>
-                    <a id="btn-edit-org" name="btn-edit-org" href="#" class="open-modal-org" data="{{ $org->_id}}">
-                        Edit Organisation
-                    </a>
-                </li>
-            @endcan
-        @else
-            <li>
-                <a id="btn-add-org" name="btn-add-org" href="#" class="open-modal-org" data="">
-                    Add Organisation
-                </a>
-            </li>
-        @endif
-
-        @can('add-vehicle',$org)
-            <li>
-                <a id="btn-add-vehicle" name="btn-add-vehicle" href="#" {{$org?:'disabled="disabled"'}}>
-                    Add Vehicle
-                </a>
-            </li>
-        @endcan
-        @can('add-driver',$org)
-            <li>
-                <a id="btn-add-driver" name="btn-add-driver" href="#" {{$org?:'disabled="disabled"'}}>
-                    Add Driver
-                </a>
-            </li>
-        @endcan
-
+    @include('home.pageNav')
 @endsection
 
 @section('content')
@@ -45,7 +15,7 @@
     @can('add-vehicle',$org)
         @include('home.modal',['subject'=>'vehicle','title'=>'Vehicle Editor','subject_id_value'=>'','save_button_label'=>'Save Changes'])
     @endcan
-    @include('home.modal',['subject'=>'location','title'=>'Locate Vehicle','subject_id_value'=>'','save_button_label'=>'Send'])
+    @include('home.modal',['subject'=>'locateVehicle','title'=>'Locate Vehicle','subject_id_value'=>'','save_button_label'=>'Send'])
     @if (!$org || $user->can('view-organisation',$org))
         @include('home.modal',['subject'=>'org','title'=>'Organisation Editor','subject_id_value'=>$org?$org->_id:'','save_button_label'=>$org?'Save Changes':'Add Organisation'])
         @include('home.modal',['subject'=>'user','title'=>'Register Organisation User','subject_id_value'=>'','save_button_label'=>'<i class="fa fa-btn fa-user"></i>Register'])

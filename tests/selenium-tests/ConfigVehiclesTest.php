@@ -43,14 +43,16 @@ class ConfigVehiclesTest extends IntegratedTestCase
      * Diver Dialog displayed to add vehicle
      *
      * @return void
+     * @test
      */
-    public function testAddVehicleDialogDisplayed()
+    public function add_Vehicle_Dialog_Displayed()
     {
         // Arrange
 
 
         // Act
-        $this->login()->clickOnElement('btn-add-vehicle');
+        $this->login();
+        $this->clickOnElement('btn-add-vehicle');
         sleep(2); // wait for animation
 
         // Assert
@@ -63,8 +65,10 @@ class ConfigVehiclesTest extends IntegratedTestCase
      * Can Add a vehicle and delete a vehicle
      *
      * @return void
+     *
+     * @test
      */
-    public function testAddsVehicle()
+    public function add_and_delete_vehicle()
     {
         // Arrange
         $vehicle = $this->vehicleSet[0];
@@ -87,6 +91,8 @@ class ConfigVehiclesTest extends IntegratedTestCase
         $this->wait();
 
         $this->assertThat($this->byId('vehicleModalLabel')->displayed(), $this->isFalse());
+        $this->byCssSelector('a[href="#locate_vehicles_collapsible"]')->click();
+        $this->wait();
         $this->assertThat($this->byId('vehicle'.$id)->displayed(), $this->isTrue());
 
         // check vehicle info displayed
@@ -97,23 +103,27 @@ class ConfigVehiclesTest extends IntegratedTestCase
                 ->equalTo($vehicle['registration_number']));
 
 
-        // check added vehicle line buttons
+        // check added vehicle line selectable
 
-        $this->byCssSelector('#vehicle' . $id .' .open-modal-location')->click();
-        sleep(3);
-        $this->assertThat($this->byId('locationModal')->displayed(), $this->isTrue());
-        $this->assertThat($this->byId('location_vehicle_id')->attribute('value'),$this->equalTo(''.$id));
-        $this->byCssSelector('#locationModal button.close')->click();
-        sleep(3);
-        $this->byCssSelector('#vehicle'.$id.' .open-modal-vehicle')->click();
-        sleep(3);
+        $this->byId('#vehicle' . $id)->click();
+        $this->wait();
+        $this->assertThat($this->byId('btn-locateVehicle')->attribute('disabled'),$this->isNull());
+        $this->byId('btn-locateVehicle')->click();
+        $this->wait();
+        $this->assertThat($this->byId('locateVehicleModal')->displayed(), $this->isTrue());
+        $this->assertThat($this->byId('locateVehicle_id')->attribute('value'),$this->equalTo(''.$id));
+        $this->byCssSelector('#locateVehicleModal button.close')->click();
+        $this->wait();
+        $this->assertThat($this->byId('btn-edit-vehicle')->attribute('disabled'),$this->isNull());
+        $this->byId('btn-edit-vehicle')->click();
+        $this->wait();
         $this->assertThat($this->byId('vehicleModal')->displayed(), $this->isTrue());
+        $this->assertThat($this->byId('vehicle_id')->attribute('value'),$this->equalTo(''.$id));
+        $this->wait();
         $this->byCssSelector('#vehicleModal button.close')->click();
-
-
-        sleep(1);
-        $this->byCssSelector('#vehicle'.$id.' .delete-vehicle')->click();
-        sleep(3);
+        $this->wait();
+        $this->byId('btn-delete-vehicle')->click();
+        $this->wait();
         $cursor = $this->getMongoConnection()
             ->collection('vehicles')
             ->find($this->bind_vehicle($vehicle));
@@ -128,7 +138,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
      *
      * @test
      */
-    public function testBlankRegoValidationFail()
+    public function blank_rego_validation_fail()
     {
         // Arrange
         $vehicle = $this->vehicleSet[0];
@@ -144,13 +154,25 @@ class ConfigVehiclesTest extends IntegratedTestCase
         $this->assertThat($this->byCssSelector('#vehicleForm div:first-child span.help-block')->text(),
             $this->equalTo('We know the vehicles by their registration numbers'));
 
+        // assert closing the dialog clears the error display
+
+        $this->byCssSelector('#vehicleModal button.close')->click();
+        $this->wait();
+        $this->byId('btn-add-vehicle')->click();
+        $this->wait();
+        $this->assertThat(explode(' ', $this->byCssSelector('#vehicleForm div:first-child')->attribute('class')),
+            $this->logicalNot($this->contains('has-error')));
+
+
+
+
     }
     /**
      * display validation message registration number
      *
      * @test
      */
-    public function testLowercaseRegoToUppercase()
+    public function lowercase_rego_to_uppercase()
     {
         // Arrange
         $v = $this->vehicleSet[0];
@@ -173,7 +195,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
      *
      * @test
      */
-    public function testPhoneNumberValidationFail()
+    public function phone_number_validation_fail()
     {
         // Arrange
         $vehicle = $this->vehicleSet[0];
@@ -196,7 +218,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
      *
      * @test
      */
-    public function testImeiValidationFail()
+    public function imei_validation_fail()
     {
         // Arrange
         $vehicle = $this->vehicleSet[0];

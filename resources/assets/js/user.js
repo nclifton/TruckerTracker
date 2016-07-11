@@ -6,9 +6,10 @@ $(document).ready(function ($) {
 
     var url_prefix = "/organisation/";
 
+    setup_select('user',true);
+
     // attach an open form action to the button / link used to register a new secondary user that will be linked to the organisation
     // make sure that the org modal is hidden first
-
     function switchModals(e) {
         e.preventDefault();
         $('#orgModal').on('hidden.bs.modal', function () {
@@ -18,9 +19,17 @@ $(document).ready(function ($) {
             $('#orgModal').modal('show');
             $('#orgModal').off('hidden.bs.modal');
         });
-
         $("#btn-save-org").click();
     }
+
+    function setup_reset_user_form(){
+        $('#userForm').on("reset",function(){
+            var $form = $('#userForm');
+            $form.find('.help-block').remove();
+            $form.find('.form-group').removeClass('has-error');
+        });
+    }
+    setup_reset_user_form();
 
     $('#btn-add-user').click(function (e) {
         $('#userModalLabel').text('Register Organisation User');
@@ -33,59 +42,56 @@ $(document).ready(function ($) {
     function setup_edit_user() {
         $('.open-modal-user').click(function (e) {
             e.preventDefault();
-            var org_id = $('#org_id').val();
-            var user_id = $(this).val();
-
-            $.get(url_prefix + 'user/' + user_id, function (data) {
-                //success data
-                console.log(data);
-                $('#user_id').val(data._id);
-                $('#user_name').val(data.name);
-                $('#email').val(data.email);
-                $('#btn-save-user').val("update");
-                $('#current_password').show();
-                $('#userModalLabel').text('Edit Organisation User');
-                $('#btn-save-user').text('Save');
-                switchModals(e);
-
-            }).fail(function(data){
-                handleAjaxError(data);
-            });
+            var $user = $('.user_line.selected').first();
+            if ($user.length) {
+                var user_id = $user.attr('data');
+                var org_id = $('#org_id').val();
+                $.get(url_prefix + 'user/' + user_id, function (data) {
+                    //success data
+                    console.log(data);
+                    $('#user_id').val(data._id);
+                    $('#user_name').val(data.name);
+                    $('#email').val(data.email);
+                    $('#btn-save-user').val("update");
+                    $('#current_password').show();
+                    $('#userModalLabel').text('Edit Organisation User');
+                    $('#btn-save-user').text('Save');
+                    switchModals(e);
+                }).fail(function(data){
+                    handleAjaxError(data);
+                });
+            }
         });
     }
-
     setup_edit_user();
 
     //delete driver and remove it from list
-
     function setup_delete_user() {
         $('.delete-user').click(function (e) {
             e.preventDefault();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            });
-            var org_id = $('#org_id').val();
-            var user_id = $(this).val();
-
-            $.ajax({
-
-                type: "DELETE",
-                url: url_prefix + 'user/' + user_id,
-                success: function (data) {
-                    console.log(data);
-                    $("#user" + user_id).remove();
-                },
-                error: function (data) {
-
-                    handleAjaxError(data);
-
-                }
-            });
+            var $user = $('.user_line.selected').first();
+            if ($user.length) {
+                var user_id = $user.attr('data');
+                var org_id = $('#org_id').val();
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: "DELETE",
+                    url: url_prefix + 'user/' + user_id,
+                    success: function (data) {
+                        console.log(data);
+                        $("#user" + user_id).remove();
+                    },
+                    error: function (data) {
+                        handleAjaxError(data);
+                    }
+                });
+            }
         });
     }
-
     setup_delete_user();
 
     $("#btn-save-user").click(function (e) {
@@ -96,7 +102,6 @@ $(document).ready(function ($) {
         });
         e.preventDefault();
         var formData = $('#userForm').serializeFormJSON();
-
         //used to determine the http verb to use [add=POST], [update=PUT]
         var state = $('#btn-save-user').val();
         var type = "POST"; //for creating new resource
@@ -120,22 +125,20 @@ $(document).ready(function ($) {
             dataType: 'json',
             success: function (data) {
                 console.log(data);
-
                 if (state == "add") { //if user added a new record
                     $('#btn-save-user').text("Save Changes");
-                    $('#user').clone(false).prependTo('#user_list').attr("id", "user" + data._id);
-                    $("#user" + data._id + ' button.open-modal-user').val(data._id);
-                    $("#user" + data._id + ' button.delete-user').val(data._id);
-                    $("#user" + data._id).css('display','');
+                    $('#user')
+                        .clone(false)
+                        .appendTo('#user_list')
+                        .attr("id", "user" + data._id)
+                        .attr('data', data._id)
+                        .show();
                 }
                 $("#user" + data._id + ' span.name_email').text(data.name + ' ' + data.email);
-                
                 $('#userForm').trigger("reset");
                 $('#userModal').modal('hide');
-                setup_edit_user();
-                setup_delete_user();
+                setup_select('user',true);
                 adjust_fluid_columns();
-
             },
             error: function (data) {
                 handleAjaxError(data);
@@ -147,9 +150,7 @@ $(document).ready(function ($) {
                         input.closest('div.form-group').addClass('has-error');
                     });
                 }
-
             }
         });
     });
-
 });

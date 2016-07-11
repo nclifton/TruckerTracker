@@ -209,33 +209,30 @@ function delete_selected(classPrefix,urlPrefix) {
 
 function enable_disable_controls(classPrefix) {
     var selectedSelector = '.' + classPrefix + '_line' + '.selected';
-    var controlsSelector = '#' + classPrefix + '_controls';
+    var controlsSelector = '#' + classPrefix + '_controls button.btn-danger, button.btn-warning, button.btn-detail';
     if ($(selectedSelector).length) {
-        $(controlsSelector).find('button').removeAttr('disabled');
+        $(controlsSelector).removeAttr('disabled');
     } else {
-        $(controlsSelector).find('button').attr('disabled', 'disabled')
+        $(controlsSelector).attr('disabled', 'disabled')
     }
 }
 function setup_select(classPrefix,onlyOne) {
 
     var selectableSelector = '.' + classPrefix + '_line';
+    var selectedSelector = selectableSelector + '.selected';
     $(selectableSelector).off('click').click(function () {
-
+        var selected = $(this).hasClass('selected');
         if(onlyOne){
-            $(selectableSelector).removeClass('selected');
+            $(selectedSelector).removeClass('selected');
+            if (!selected)
+                $(this).addClass('selected');
+        } else {
+            $(this).toggleClass('selected');
         }
-        $(this).toggleClass('selected');
         enable_disable_controls(classPrefix);
 
     });
 }
-
-function clear_selected(classPrefix){
-    var selectedSelector = '.' + classPrefix + '_line' + '.selected';
-    $(selectedSelector).removeClass('selected');
-    enable_disable_controls(classPrefix);
-}
-
 function add_message_line(data) {
     if ($('#message' + data._id).length){
         return update_message_line(data);

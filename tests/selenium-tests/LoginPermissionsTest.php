@@ -48,17 +48,22 @@ class LoginPermissionsTest extends IntegratedTestCase
 
         // Assert
         $this->see('McSweeney Transport Group');
-        $this->seeById("btn-edit-org","edit organisation enabled");
-        $this->seeById('btn-add-driver','add driver enabled');
-        $this->seeByCssSelector('button.open-modal-driver[value="'.$this->driverSet[0]['_id'].'"]','edit driver 0 enabled');
-        $this->seeByCssSelector('button.delete-driver[value="'.$this->driverSet[0]['_id'].'"]','delete driver 0 enabled');
-        $this->seeByCssSelector('button.open-modal-driver[value="'.$this->driverSet[1]['_id'].'"]','edit driver 1 enabled');
-        $this->seeByCssSelector('button.delete-driver[value="'.$this->driverSet[1]['_id'].'"]','delete driver 1 enabled');
-        $this->seeById('btn-add-vehicle','add vehicle enabled');
-        $this->seeByCssSelector('button.open-modal-vehicle[value="'.$this->vehicleSet[0]['_id'].'"]','edit vehicle 0 enabled');
-        $this->seeByCssSelector('button.delete-vehicle[value="'.$this->vehicleSet[0]['_id'].'"]','delete vehicle 0 enabled');
-        $this->seeByCssSelector('button.open-modal-vehicle[value="'.$this->vehicleSet[1]['_id'].'"]','edit vehicle 1 enabled');
-        $this->seeByCssSelector('button.delete-vehicle[value="'.$this->vehicleSet[1]['_id'].'"]','delete vehicle 1 enabled');
+        $this->seeById("btn-edit-org","edit organisation seen");
+        $this->seeById('btn-add-driver','add driver seen');
+        $this->seeById('btn-add-vehicle','add vehicle seen');
+        $this->byCssSelector('a[href="#message_drivers_collapsible"]')->click();
+        $this->wait();
+        $this->seeById('btn-edit-driver','edit driver seen');
+        $this->seeById('btn-delete-driver','delete driver seen');
+        $this->seeById('btn-messageDriver','message driver seen');
+        $this->seeById('btn-delete-messages','delete message seen');
+        $this->byCssSelector('a[href="#locate_vehicles_collapsible"]')->click();
+        $this->wait();
+        $this->seeById('btn-locateVehicle','locate vehicle seen');
+        $this->seeById('btn-delete-vehicle','delete vehicle seen');
+        $this->seeById('btn-edit-vehicle','edit vehicle seen');
+        $this->seeById('btn-view-locations','view vehicle locations seen');
+        $this->seeById('btn-delete-locations','delete vehicle locations seen');
 
     }
     /**

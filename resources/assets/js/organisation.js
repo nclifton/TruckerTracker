@@ -15,15 +15,23 @@ $(document).ready(function ($) {
         $('#orgModal').modal('show');
     });
 
-    $('#orgConfigForm').on('reset',function(){
-        $('#orgConfigForm span.help-block').remove();
-    });
-    $('#orgTwilioForm').on('reset',function(){
-        $('#orgTwilioForm span.help-block').remove();
-    });
+    function setup_reset_config_form(){
+        $('#orgConfigForm').on("reset",function(){
+            var $form = $('#orgConfigForm');
+            $form.find('.help-block').remove();
+            $form.find('.form-group').removeClass('has-error');
+        });
+    }
+    setup_reset_config_form();
 
-    //display modal form for org editing
-    var resetTimer;
+    function setup_reset_twilio_form(){
+        $('#orgTwilioForm').on("reset",function(){
+            var $form = $('#orgTwilioForm');
+            $form.find('.help-block').remove();
+            $form.find('.form-group').removeClass('has-error');
+        });
+    }
+    setup_reset_twilio_form();
 
     $('#org-users-tab-link').on('shown.bs.tab', function (e) {
         adjust_fluid_columns();
@@ -123,8 +131,8 @@ $(document).ready(function ($) {
 
                 $("#btn-save-org").val('update');
                 $("#org_id").val(data._id);
-                $('#btn-add-driver').removeAttr('disabled');
-                $('#btn-add-vehicle').removeAttr('disabled');
+                $('#btn-add-driver').show();
+                $('#btn-add-vehicle').show();
                 $('#orgModal').modal('hide');
                 $("#btn-save-org").text('Save Changes');
 

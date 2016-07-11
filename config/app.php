@@ -183,7 +183,9 @@ return [
         /*
          * Guzzle
          */
-        Kozz\Laravel\Providers\Guzzle::class
+        Kozz\Laravel\Providers\Guzzle::class,
+
+        GeneaLabs\LaravelCaffeine\LaravelCaffeineServiceProvider::class,
 
     ],
 

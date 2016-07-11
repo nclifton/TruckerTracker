@@ -136,7 +136,7 @@ $(document).ready(function () {
 
 
     //send location request to vehicle
-    $("#btn-save-location").click(function (e) {
+    $("#btn-save-locateVehicle").click(function (e) {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -145,7 +145,7 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        var vehicle_id = $('#location_vehicle_id').val();
+        var vehicle_id = $('#locateVehicle_id').val();
 
         $.ajax({
 
@@ -156,7 +156,7 @@ $(document).ready(function () {
                 console.log(data);
 
                 $('#locationForm').trigger("reset");
-                $('#locationModal').modal('hide');
+                $('#locateVehicleModal').modal('hide');
                 $('#location-list-panel').show();
 
                 var loc = $('#location')

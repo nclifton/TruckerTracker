@@ -67,6 +67,15 @@ $(document).ready(function () {
 
     };
 
+    function setup_reset_message_form(){
+        $('#messageForm').on("reset",function(){
+            var $form = $('#messageForm');
+            $form.find('.help-block').remove();
+            $form.find('.form-group').removeClass('has-error');
+        });
+    }
+    setup_reset_message_form();
+
     //send message to driver
 
     $("#btn-save-messageDriver").click(function (e) {
