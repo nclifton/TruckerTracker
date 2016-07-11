@@ -3,21 +3,37 @@
  */
 $(document).ready(function ($) {
 
+
+//display modal form for messaging driver
+    function setup_message_driver() {
+        $('.open-modal-message').click(function (e) {
+            var driver_id = $('.driver_line.selected').attr('data');
+            if (driver_id){
+                $('#btn-save-messageDriver').val("send");
+                $('#messageDriver_id').val(driver_id);
+                $('#messageDriverModal').modal('show');
+            }
+        });
+    }
     setup_message_driver();
 
     setup_select('driver',true);
 
 
-    //display modal form for driver editing
+    //display modal form for selected driver editing
     function setup_edit_driver() {
         $('.open-modal-driver').click(function (e) {
             e.preventDefault();
+            var $driver = $('.driver_line.selected').first();
+            if (!$driver.length) {
+                return false;
+            }
+            var driver_id = $driver.attr('data');
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
                 }
             });
-            var driver_id = $(this).val();
             $('#test-message-from-driver-button').show();
             $.get( '/drivers/' + driver_id, function (data) {
                 //success data
@@ -47,17 +63,22 @@ $(document).ready(function ($) {
         $('#driverModal').modal('show');
     });
 
-    //delete driver and remove it from list
+    //delete selected driver and remove it from list
 
     function setup_delete_driver() {
-        $('.delete-driver').click(function (e) {
+        $('#btn-delete-driver').click(function (e) {
             e.preventDefault();
+            var $driver = $('.driver_line.selected').first();
+            if (!$driver.length) {
+                return false;
+            }
+            var driver_id = $driver.attr('data');
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
                 }
             });
-            var driver_id = $(this).val();
+
             $.ajax({
                 type: "DELETE",
                 url:  '/drivers/' + driver_id,
@@ -129,10 +150,7 @@ $(document).ready(function ($) {
                 $('#driverForm').trigger("reset");
                 $('#driverModal').modal('hide');
                 
-                setup_edit_driver();
-                setup_delete_driver();
                 setup_select('driver',true);
-                setup_message_driver();
                 adjust_fluid_columns();
                 setup_sse();
 

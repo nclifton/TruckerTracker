@@ -71,6 +71,8 @@ class ConfigDriversTest extends IntegratedTestCase
         }
         $this->assertNotNull($id);
         $this->assertThat($this->byId('driverModalLabel')->displayed(), $this->isFalse());
+        $this->byCssSelector('#accordion a[href="#message_drivers_collapsible"]')->click();
+        $this->wait();
         $this->assertThat($this->byId('driver'.$id)->displayed(), $this->isTrue());
 
         // check driver info displayed
@@ -80,19 +82,24 @@ class ConfigDriversTest extends IntegratedTestCase
                 ->text(),$this
                 ->equalTo($driver['first_name'].' '.$driver['last_name']));
 
-        // check added driver line buttons
-        $this->byCssSelector('#driver' . $id .' .open-modal-message')->click();
-        sleep(3);
-        $this->assertThat($this->byId('messageModal')->displayed(), $this->isTrue());
-        $this->byCssSelector('#messageModal button.close')->click();
-        sleep(3);
-        $this->byCssSelector('#driver'.$id.' .open-modal-driver')->click();
-        sleep(3);
+        // check added driver is clickable
+        $this->assertThat($this->byId('btn-messageDriver')->attribute('disabled'),$this->equalTo('true'));
+        $this->byId('driver' . $id )->click();
+        $this->assertThat($this->byId('btn-messageDriver')->attribute('disabled'),$this->equalTo(null));
+        $this->byId('btn-messageDriver')->click();
+        $this->wait();
+        $this->assertThat($this->byId('messageDriverModal')->displayed(), $this->isTrue());
+        $this->byCssSelector('#messageDriverModal button.close')->click();
+        $this->wait();
+        $this->byId('driver' . $id )->click();
+        $this->byId('btn-edit-driver')->click();
+        $this->wait(6000);
         $this->assertThat($this->byId('driverModal')->displayed(), $this->isTrue());
         $this->byCssSelector('#driverModal button.close')->click();
-        sleep(1);
-        $this->byCssSelector('#driver'.$id.' .delete-driver')->click();
-        sleep(3);
+        $this->wait();
+        $this->byId('driver' . $id )->click();
+        $this->byId('btn-delete-driver')->click();
+        $this->wait();
         $cursor = $this->getMongoConnection()
             ->collection('drivers')
             ->find($this->bind_driver($driver));

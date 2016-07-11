@@ -374,8 +374,9 @@ class ConfigOrgTest extends IntegratedTestCase
     {
 
         // Act
-        $this->login()->addOrg()->byId('btn-edit-org')->click();
-        sleep(2);
+        $this->login()->addOrg();
+        $this->byId('btn-edit-org')->click();
+        $this->wait();
 
         // Assert
         $this->assertThat($this->byId('orgModalLabel')->text(), $this->equalTo('Organisation Editor'));
@@ -483,7 +484,7 @@ class ConfigOrgTest extends IntegratedTestCase
         $this->wait();
         $this->byCssSelector('#user_list li:nth-child(1) > span > button.open-modal-user')->click();
         $this->wait();
-        $this->see('Register Organisation User');
+        $this->see('Edit Organisation User');
         $this->see($this->newUserLogin['name']);
         $this->see($this->newUserLogin['email']);
         $this->byId('btn-save-user')->click();

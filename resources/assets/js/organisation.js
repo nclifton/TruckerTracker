@@ -29,53 +29,58 @@ $(document).ready(function ($) {
         adjust_fluid_columns();
     });
 
-    $('#btn-edit-org').click(function (e) {
-        e.preventDefault();
-        var org_id = $(this).val();
-        if (!org_id){
-            org_id = $(this).attr('value');
-        }
-        if (!org_id){
-            org_id = $(this).attr('data');
-        }
-
-        $.get(org_url + '/' + org_id, function (data) {
-            //success data
-            console.log(data);
-            $('#orgConfigForm').trigger("reset");
-            $('#orgTwilioForm').trigger("reset");
-            $('#org-users-tab-link').parent().removeClass('disabled');
-            $('#org-users-tab-link').attr('data-toggle', 'tab');
-
-            for (var i in data) {
-                if (i == "users") {
-                    var users = data[i];
-                    for (var j in users) {
-                        var user = users[j];
-                        if (!$("#user" + user._id).length) {
-                            var usr = $('#user').clone(false).prependTo('#user_list').attr("id", "user" + user._id);
-                            usr.show();
-                        }
-                        $('user' + user._id + ' span.name').text(user.name);
-                        $('user' + user._id + ' span.email').text(user.email);
-                        $('user' + user._id + ' button.delete-user').val(user._id).show();
-
-                    }
-                } else if (i == "_id") {
-                    $('#org_id').val(data[i]);
-                } else {
-                    $('#orgConfigForm [name="' + i + '"], #orgTwilioForm [name="' + i + '"] ').val(data[i]);
-                }
+    function setup_org_edit_button(){
+        $('#btn-edit-org').off('click').click(function (e) {
+            e.preventDefault();
+            var org_id = $(this).val();
+            if (!org_id){
+                org_id = $(this).attr('value');
             }
-            $('#btn-save-org').val("update");
-            $('#orgModal').modal('show');
+            if (!org_id){
+                org_id = $(this).attr('data');
+            }
 
-        }).fail(function (data) {
-            var newDoc = document.open("text/html", "replace");
-            newDoc.write(data.responseText);
-            newDoc.close();
+            $.get(org_url + '/' + org_id, function (data) {
+                //success data
+                console.log(data);
+                $('#orgConfigForm').trigger("reset");
+                $('#orgTwilioForm').trigger("reset");
+                $('#org-users-tab-link').parent().removeClass('disabled');
+                $('#org-users-tab-link').attr('data-toggle', 'tab');
+
+                for (var i in data) {
+                    if (i == "users") {
+                        var users = data[i];
+                        for (var j in users) {
+                            var user = users[j];
+                            if (!$("#user" + user._id).length) {
+                                var usr = $('#user').clone(false).prependTo('#user_list').attr("id", "user" + user._id);
+                                usr.show();
+                            }
+                            $('user' + user._id + ' span.name').text(user.name);
+                            $('user' + user._id + ' span.email').text(user.email);
+                            $('user' + user._id + ' button.delete-user').val(user._id).show();
+
+                        }
+                    } else if (i == "_id") {
+                        $('#org_id').val(data[i]);
+                    } else {
+                        $('#orgConfigForm [name="' + i + '"], #orgTwilioForm [name="' + i + '"] ').val(data[i]);
+                    }
+                }
+                $('#btn-save-org').val("update");
+                $('#btn-save-org').text('Save Changes');
+                $('#orgModal').modal('show');
+
+            }).fail(function (data) {
+                var newDoc = document.open("text/html", "replace");
+                newDoc.write(data.responseText);
+                newDoc.close();
+            });
         });
-    });
+    }
+
+    setup_org_edit_button();
 
 
     //create new organisation 
@@ -110,16 +115,20 @@ $(document).ready(function ($) {
             success: function (data) {
                 console.log(data);
                 $("#heading_org_name").html(data.name);
-                organisation_id = data._id;
-                $("#btn-edit-org").val(data._id);
+
+                $("#btn-add-org").attr('name','btn-edit-org');
+                $("#btn-add-org").attr('data',data._id);
+                $("#btn-add-org").text('Edit Organisation');
+                $("#btn-add-org").attr('id','btn-edit-org');
+
                 $("#btn-save-org").val('update');
                 $("#org_id").val(data._id);
-                $("#btn-add-org").hide();
-                $("#btn-edit-org").show();
-                $('#btn-add-driver').prop('disabled', false);
-                $('#btn-add-vehicle').prop('disabled', false);
+                $('#btn-add-driver').removeAttr('disabled');
+                $('#btn-add-vehicle').removeAttr('disabled');
                 $('#orgModal').modal('hide');
-                $("#btn-save-org").html('Save Changes');
+                $("#btn-save-org").text('Save Changes');
+
+                setup_org_edit_button()
             },
             error: function (data) {
                 handleAjaxError(data);

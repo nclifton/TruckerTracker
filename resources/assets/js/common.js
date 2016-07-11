@@ -386,18 +386,6 @@ function setup_sse(){
     }
 }
 
-//display modal form for messaging driver
-function setup_message_driver() {
-    $('.open-modal-message').click(function (e) {
-        var driver_id = $('.driver_line.selected').attr('data');
-        if (driver_id){
-            clear_selected('driver');
-            $('#btn-save-messageDriver').val("send");
-            $('#messageDriver_id').val(driver_id);
-            $('#messageDriverModal').modal('show');
-        }
-    });
-}
 
 /**
  * show hide event

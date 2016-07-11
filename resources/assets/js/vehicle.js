@@ -5,23 +5,11 @@ $(document).ready(function () {
 
     var vehicles_url = "/vehicles";
 
-    
-    
-    
-    
-    
     $('#registration_number').keyup(function(){
         this.value = this.value.toUpperCase();
     });
 
-
-    
-    
-    
-    
     setup_select('vehicle',true);
-
-
 
     //display modal form for sending locate request message to vehicle
     function setup_locate_vehicle() {
@@ -29,7 +17,6 @@ $(document).ready(function () {
 
             var vehicle_id = $('.vehicle_line.selected').attr('data');
             if (vehicle_id) {
-                clear_selected('vehicle');
                 $('#btn-save-location').val("send");
                 $('#location_vehicle_id').val(vehicle_id);
                 $('#locationModal').modal('show');
