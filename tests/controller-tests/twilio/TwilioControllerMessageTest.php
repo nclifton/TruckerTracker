@@ -66,6 +66,33 @@ class TwilioControllerMessageTest extends TwilioControllerTestCase
     }
 
     /**
+     * Post message validates that message is not blank - fails
+     *
+     * @return void
+     *
+     * @test
+     */
+    public function postMessageEmptyMessageFails422()
+    {
+
+        // Arrange
+        $user = $this->user();
+        $driver = $this->driverSet[0];
+        $messageText = '';
+        $this->injectMockNeverUsedTwilio();
+        $expectedResponseCode = 422;
+
+        // Act
+        $this->actingAs($user)->json('post', '/driver/' . $driver['_id'].'/message',
+            [
+                'message_text' => $messageText
+            ]);
+
+        // Assert
+        $this->assertResponseStatus($expectedResponseCode);
+    }
+
+    /**
      * Post message as Twilio user fails unauthorised
      *
      * @return void

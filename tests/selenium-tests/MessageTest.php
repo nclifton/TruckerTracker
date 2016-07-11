@@ -30,8 +30,24 @@ class MessageTest extends IntegratedTestCase
         $this->byId('driver' . $driver['_id'])->click();
         $this->wait();
         $this->byId('btn-messageDriver')->click();
-
         $this->wait();
+        $this->byId('btn-save-messageDriver')->click();
+        $this->wait();
+
+        $this->assertThat($this->byId('messageDriverModalLabel')->text(), $this->equalTo('Message Driver'));
+        $this->assertThat(explode(' ', $this->byCssSelector('#messageForm > div:first-child')->attribute('class')),
+            $this->contains('has-error'));
+        $this->assertThat($this->byCssSelector('#messageForm > div:first-child > div > span > strong')->text(),
+            $this->equalTo('Sorry, you can\'t send nothing'));
+
+        // closing the dialog clears the error display
+        $this->byCssSelector('#messageDriverModal button.close')->click();
+        $this->wait();
+        $this->byId('btn-messageDriver')->click();
+        $this->wait();
+        $this->assertThat(explode(' ', $this->byCssSelector('#messageForm > div:first-child')->attribute('class')),
+            $this->logicalNot($this->contains('has-error')));
+
         $this->type($message_text, '#message_text');
         $this->wait();
         $this->byId('btn-save-messageDriver')->click();

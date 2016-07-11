@@ -19,6 +19,7 @@ $(document).ready(function ($) {
         $('.open-modal-message').click(function (e) {
             var driver_id = $('.driver_line.selected').attr('data');
             if (driver_id){
+                $('#messageForm').trigger("reset");
                 $('#btn-save-messageDriver').val("send");
                 $('#messageDriver_id').val(driver_id);
                 $('#messageDriverModal').modal('show');
@@ -28,7 +29,6 @@ $(document).ready(function ($) {
     setup_message_driver();
 
     setup_select('driver',true);
-
 
     //display modal form for selected driver editing
     function setup_edit_driver() {

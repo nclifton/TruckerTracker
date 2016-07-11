@@ -32,7 +32,7 @@ class TwilioController extends Controller
 
     /**
      * Create a new controller instance.
-     * @param TwilioInterface $twilio
+     * @internal param TwilioInterface $twilio
      */
     public function __construct()
     {
@@ -50,6 +50,9 @@ class TwilioController extends Controller
         if (Gate::denies('send-message',$driver->organisation)){
             abort(403);
         }
+
+        $this->validateMessage($request);
+        
         $message = Message::create($request->all());
         $org = $driver->organisation;
         $org->messages()->save($message);
@@ -152,6 +155,21 @@ class TwilioController extends Controller
     private function requestLocationMessage($vehicle)
     {
         return "WHERE,${vehicle['tracker_password']}#";
+    }
+
+    private function validateMessage($request)
+    {
+        $this->validate($request,
+            [
+                'message_text' =>
+                    [
+                        'required'
+                    ]
+            ],
+            [
+                'message_text.required' => "Sorry, you can't send nothing"
+            ]
+        );
     }
 
 }
