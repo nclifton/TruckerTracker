@@ -42,20 +42,20 @@ abstract class IntegratedTestCase extends \Laracasts\Integrated\Extensions\Selen
     protected $app;
     protected $process;
 
+
     public function newSession()
     {
         $host = 'http://localhost:4444/wd/hub';
 
         $capabilities = [
-            'browserName' => 'chrome'
-//            ,'chromeOptions' => [
-//                'args' => "\"user-data-dir=/Users/nclifton/Library/Application Support/Google/Chrome/Profile 3\""
-//            ]
-        ];
+            'browserName' => 'chrome',
+                'args' => "\"user-data-dir=/Users/nclifton/Library/Application Support/Google/Chrome/Profile 3\""
+            ];
 
         $this->webDriver = new WebDriver($host);
 
         return $this->session = $this->webDriver->session($this->getBrowserName(), $capabilities);
+
     }
 
     /**

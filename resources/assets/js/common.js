@@ -240,7 +240,7 @@ function add_message_line(data) {
 
     var msg = $('#message')
         .clone(false)
-        .appendTo('#message_list')
+        .prependTo('#message_list')
         .attr("id", "message" + data._id)
         .attr('data',data._id);
     msg.find('button.open-modal-view-message').val(data._id);
@@ -308,7 +308,8 @@ function reset_conversation_scrollPane() {
     }
 }
 function update_conversation_message(data) {
-    if ($('#messageDriverModal:visible').length){
+    var css = $('#messageDriverModal').css('display');
+    if (css == 'block'){
         var $conversationContainer = $('#driver_conversation');
         var $messagesContainer = $conversationContainer.find('.messages_container');
         var $msg = $messagesContainer.find('#conversation_message' + data._id);
@@ -329,13 +330,13 @@ function add_message_to_conversation($messagesContainer, msgdata) {
         .appendTo($messagesContainer).attr("id", "conversation_message" + msgdata._id);
     $msg.find(".message_text").text(msgdata.message_text).addClass(msgdata.status);
     $msg.show();
-
-
+    reset_conversation_scrollPane();
 }
 
 
 function add_conversation_message(data) {
-    if ($('#messageDriverModal:visible').length){
+    var css = $('#messageDriverModal').css('display');
+    if (css == 'block'){
         var $conversationContainer = $('#driver_conversation');
         var $messagesContainer = $conversationContainer.find('.messages_container');
         add_message_to_conversation($messagesContainer, data);

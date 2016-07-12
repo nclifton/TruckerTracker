@@ -25,10 +25,8 @@ $(document).ready(function () {
                 //success data
                 console.log(loc);
 
-                $('#location_id').val(loc._id);
-                $('#datetime').text(loc.vehicle.datetime);
                 $('#view_location_vehicle_registration_number').text(loc.vehicle.registration_number);
-                $('#view_location_datetime').text(loc.datetime);
+                $('#view_location_datetime').text(loc[loc.status + '_at']);
 
                 $('#location-viewModal').on('shown.bs.modal', function (e) {
                     $('#location-viewModal').off('shown.bs.modal');
@@ -161,7 +159,7 @@ $(document).ready(function () {
 
                 var loc = $('#location')
                     .clone(false)
-                    .appendTo('#location_list')
+                    .prependTo('#location_list')
                     .attr("id", "location" + data._id)
                     .attr("data",data._id);
                 loc.find('button.open-modal-view-location').val(data._id);

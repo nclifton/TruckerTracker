@@ -11,6 +11,8 @@
 
 
 namespace TruckerTracker;
+use Faker\Provider\DateTime;
+
 require_once __DIR__ . '/MessageControllerTestCase.php';
 
 
@@ -57,6 +59,7 @@ class MessageControllerDriverConversationTest extends MessageControllerTestCase
             'mobile_phone_number' => $driver['mobile_phone_number'],
             'drivers_licence_number' => $driver['drivers_licence_number']
             ]);
+
         foreach ($this->conversationSet as $key => $message){
             if (! in_array($key,[4,7]))
                 $this->seeJsonContains([
@@ -66,6 +69,4 @@ class MessageControllerDriverConversationTest extends MessageControllerTestCase
         }
 
     }
-
-
 }

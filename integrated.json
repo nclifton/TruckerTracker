@@ -1,0 +1,8 @@
+{
+  "baseUrl": "http://homestead.app",
+  "selenium": [
+        {
+          "browser": "chrome"
+        }
+    ]
+}

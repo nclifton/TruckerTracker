@@ -40,8 +40,7 @@ class MessageController extends Controller
             abort(403);
         }
         $driver->load(['messages'=> function($query){
-            $query->whereIn('status',[Message::STATUS_RECEIVED,Message::STATUS_DELIVERED])
-            ->orderBy('created_at');
+            $query->orderBy('created_at');
         }]);
         return Response::json($driver);
     }

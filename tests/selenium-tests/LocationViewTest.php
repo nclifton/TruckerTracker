@@ -40,7 +40,7 @@ class LocationViewTest extends IntegratedTestCase
         $org = $this->orgSet[0];
         $loc = json_decode($this->viewLocationSetJson,true)[0];
         $vehicle = $this->vehicleSet[0];
-        $expectedDatetime = (new \DateTime($loc['datetime']))->format($org['datetime_format']);
+        $expectedDatetime = (new \DateTime($loc['received_at']))->format($org['datetime_format']);
 
         // Act
         $this->byCssSelector('#accordion a[href="#locate_vehicles_collapsible"]')->click();

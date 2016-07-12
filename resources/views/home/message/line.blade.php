@@ -29,7 +29,7 @@ if ($message){
             $status_at = $message->received_at;
             break;
     }
-    $message_text_title = ' title='.$message->message_text.'';
+    $message_text_title = ' title="'. $message->message_text.'"';
 }
 ?>
 <li id="message{{$id}}" class="row list_panel_line message_line" style="{{$styleAttr}}"{!! $message_text_title !!}

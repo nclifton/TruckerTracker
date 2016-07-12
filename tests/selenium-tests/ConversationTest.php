@@ -49,7 +49,7 @@ class ConversationTest extends IntegratedTestCase
 
         // Assert that previous messages in conversation are displayed
         foreach ($this->conversationSet as $key => $message) {
-            if (!in_array($key,[4,7]))
+            if (!in_array($key,[4]))
                 $this->assertMessageSeenOnMessageModal($message);
         }
 

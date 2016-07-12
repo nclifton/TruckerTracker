@@ -10,7 +10,7 @@
                 <div id="locate_vehicles_collapsible" class="panel-collapse collapse">
                     <div class="container-fluid">
                         @include('home.listPanel',['lines'=>$org?$org->vehicles:[],'subject'=>'vehicle','add_button_label'=>'Add Vehicle'])
-                        @include('home.listPanel',['lines'=>$org?$org->locations:[],'subject'=>'location'])
+                        @include('home.listPanel',['lines'=>$org?$org->locations()->orderBy('created_at','desc')->get():[],'subject'=>'location'])
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                 <div id="message_drivers_collapsible" class=" panel-collapse collapse">
                     <div class="container-fluid">
                         @include('home.listPanel',['lines'=>$org?$org->drivers:[],'subject'=>'driver','add_button_label'=>'Add Driver'])
-                        @include('home.listPanel',['lines'=>$org?$org->messages:[],'subject'=>'message'])
+                        @include('home.listPanel',['lines'=>$org?$org->messages()->orderBy('created_at','desc')->get():[],'subject'=>'message'])
                     </div>
                 </div>
             </div>

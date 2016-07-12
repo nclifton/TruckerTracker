@@ -57,16 +57,6 @@ $(document).ready(function () {
 
     setup_view_conversation();
 
-    var add_message_to_conversation_display = function (data) {
-
-        if ($('#messageDriverModal:visible').length){
-            var $conversationContainer = $('#driver_conversation');
-            var $messagesContainer = $conversationContainer.find('.messages_container');
-            add_message_to_conversation($messagesContainer,data);
-        }
-
-    };
-
     function setup_reset_message_form(){
         $('#messageForm').on("reset",function(){
             var $form = $('#messageForm');
@@ -109,7 +99,7 @@ $(document).ready(function () {
                 $('#message-list-panel').show();
                 
                 add_message_line(data);
-                add_message_to_conversation_display(data);
+                add_conversation_message(data);
                 setup_view_conversation();
                 setup_sse();
                 adjust_fluid_columns();
