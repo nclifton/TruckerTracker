@@ -51,10 +51,14 @@ $(document).ready(function ($) {
             $.get(org_url + '/' + org_id, function (data) {
                 //success data
                 console.log(data);
-                $('#orgConfigForm').trigger("reset");
-                $('#orgTwilioForm').trigger("reset");
-                $('#org-users-tab-link').parent().removeClass('disabled');
-                $('#org-users-tab-link').attr('data-toggle', 'tab');
+
+                var $orgConfigForm = $('#orgConfigForm');
+                $orgConfigForm.trigger("reset");
+                var $orgTwilioForm = $('#orgTwilioForm');
+                $orgTwilioForm.trigger("reset");
+                var $orgUsersTabLink = $('#org-users-tab-link');
+                $orgUsersTabLink.parent().removeClass('disabled');
+                $orgUsersTabLink.attr('data-toggle', 'tab');
 
                 for (var i in data) {
                     if (i == "users") {
@@ -68,16 +72,17 @@ $(document).ready(function ($) {
                             $('user' + user._id + ' span.name').text(user.name);
                             $('user' + user._id + ' span.email').text(user.email);
                             $('user' + user._id + ' button.delete-user').val(user._id).show();
-
                         }
                     } else if (i == "_id") {
                         $('#org_id').val(data[i]);
                     } else {
-                        $('#orgConfigForm [name="' + i + '"], #orgTwilioForm [name="' + i + '"] ').val(data[i]);
+                        $orgConfigForm.find('[name="' + i + '"]').val(data[i]);
+                        $orgTwilioForm.find('[name="' + i + '"]').val(data[i]);
                     }
                 }
-                $('#btn-save-org').val("update");
-                $('#btn-save-org').text('Save Changes');
+                var $btn = $('#btn-save-org');
+                $btn.val("update");
+                $btn.text('Save Changes');
                 $('#orgModal').modal('show');
 
             }).fail(function (data) {

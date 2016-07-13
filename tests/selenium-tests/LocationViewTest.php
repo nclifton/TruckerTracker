@@ -15,7 +15,7 @@ class LocationViewTest extends IntegratedTestCase
     protected function getFixture()
     {
         return [
-            'users' => $this->fixtureUserset,
+            'users' => $this->fixtureUserSet,
             'password_resets' => [],
             'organisations' => $this->orgSet,
             'drivers' => $this->driverSet,
@@ -40,7 +40,7 @@ class LocationViewTest extends IntegratedTestCase
         $org = $this->orgSet[0];
         $loc = json_decode($this->viewLocationSetJson,true)[0];
         $vehicle = $this->vehicleSet[0];
-        $expectedDatetime = (new \DateTime($loc['received_at']))->format($org['datetime_format']);
+        $expectedDatetime = (new \DateTime($loc['received_at']))->format('j/m/Y, G:i:s');
 
         // Act
         $this->byCssSelector('#accordion a[href="#locate_vehicles_collapsible"]')->click();

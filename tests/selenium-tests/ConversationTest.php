@@ -12,12 +12,12 @@ class ConversationTest extends IntegratedTestCase
     {
 
         return [
-            'users' =>              $this->fixtureUserset,
+            'users' =>              $this->fixtureUserSet,
             'password_resets' =>    [],
             'organisations' =>      $this->orgSet,
             'drivers' =>            $this->driverSet,
             'vehicles' =>           [],
-            'messages' =>           $this->conversationSet,
+            'messages' =>           $this->conversationSet(),
             'locations' =>          []
         ];
     }
@@ -48,9 +48,10 @@ class ConversationTest extends IntegratedTestCase
 
 
         // Assert that previous messages in conversation are displayed
-        foreach ($this->conversationSet as $key => $message) {
-            if (!in_array($key,[4]))
+        foreach ($this->conversationSet() as $key => $message) {
+            if (!in_array($key,[0,1,2,3,4])){
                 $this->assertMessageSeenOnMessageModal($message);
+            }
         }
 
         $this->type($message_text, '#message_text');
@@ -147,17 +148,25 @@ class ConversationTest extends IntegratedTestCase
      */
     protected function assertMessageSeenOnMessageModal($message)
     {
-        $this->assertTrue($this->byId('conversation_message' . $message['_id'])->displayed());
+
         $this
             ->assertThat($this
                 ->byCssSelector('#conversation_message' . $message['_id'] . ' .message_text')
                 ->text(), $this
-                ->equalTo($message['message_text']));
+                ->equalTo($message['message_text']),'message text');
         $this
             ->assertThat(explode(' ', $this
-                ->byCssSelector('#conversation_message' . $message['_id'] . ' .message_text')
+                ->byCssSelector('#conversation_message' . $message['_id'] . ' .message_container')
                 ->attribute('class')), $this
-                ->contains($message['status']));
+                ->contains($message['status']),'status css class');
+        // assert that a date is shown
+        $this
+            ->assertThat($this
+                ->byCssSelector('#conversation_message' . $message['_id'] . ' .datetime')
+                ->text(), $this
+                ->logicalNot($this
+                    ->isEmpty()),'datetime');
+        
     }
 
 }

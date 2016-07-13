@@ -42,7 +42,8 @@ class MessageController extends Controller
         $driver->load(['messages'=> function($query){
             $query->orderBy('created_at');
         }]);
-        return Response::json($driver);
+        $jsonResponse = Response::json($driver);
+        return $jsonResponse;
     }
 
 }

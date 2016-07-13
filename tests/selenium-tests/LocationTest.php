@@ -17,7 +17,7 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
     protected function getFixture()
     {
          return [
-            'users' => $this->fixtureUserset,
+            'users' => $this->fixtureUserSet,
             'password_resets' => [],
             'organisations' => $this->orgSet,
             'drivers' => [],
@@ -69,7 +69,7 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
         $this->assertNotNull($id);
         $this->assertThat($this->byId('location'.$id)->displayed(),$this->isTrue());
 
-        $this->assert_location_line($id, $vehicle, 'queued', $org, $queued_at);
+        $this->assert_location_line($id, $vehicle, 'queued', $queued_at);
 
         $dbOrg = $this->connection->collection('organisations')->findOne(['_id'=>$org['_id']]);
         $twilioUser = $this->connection->collection('users')->findOne(['_id'=>$dbOrg['twilio_user_id']]);
@@ -81,14 +81,14 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
 
         $this->wait();
 
-        $this->assert_location_line($id, $vehicle, 'sent', $org, $sent_at);
+        $this->assert_location_line($id, $vehicle, 'sent', $sent_at);
 
         $delivered_at = new \DateTime();
         $this->postStatusUpdate($twilioUser, $dbOrg, $sid, 'delivered', $vehicle['mobile_phone_number']);
 
         $this->wait();
 
-        $this->assert_location_line($id, $vehicle, 'delivered', $org, $delivered_at);
+        $this->assert_location_line($id, $vehicle, 'delivered', $delivered_at);
 
         $received_at = new \DateTime();
         $this->postMessageToIncomingController(
@@ -100,7 +100,7 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
 
         $this->wait();
 
-        $this->assert_location_line($id, $vehicle, 'received', $org, $received_at);
+        $this->assert_location_line($id, $vehicle, 'received', $received_at);
 
         $this->wait();
 
@@ -120,7 +120,7 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
      * @param $org
      * @param $delivered_at
      */
-    protected function assert_location_line($id, $vehicle, $expected_status, $org, \Datetime $delivered_at)
+    protected function assert_location_line($id, $vehicle, $expected_status, \DateTime $delivered_at)
     {
         $this
             ->assertThat($this
@@ -137,11 +137,11 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
             ->text();
         $this
             ->assertThat(
-                \DateTime::createFromFormat($org['datetime_format'], $actualDateString)
+                (new \DateTime($actualDateString))
                     ->getTimestamp(), $this
                 ->equalTo($delivered_at
                     ->getTimestamp(), 10),
-                "actual: $actualDateString expected: ".$delivered_at->format($org['datetime_format']));
+                "actual: $actualDateString expected: ".$delivered_at->format('c'));
     }
 
 

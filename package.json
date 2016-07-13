@@ -11,6 +11,6 @@
     "selenium-webdriver": "^2.53.2"
   },
   "dependencies": {
-
+    "relative-date": "*"
   }
 }

@@ -7,7 +7,6 @@
     margin: 4px 0;
     white-space: nowrap;
 
-
     span {
       line-height: 20px;
       display: inline-block;
@@ -15,25 +14,6 @@
       vertical-align: top;
       margin: 0;
       border-width: 0;
-
-      &.pull-right, &.delete-button, &.edit-button, &.locate-button, &.message-button, &.view-button{
-        padding:0;
-      }
-      &.delete-button{
-        width:48px;
-      }
-      &.edit-button{
-        width:34px;
-      }
-      &.locate-button{
-        width:45px;
-      }
-      &.message-button{
-        width:58px;
-      }
-      &.view-button{
-        width:39px;
-      }
     }
 
     .line_fluid_column{
@@ -172,7 +152,7 @@
   .message_to_panel, .received  {
     background-color: palegoldenrod;
   }
-  .message_text, .message_to_panel, .message_from_panel {
+  .message_container, .message_to_panel, .message_from_panel {
     border-radius: 4px;
     margin: 5px;
   }
@@ -197,12 +177,21 @@
     padding:0 26px;
     width:100%;
 
-    .message_text {
+    .message_container {
       padding: 5px 10px;
       position:relative
     }
+    .datetime{
+      font-size: 0.8em;
+      border-radius: 0.8em;
+      background-color: lightgrey;
+      padding:0 0.8em;
+    }
     .received{
       float: left;
+      .datetime{
+        float: left;
+      }
       &:before{
         content:'';
         position:absolute;
@@ -217,6 +206,9 @@
     }
     .delivered, .queued, .sent {
       float: right;
+      .datetime{
+        float: right;
+      }
       &:after {
         content: '';
         position: absolute;

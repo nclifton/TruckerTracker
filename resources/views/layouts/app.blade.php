@@ -35,7 +35,7 @@
     <script src="{{ asset('/js/jquery.sse.js') }}"></script>
     <script src="{{ asset('/js/jquery.mousewheel.js') }}"></script>
     <script src="{{ asset('/js/jquery.jscrollpane.js') }}"></script>
-
+    <script src="{{ asset('/js/relative-date.js') }}"></script>
 
 </head>
 <body id="app-layout">

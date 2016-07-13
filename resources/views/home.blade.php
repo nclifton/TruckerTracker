@@ -33,9 +33,11 @@
     </div>
     <meta name="_token" content="{!! csrf_token() !!}"/>
     <script>
-        @if($org && $user->can('view-location') )
+        @if($org)
             subscribe_sse = true;
             organisation_id = '{{$org->_id}}';
+            time_format_hour12 = '{{$org->hour12}}';
+            default_locale_code = 'en-AU';
         @else
             subscribe_sse = false;
         @endif

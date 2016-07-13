@@ -314,7 +314,7 @@ function update_conversation_message(data) {
         var $messagesContainer = $conversationContainer.find('.messages_container');
         var $msg = $messagesContainer.find('#conversation_message' + data._id);
 
-        $msg.find(".message_text")
+        $msg.find(".message_container")
             .removeClass('queued sent delivered')
             .addClass(data.status);
 
@@ -323,12 +323,25 @@ function update_conversation_message(data) {
     }
 }
 
+function friendly_datetime(iso8601TimeStr){
+    var date = new Date(iso8601TimeStr);
+    var timeStr = date.toLocaleTimeString();
+    var relDate = relativeDate(date);
+    return timeStr + ' (' + relDate + ")";
+}
+
 
 function add_message_to_conversation($messagesContainer, msgdata) {
     var $msg = $messagesContainer.find('#conversation_message')
         .clone(false)
-        .appendTo($messagesContainer).attr("id", "conversation_message" + msgdata._id);
-    $msg.find(".message_text").text(msgdata.message_text).addClass(msgdata.status);
+        .appendTo($messagesContainer)
+        .attr("id", "conversation_message" + msgdata._id);
+    $msg.find(".message_container")
+        .addClass(msgdata.status);
+    $msg.find(".message_text")
+        .text(msgdata.message_text);
+    $msg.find(".datetime")
+        .text(friendly_datetime(msgdata[msgdata.status + '_at']));
     $msg.show();
     reset_conversation_scrollPane();
 }

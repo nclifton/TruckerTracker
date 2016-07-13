@@ -156,9 +156,9 @@ class MessageTest extends IntegratedTestCase
                 ->text(), $this
                 ->equalTo($status));
         $expectedTimeStamp = $expectedDatetime->getTimeStamp();
-        $actualTimeStamp = \DateTime::createFromFormat($org['datetime_format'], $this
+        $actualTimeStamp = (new \DateTime($this
             ->byCssSelector('#message' . $message['_id'] . ' .status_at')
-            ->text())
+            ->text()))
             ->getTimestamp();
 
         $this
@@ -169,7 +169,7 @@ class MessageTest extends IntegratedTestCase
     protected function getFixture()
     {
         return [
-            'users' => $this->fixtureUserset,
+            'users' => $this->fixtureUserSet,
             'password_resets' => [],
             'organisations' => $this->orgSet,
             'drivers' => $this->driverSet,

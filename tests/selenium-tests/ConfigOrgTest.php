@@ -13,7 +13,7 @@ class ConfigOrgTest extends IntegratedTestCase
         'test' => [
             'name' => 'McSweeney Transport Group',
             'timezone' => 'Australia/Sydney',
-            'datetime_format' => 'H:i:s d/m/y',
+            'hour12' => true,
             'twilio_account_sid' => 'AC392e8d8bc564eb45ea67cc0f3a8ebf3c',
             'twilio_auth_token' => '36c8ee5499df1e116aa53b1ee05ca5fa',
             'twilio_phone_number' => '+61419140683'
@@ -31,7 +31,7 @@ class ConfigOrgTest extends IntegratedTestCase
         'other' => [
             'name' => 'Some Other Organisation',
             'timezone' => 'Australia/Perth',
-            'datetime_format' => 'h:i:s A D d/m/y',
+            'hour12' => false,
             'twilio_account_sid' => 'AC402e8d8bc564eb45ea67cc0f3a8ebf3c',
             'twilio_auth_token' => '37c8ee5499df1e116aa53b1ee05ca5fa',
             'twilio_phone_number' => '+61419140684'
@@ -137,8 +137,7 @@ class ConfigOrgTest extends IntegratedTestCase
             ->clearType($org['name'], '#org_name');
         $this
             ->select('timezone', $org['timezone'])
-            ->wait(500)
-            ->select('datetime_format', $org['datetime_format'])
+            ->check('hour12')
             ->wait(500);
 
         // Twilio mobile network gateway properties are on a separate tab
@@ -599,8 +598,8 @@ class ConfigOrgTest extends IntegratedTestCase
         $this->clearType($org['name'], '#org_name');
         if (isset($org['timezone']))
             $this->select('timezone', $org['timezone']);
-        if (isset($org['datetime_format']))
-            $this->select('datetime_format', $org['datetime_format']);
+        if (isset($org['hour12']))
+            $this->select('hour12', $org['hour12']);
         $this->byId('org-twilio-tab-link')->click();
         if (isset($org['twilio_account_sid']))
             $this->clearType($org['twilio_account_sid'], '#twilio_account_sid');

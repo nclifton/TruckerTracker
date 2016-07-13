@@ -68,7 +68,7 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
             '_id',
             'name',
             'timezone',
-            'datetime_format',
+            'hour12',
             'twilio_account_sid',
             'twilio_auth_token',
             'twilio_phone_number',
@@ -360,12 +360,16 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
+        $twilioPassword = bin2hex(random_bytes(16));
+        $twilioUsername = bin2hex(random_bytes(16));
 
         // Act
 
         $noName = '';
         $this->actingAs($user)->json('post', '/organisation', [
-            'name' => $noName
+            'name' => $noName,
+            'twilio_username' => $twilioUsername,
+            'twilio_user_password' => $twilioPassword
         ]);
 
         // Assert
@@ -408,11 +412,15 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
+        $twilioUsername = bin2hex(random_bytes(16));
+        $twilioPassword = bin2hex(random_bytes(16));
 
         // Act
 
         $this->actingAs($user)->json('post', '/organisation', [
-            'name' => $this->longname
+            'name' => $this->longname,
+            'twilio_username' => $twilioUsername,
+            'twilio_user_password' => $twilioPassword
         ]);
 
         // Assert
@@ -454,11 +462,16 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         $user = $this->firstUser();
         $this->twilioUser();
         $org = $this->orgSet[0];
+        $twilioUsername = bin2hex(random_bytes(16));
+        $twilioPassword = bin2hex(random_bytes(16));
+
 
         // Act
 
         $this->actingAs($user)->json('post', '/organisation', [
-            'name' => 'Some Other Name'
+            'name' => 'Some Other Name',
+            'twilio_username' => $twilioUsername,
+            'twilio_user_password' => $twilioPassword
         ]);
         $this->actingAs($user)->json('put', '/organisation/' . $org['_id'], [
             'name' => 'Some Other Name'
@@ -477,11 +490,15 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
     {
         // Arrange
         $user = $this->firstUser();
+        $twilioUsername = bin2hex(random_bytes(16));
+        $twilioPassword = bin2hex(random_bytes(16));
 
         // Act
 
         $this->actingAs($user)->json('post', '/organisation', [
-            'name' => $this->longname
+            'name' => $this->longname,
+            'twilio_username' => $twilioUsername,
+            'twilio_user_password' => $twilioPassword
         ]);
 
 
@@ -635,32 +652,6 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         $this->assertUpdateOptionalProperty('timezone');
     }
 
-
-    /**
-     *
-     * creates organisation with datetime_format
-     *
-     * @test
-     */
-    // TODO createNewOrganisationIncludingDatetimeFormat
-
-    /**
-     *
-     *  validates datetime_format
-     *
-     * @test
-     */
-    // TODO validateDatetimeFormatFail
-
-    /**
-     *
-     *  updates datetime_format
-     *
-     * @test
-     */
-    // TODO updateOrganisationIncludingDatetimeFormat
-
-
     /**
      *
      *   auto_reply
@@ -773,11 +764,15 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         $org = $this->orgSet[0];
         $this->getMongoConnection()->collection('organisations')
             ->remove(['_id' => $org['_id']]);
+        $twilioPassword = bin2hex(random_bytes(16));
+        $twilioUsername = bin2hex(random_bytes(16));
 
         // Act
 
         $this->actingAs($user)->json('post', '/organisation', [
             'name' => $org['name'],
+            'twilio_username' => $twilioUsername,
+            'twilio_user_password' => $twilioPassword,
             $propertyName => $badValue
         ]);
 

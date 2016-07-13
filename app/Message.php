@@ -26,10 +26,6 @@ class Message extends Moloquent
     const STATUS_DELIVERED  = 'delivered';
     const STATUS_RECEIVED   = 'received';
 
-    const DATE_TIME_TYPE_RELATIVE = 'relative';
-    const DATE_TIME_TYPE_ABSOLUTE = 'absolute';
-
-
     protected $fillable =
         [
             'message_text',

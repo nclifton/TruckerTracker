@@ -35,11 +35,6 @@ class LocationControllerViewLocationsTest extends LocationControllerTestCase
             unset($expectedLoc['organisation_id']);
             unset($expectedLoc['vehicle_id']);
             unset($expectedLoc['sid']);
-            $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format($org['datetime_format']);
-            $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format($org['datetime_format']);
-            $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format($org['datetime_format']);
-            $expectedLoc['delivered_at'] = (new \DateTime($expectedLoc['delivered_at']))->format($org['datetime_format']);
-            $expectedLoc['received_at'] = (new \DateTime($expectedLoc['received_at']))->format($org['datetime_format']);
             $expectedLoc['vehicle'] = [
                 '_id'=>$vehicle['_id'],
                 'registration_number'=>$vehicle['registration_number']
@@ -73,11 +68,11 @@ class LocationControllerViewLocationsTest extends LocationControllerTestCase
         unset($expectedLoc['organisation_id']);
         unset($expectedLoc['vehicle_id']);
         unset($expectedLoc['sid']);
-        $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format($org['datetime_format']);
-        $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format($org['datetime_format']);
-        $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format($org['datetime_format']);
-        $expectedLoc['delivered_at'] = (new \DateTime($expectedLoc['delivered_at']))->format($org['datetime_format']);
-        $expectedLoc['received_at'] = (new \DateTime($expectedLoc['received_at']))->format($org['datetime_format']);
+        $expectedLoc['queued_at'] = (new \DateTime($expectedLoc['queued_at']))->format('c');
+        $expectedLoc['datetime'] = (new \DateTime($expectedLoc['datetime']))->format('c');
+        $expectedLoc['sent_at'] = (new \DateTime($expectedLoc['sent_at']))->format('c');
+        $expectedLoc['delivered_at'] = (new \DateTime($expectedLoc['delivered_at']))->format('c');
+        $expectedLoc['received_at'] = (new \DateTime($expectedLoc['received_at']))->format('c');
         $expectedLoc['vehicle'] = [
             '_id'=>$vehicle['_id'],
             'registration_number'=>$vehicle['registration_number']

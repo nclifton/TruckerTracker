@@ -11,7 +11,7 @@ class LoginPermissionsTest extends IntegratedTestCase
     protected function getFixture()
     {
         return [
-            'users' => $this->fixtureUserset,
+            'users' => $this->fixtureUserSet,
             'password_resets' => [],
             'drivers' => $this->driverSet,
             'organisations' => $this->orgSet,

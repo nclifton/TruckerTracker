@@ -24,9 +24,12 @@ $(document).ready(function () {
             $.get('/vehicle/location/' + location_id, function (loc) {
                 //success data
                 console.log(loc);
+                var options = {hour12: time_format_hour12};
 
                 $('#view_location_vehicle_registration_number').text(loc.vehicle.registration_number);
-                $('#view_location_datetime').text(loc[loc.status + '_at']);
+                $('#view_location_datetime')
+                    .text((new Date(loc[loc.status + '_at']))
+                        .toLocaleString(default_locale_code,options));
 
                 $('#location-viewModal').on('shown.bs.modal', function (e) {
                     $('#location-viewModal').off('shown.bs.modal');

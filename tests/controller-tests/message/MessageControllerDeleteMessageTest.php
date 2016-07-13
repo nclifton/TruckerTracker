@@ -32,8 +32,6 @@ class MessageControllerDeleteMessageTest extends MessageControllerTestCase
         $user = $this->firstUser();
         $msg = $this->messageSet[0];
         $expectedMsg = $msg;
-        $expectedMsg['queued_at'] = (new \DateTime($expectedMsg['queued_at']))->format($org['datetime_format']);
-        $expectedMsg['sent_at'] = (new \DateTime($expectedMsg['sent_at']))->format($org['datetime_format']);
         unset($expectedMsg['driver_id']);
         unset($expectedMsg['organisation_id']);
         unset($expectedMsg['sid']);

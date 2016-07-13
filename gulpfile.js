@@ -59,7 +59,10 @@ elixir(function (mix) {
             'public/js/jquery.mousewheel.js')
         .copy(
             'resources/assets/bower/jScrollPane/style/jquery.jscrollpane.css',
-            'public/css/jquery.jscrollpane.css');
+            'public/css/jquery.jscrollpane.css')
+        .copy(
+            'node_modules/relative-date/lib/relative-date.js',
+            'public/js/relative-date.js');
 
 
 

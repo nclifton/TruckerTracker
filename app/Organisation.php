@@ -32,7 +32,7 @@ class Organisation extends Moloquent
             'twilio_auth_token',
             'twilio_phone_number',
             'timezone',
-            'datetime_format',
+            'hour12',
             'first_user_id',
             'twilio_user_id',
             'twilio_user_password',

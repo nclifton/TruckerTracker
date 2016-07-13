@@ -10,7 +10,7 @@ class HomePageAppearanceTest extends IntegratedTestCase
     protected function getFixture()
     {
         return [
-            'users' => $this->fixtureUserset,
+            'users' => $this->fixtureUserSet,
             'password_resets' => [],
             'organisations' => $this->orgSet,
             'drivers' => $this->driverSet,
@@ -55,7 +55,7 @@ class HomePageAppearanceTest extends IntegratedTestCase
                 ->equalTo($message['message_text']));
         $dateTime = new \DateTime($message['sent_at']);
         $dateTime->setTimezone(new \DateTimezone('Australia/Sydney'));
-        $dateString = $dateTime->format($this->orgSet[0]['datetime_format']);
+        $dateString = $dateTime->format('c');
         $this
             ->assertThat($this
                 ->byCssSelector('#message'.$message['_id'].' .first_name')

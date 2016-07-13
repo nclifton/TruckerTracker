@@ -8,7 +8,12 @@
         <div class="conversation_panel">
             <div class="messages_container">
                 <div id="conversation_message" class="container_row" style="display: none">
-                    <div class="message_text"></div>
+                    <div class="message_container">
+                        <div class="message_text"></div>
+                        <div class="datetime_container">
+                            <div class="datetime"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

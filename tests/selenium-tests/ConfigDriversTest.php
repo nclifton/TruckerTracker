@@ -23,7 +23,7 @@ class ConfigDriversTest extends IntegratedTestCase
     protected function getFixture()
     {
         return [
-            'users' => $this->fixtureUserset,
+            'users' => $this->fixtureUserSet,
             'password_resets' => [],
             'organisations' => $this->orgSet,
             'drivers' => [],

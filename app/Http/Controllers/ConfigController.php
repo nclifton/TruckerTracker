@@ -56,6 +56,11 @@ class ConfigController extends Controller
     {
         $this->validateOrganisation($request);
         $attributes = array_merge($request->all(), ['auto_reply' => false]);
+        if (key_exists('hour12',$attributes)) {
+            $attributes['hour12'] = $attributes['hour12'] == 1;
+        } else {
+            $attributes['hour12'] = false;
+        }
         $this->internationalisePhoneNumbers($attributes, ['twillio_phone_number']);
         $twilioUsername = $attributes['twilio_username'];
         unset($attributes['twilio_username']);
@@ -113,6 +118,11 @@ class ConfigController extends Controller
 
         $this->validateOrganisation($request);
         $attributes = $request->all();
+        if (key_exists('hour12',$attributes)) {
+            $attributes['hour12'] = $attributes['hour12'] == 1;
+        } else {
+            $attributes['hour12'] = false;
+        }
         $this->internationalisePhoneNumbers($attributes, ['twillio_phone_number']);
 
         $org->update($attributes);
@@ -482,9 +492,10 @@ class ConfigController extends Controller
     }
 
     /**
-     * @param $user
+     * @param $twilioUsername
      * @param Organisation $org
      * @return User
+     * @internal param $user
      */
     private function addOrganisationTwilioUser( $twilioUsername, Organisation $org)
     {

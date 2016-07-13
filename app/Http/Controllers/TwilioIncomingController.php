@@ -242,18 +242,19 @@ class TwilioIncomingController extends Controller
     {
         $org = Auth::getUser()->organisation;
         $url = Config::get('url',env('APP_URL')) . '/pub/' . $org->_id;
+        $options = [
+            'headers' => [
+                'Accept' => 'text/json',
+                'X-EventSource-Event' => $event
+            ],
+            'json' => $pubMsg
+        ];
         Log::debug("publish url: $url");
-        Log::debug("publish event: $event data: ".json_encode($pubMsg));
+        Log::debug("publish options: ".json_encode($options));
         try{
             $response = Guzzle::post(
                 $url,
-                [
-                    'headers' => [
-                        'Accept'                => 'text/json',
-                        'X-EventSource-Event'   => $event
-                    ],
-                    'json' => $pubMsg
-                ]
+                $options
             );
             switch ($code = $response->getStatusCode()) {
                 case 200:
@@ -273,7 +274,14 @@ class TwilioIncomingController extends Controller
             Log::critical($e->getMessage());
         }
 
-
+/*
+ * [2016-07-13 22:26:16] testing.DEBUG: publish url: http://homestead.app/pub/10001
+[2016-07-13 22:26:16] testing.DEBUG: publish options: {"headers":{"Accept":"text\/json","X-EventSource-Event":"MessageUpdate"},"json":{"_id":"200001","message_text":"hello","queued_at":"2016-06-09T20:45:10+10:00","sent_at":"2016-06-09T20:46:10+10:00","status":"delivered","delivered_at":"2016-07-13T22:26:16+10:00","driver":{"_id":"110001","first_name":"Driver","last_name":"One","mobile_phone_number":"+61419140683","drivers_licence_number":"9841YG"}}}
+ * [2016-07-13 22:29:12] testing.DEBUG: publish url: http://homestead.app/pub/10001
+[2016-07-13 22:29:12] testing.DEBUG: publish options: {"headers":{"Accept":"text\/json","X-EventSource-Event":"MessageUpdate"},"json":{"_id":"200001","message_text":"hello","queued_at":"20:45:10 09\/06\/16","sent_at":"20:46:10 09\/06\/16","status":"delivered","delivered_at":"22:29:12 13\/07\/16","driver":{"_id":"110001","first_name":"Driver","last_name":"One","mobile_phone_number":"+61419140683","drivers_licence_number":"9841YG"}}}
+ *
+ *
+ */
 
     }
 }

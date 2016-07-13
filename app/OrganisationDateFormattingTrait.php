@@ -18,16 +18,6 @@ use MongoDB\BSON\UTCDatetime;
 
 trait OrganisationDateFormattingTrait
 {
-    protected $dateTimeType = Message::DATE_TIME_TYPE_ABSOLUTE;
-
-    /**
-     * @param string $dateTimeType
-     */
-    public function setDateTimeType($dateTimeType)
-    {
-        $this->dateTimeType = $dateTimeType;
-    }
-
 
     /**
      * @param mixed $dt
@@ -37,9 +27,9 @@ trait OrganisationDateFormattingTrait
     protected function formatDate( $dt, Organisation $org)
     {
         $dateTime = $this->translateMongoDate($dt, $org);
-        return $this->dateTimeType==Message::DATE_TIME_TYPE_ABSOLUTE
-            ? $dateTime->format($org->datetime_format ?: 'H:i:s d/m/y')
-            : $this->formatAsRelativeDateTime($dateTime,$org);
+        return $dateTime->format('c');
+
+
     }
 
     /**

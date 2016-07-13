@@ -167,6 +167,7 @@ return [
          * forms and stuff
          */
         Collective\Html\HtmlServiceProvider::class,
+        Watson\BootstrapForm\BootstrapFormServiceProvider::class,
         Camroncade\Timezone\TimezoneServiceProvider::class,
 
         /*
@@ -245,6 +246,7 @@ return [
 
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        'BootForm' => Watson\BootstrapForm\Facades\BootstrapForm::class,
 
     ],
 

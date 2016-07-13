@@ -15,19 +15,9 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="input_datetime_format" class="col-sm-5 control-label">Date Time Format</label>
+        {{ Form::label('hour12', '12 Hour Time (AM/PM)',['class'=>'control-label col-sm-5']) }}
         <div class="col-sm-7">
-            <select type="text" class="form-control"
-                    id="datetime_format" name="datetime_format">
-                <option value="H:i:s d/m/y">HH:mm:ss dd/mm/yy</option>
-                <option value="H:i:s D d/m/y">HH:mm:ss Day dd/mm/yy</option>
-                <option value="h:i:s A d/m/y">hh:mm:ss AM/PM dd/mm/yy</option>
-                <option value="h:i:s A D d/m/y">hh:mm:ss AM/PM Day dd/mm/yy</option>
-                <option value="H:i:s m/d/y">HH:mm:ss mm/dd/yy</option>
-                <option value="H:i:s D m/d/y">HH:mm:ss Day mm/dd/yy</option>
-                <option value="h:i:s A m/d/y">hh:mm:ss AM/PM mm/dd/yy</option>
-                <option value="h:i:s A D m/d/y">hh:mm:ss AM/PM Day mm/dd/yy</option>
-            </select>
+            {{ Form::checkbox('hour12',true, null, ['class'=>'col-sm-7 form-control']) }}
         </div>
     </div>
 </form>

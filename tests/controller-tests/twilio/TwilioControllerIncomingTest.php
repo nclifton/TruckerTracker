@@ -22,7 +22,6 @@ require_once __DIR__ . '/TwilioControllerTestCase.php';
 
 class TwilioControllerIncomingTest extends TwilioControllerTestCase
 {
-    protected $datetime_format;
     protected $allowedDateTimeDiffInSeconds = 5;
 
     /**
@@ -76,16 +75,13 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $message = $this->messageSet[0];
         $driver = $this->driverSet[0];
         $org = $this->orgSet[0];
-        $this->datetime_format = $org['datetime_format'];
         $expectedUrl = 'http://homestead.app/pub/'.$org['_id'];
         $expectedMessage = $message;
         $expectedMessage['status']='delivered';
         unset($expectedMessage['organisation_id']);
         unset($expectedMessage['driver_id']);
         unset($expectedMessage['sid']);
-        $expectedMessage['delivered_at'] = (new \DateTime())->format($org['datetime_format']);
-        $expectedMessage['queued_at'] = (new \DateTime($expectedMessage['queued_at']))->format($org['datetime_format']);
-        $expectedMessage['sent_at'] = (new \DateTime($expectedMessage['sent_at']))->format($org['datetime_format']);
+        $expectedMessage['delivered_at'] = (new \DateTime())->format('c');
         $expectedDriver = $driver;
         unset($expectedDriver['organisation_id']);
         $expectedMessage['driver'] = $expectedDriver;
@@ -139,7 +135,6 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $location = $this->locationSet[0];
         $vehicle = $this->vehicleSet[0];
         $org = $this->orgSet[0];
-        $this->datetime_format = $org['datetime_format'];
 
         $expectedUrl = 'http://homestead.app/pub/'.$org['_id'];
         $expectedLocation = $location;
@@ -147,9 +142,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         unset($expectedLocation['organisation_id']);
         unset($expectedLocation['vehicle_id']);
         unset($expectedLocation['sid']);
-        $expectedLocation['delivered_at'] = (new \DateTime())->format($org['datetime_format']);
-        $expectedLocation['queued_at'] = (new \DateTime($expectedLocation['queued_at']))->format($org['datetime_format']);
-        $expectedLocation['sent_at'] = (new \DateTime($expectedLocation['sent_at']))->format($org['datetime_format']);
+        $expectedLocation['delivered_at'] = (new \DateTime())->format('c');
         $expectedVehicle = $vehicle;
         unset($expectedVehicle['organisation_id']);
         unset($expectedVehicle['tracker_password']);
@@ -238,7 +231,6 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $user= $this->twilioUser();
         $org = $this->orgSet[0];
         $driver = $this->driverSet[0];
-        $this->datetime_format = $org['datetime_format'];
 
         $message = [
             'MessageSid' => '9999999',
@@ -259,7 +251,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         unset($expectedDriver['organisation_id']);
         $expectedMessage['driver'] = $expectedDriver;
         $expectedMessage['status']='received';
-        $expectedMessage['received_at'] = (new \DateTime())->format($org['datetime_format']);
+        $expectedMessage['received_at'] = (new \DateTime())->format('c');
 
         $expectedPostData = [
             'headers' => [
@@ -351,7 +343,6 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
 
         $user= $this->twilioUser();
         $driver = $this->driverSet[0];
-        $this->datetime_format = $org['datetime_format'];
 
         $message = [
             'MessageSid' => '9999999',
@@ -372,7 +363,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         unset($expectedDriver['organisation_id']);
         $expectedMessage['driver'] = $expectedDriver;
         $expectedMessage['status']='received';
-        $expectedMessage['received_at'] = (new \DateTime())->format($org['datetime_format']);
+        $expectedMessage['received_at'] = (new \DateTime())->format('c');
 
         $expectedPostData = [
             'headers' => [
@@ -451,18 +442,14 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
                 'status' => 'received'
             ];
 
-        $this->datetime_format = $org['datetime_format'];
 
         $expectedUrl = 'http://homestead.app/pub/'.$org['_id'];
         $expectedData = $expectedLocationDb;
         unset($expectedData['sid_response']);
         unset($expectedData['vehicle_id']);
         unset($expectedData['sid']);
-        $expectedData['received_at'] = (new \DateTime())->format($org['datetime_format']);
-        $expectedData['delivered_at'] = (new \DateTime($location['delivered_at']))->format($org['datetime_format']);
-        $expectedData['queued_at'] = (new \DateTime($location['queued_at']))->format($org['datetime_format']);
-        $expectedData['sent_at'] = (new \DateTime($location['sent_at']))->format($org['datetime_format']);
-        $expectedData['datetime'] = $expectedData['datetime']->format($org['datetime_format']);
+        $expectedData['received_at'] = (new \DateTime())->format('c');
+        $expectedData['datetime'] = $expectedData['datetime']->format('c');
         $expectedVehicle = $vehicle;
         unset($expectedVehicle['organisation_id']);
         unset($expectedVehicle['tracker_password']);
@@ -528,15 +515,15 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
 
     private function isDate($value)
     {
-        $dt = \DateTime::createFromFormat($this->datetime_format,$value);
+        $dt = \DateTime::createFromFormat('c',$value);
         return !($dt === false);
 
     }
 
     private function datesAreClose($expected, $actual)
     {
-        $dt1 = \DateTime::createFromFormat($this->datetime_format,$expected);
-        $dt2 =  \DateTime::createFromFormat($this->datetime_format,$expected);
+        $dt1 = new \DateTime($expected);
+        $dt2 =  new \DateTime($expected);
         $timestamp = $dt1->getTimestamp();
         $timestamp1 = $dt2->getTimestamp();
         $b = abs($timestamp - $timestamp1) < $this->allowedDateTimeDiffInSeconds;
