@@ -1,4 +1,4 @@
-<div class="col-md-offset-10 col-md-2">
+<div class="col-xs-offset-10 col-xs-2">
     @can('delete-message')
         <button id="btn-delete-messages"
                 class="btn btn-danger btn-xs btn-delete delete-messages delete-button pull-right "

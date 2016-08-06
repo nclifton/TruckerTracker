@@ -1,10 +1,10 @@
 @can('edit-users',$org)
-<div class="col-md-4">
+<div class="col-xs-2">
     <button id="btn-add-user" name="btn-add-user"
             class="btn btn-primary btn-xs pull-left">
         <i class="fa fa-btn fa-user"></i>Register New User</button>
 </div>
-<div class="col-md-8">
+<div class="col-xs-4 col-xs-offset-6">
     <button id="btn-edit-user"
             class="btn btn-warning btn-xs btn-detail open-modal-user pull-right"
             value="" disabled="disabled">Edit</button>

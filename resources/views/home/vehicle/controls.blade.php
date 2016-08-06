@@ -1,14 +1,14 @@
 <?php
 $user = Auth::getUser();
 ?>
-<div class="col-md-4">
+<div class="col-xs-2">
 @can('send-location')
     <button id="btn-locateVehicle"
             class="btn btn-xs btn-detail open-modal-location locate-button pull-left"
             value="" disabled="disabled">locate</button>
 @endcan
 </div>
-<div class="col-md-8">
+<div class="col-xs-4 col-xs-offset-6">
 @if ($user->can('delete-vehicle') || $user->can('update-vehicle'))
     @can('delete-vehicle',$org)
         <button id="btn-delete-vehicle"

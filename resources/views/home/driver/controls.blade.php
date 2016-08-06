@@ -1,14 +1,14 @@
 <?php
 $user = Auth::getUser();
 ?>
-<div class="col-md-4">
+<div class="col-xs-2">
 @can('send-message')
     <button id="btn-messageDriver"
             class="btn btn-xs btn-detail open-modal-message message-button"
             value="" disabled="disabled">message</button>
 @endcan
 </div>
-<div class="col-md-8">
+<div class="col-xs-4 col-xs-offset-6">
 @if ($user->can('delete-driver') || $user->can('update-driver'))
     @can('delete-driver')
         <button id="btn-delete-driver"
