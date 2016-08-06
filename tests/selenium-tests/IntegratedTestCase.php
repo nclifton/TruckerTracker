@@ -390,7 +390,7 @@ abstract class IntegratedTestCase extends \Laracasts\Integrated\Extensions\Selen
                 'From' => $dbOrg['twilio_phone_number']
             ]
         ]);
-        $this->assertEquals($response->getStatusCode(), 200, 'test sending status updatec to incoming comtroller');
+        $this->assertEquals($response->getStatusCode(), 200, 'test sending status updated to incoming controller');
 
     }
 

@@ -1,452 +1,441 @@
 /**
  * Created by nclifton on 18/06/2016.
  */
-(function ($) {
-    $.fn.serializeFormJSON = function () {
+var Common = {
+    settings: {
+        subscribe_sse: false,
+        orgId: false,
+        sseUrl: '/sub',
+        time_format_hour12: false
+    },
+    sse: false,
 
-        var o = {};
-        var a = this.serializeArray();
-        $.each(a, function () {
-            if (o[this.name]) {
-                if (!o[this.name].push) {
-                    o[this.name] = [o[this.name]];
-                }
-                o[this.name].push(this.value || '');
-            } else {
-                o[this.name] = this.value || '';
-            }
-        });
-        return o;
-    };
-})(jQuery);
+    init: function(){
+        this.onUIActions(this.settings);
+        this.setupSse(this.settings);
+    },
 
-
-function handleStatusCode500(data) {
-    var newDoc = document.open("text/html", "replace");
-    newDoc.write(data.responseText);
-    newDoc.close();
-}
-function handleStatusCode403() {
-    window.alert('Permission denied');
-}
-function handleStatusCode401() {
-    window.alert('Permission denied');
-}
-function handleAjaxError(data) {
-    console.log('Error:', data);
-    if (data.status == 500) {
-        handleStatusCode500(data);
-    } else if (data.status == 403) {
-        handleStatusCode403();
-    }
-}
-function timeConverter(UNIX_timestamp){
-    var a = new Date(UNIX_timestamp * 1000);
-    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var hour = a.getHours();
-    var min = a.getMinutes();
-    var sec = a.getSeconds();
-    var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
-    return time;
-}
-
-function setClickableTooltip(target, content){
-    $( target ).tooltip({
-        show: null, // show immediately 
-        position: { my: "right top", at: "left top" },
-        content: content, //from params
-        hide: { effect: "" }, //fadeOut
-        close: function(event, ui){
-            ui.tooltip.hover(
-                function () {
-                    $(this).stop(true).fadeTo(400, 1);
-                },
-                function () {
-                    $(this).fadeOut("400", function(){
-                        $(this).remove();
-                    })
-                }
-            );
-        }
-    });
-}
-
-/**
- *     Adjust width of row elements using the line-fluid-column class.
- *     For this to work properly there must be only one per line
- **/
-function remove_fluid_column_style_widths(){
-    $('.row > .line_fluid_column').each(function(){
-        var $fluidCol = $(this);
-        if ($fluidCol.is(':visible')) {
-            $fluidCol.siblings().each(function () {
-                $(this).css('width', '');
-            });
-            $fluidCol.css('width', '');
-            $fluidCol.children().each(function () {
-                $(this).css('width', '');
-            });
-        }
-    });
-}
-
-function adjust_fluid_columns () {
-    remove_fluid_column_style_widths();
-    $('.row > .line_fluid_column').each(function(){
-        var $fluidCol = $(this);
-        if ($fluidCol.is(':visible')){
-            var fluidWidth = $fluidCol.closest('.row').width();
-            //$fcol.closest('.row').width(colWidth);
-            $fluidCol.siblings().each(function(){
-                var $sib = $(this);
-                if ($sib.is(':visible')) {
-                    var sibWidth = $sib.width();
-                    $sib.width(sibWidth);
-                    fluidWidth -= sibWidth;
-                }
-            });
-            $fluidCol.width(fluidWidth);
-            var width = 0;
-            var ofWidth = 0;
-            // how wide can we make the overflow_container? will be fluid col width less fixed width col widths
-            // colWidth is fluid col width
-            $fluidCol.children().each(function(){
-                var $this = $(this);
-                var w = $this.width();
-                var pw = parseInt($this.css("padding-right")) + parseInt($this.css("padding-left"));
-                var mw = parseInt($this.css("margin-right")) + parseInt($this.css("margin-left"));
-                $this.width(w + pw + mw);
-                width += w + pw + mw;
-                if ($this.hasClass('overflow_container')){
-                    ofWidth = 0;
-                    $this.children().each(function(){
-                        var pw = parseInt($(this).css("padding-right")) + parseInt($(this).css("padding-left"));
-                        var mw = parseInt($(this).css("margin-right")) + parseInt($(this).css("margin-left"));
-                        ofWidth += $(this).width() + pw + mw;
-                    });
-                }
-            });
-            var fixedWidth = width - ofWidth;
-            if (fixedWidth < fluidWidth){
-                var $overflowContainer = $fluidCol.children('.overflow_container').first();
-                var ofcWidth = fluidWidth - fixedWidth;
-                $overflowContainer.width(ofcWidth);
-                if ((ofWidth + 10) > ofcWidth) {
-                    $overflowContainer.children().each(function () {
-                        $(this).addClass('overflow_ellipsis_active');
-                    });
-                } else {
-                    //$overflowContainer.width('auto');
-                    $fluidCol.find('.overflow_ellipsis_active').removeClass('overflow_ellipsis_active');
-                }
-
-            }
-
-        }
-    });
-}
-
-function update_location_line(data) {
-    var loc = $('#location' + data._id);
-    loc.find('span.status').text(data.status);
-    var status_at = data.queued_at;
-    switch (data.status) {
-        case 'sent':
-            status_at = data.sent_at;
-            break;
-        case 'delivered':
-            status_at = data.delivered_at;
-            break;
-        case 'received':
-            status_at = data.received_at;
-            loc.find('button.open-modal-location-view').val(data._id);
-            loc.find('.view-button').show();
-            break;
-    }
-    loc.find('span.status_at').text(status_at);
-}
-
-function delete_selected_message() {
-    delete_selected('message', '/driver/message/');
-}
-
-function delete_selected_location(){
-    delete_selected('location','/vehicle/location/');
-}
-
-function delete_selected(classPrefix,urlPrefix) {
-
-    var $item = $('.' + classPrefix + '_line.selected').first()
-    if ($item.length) {
-        var item_id = $item.attr('data');
+    ajaxSetup: function () {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
             }
         });
-        $.ajax({
-            type: "DELETE",
-            url: urlPrefix + item_id,
-            success: function (data) {
-                console.log(data);
-                $("#" + classPrefix + item_id).remove();
-                var selectedSelector = '.' + classPrefix + '_line' + '.selected';
-                $(selectedSelector).removeClass('selected');
-                enable_disable_controls(classPrefix);
-                delete_selected(classPrefix,urlPrefix);
-            },
-            error: function (data) {
-                handleAjaxError(data);
-            }
-        });
-    }
-}
+    },
 
-
-
-function enable_disable_controls(classPrefix) {
-    var selectedSelector = '.' + classPrefix + '_line' + '.selected';
-    var controlsSelector = '#' + classPrefix + '_controls button.btn-danger, button.btn-warning, button.btn-detail';
-    if ($(selectedSelector).length) {
-        $(controlsSelector).removeAttr('disabled');
-    } else {
-        $(controlsSelector).attr('disabled', 'disabled')
-    }
-}
-function setup_select(classPrefix,onlyOne) {
-
-    var selectableSelector = '.' + classPrefix + '_line';
-    var selectedSelector = selectableSelector + '.selected';
-    $(selectableSelector).off('click').click(function () {
-        var selected = $(this).hasClass('selected');
-        if(onlyOne){
-            $(selectedSelector).removeClass('selected');
-            if (!selected)
-                $(this).addClass('selected');
-        } else {
-            $(this).toggleClass('selected');
-        }
-        enable_disable_controls(classPrefix);
-
-    });
-}
-function add_message_line(data) {
-    if ($('#message' + data._id).length){
-        return update_message_line(data);
-    }
-
-    var msg = $('#message')
-        .clone(false)
-        .prependTo('#message_list')
-        .attr("id", "message" + data._id)
-        .attr('data',data._id);
-    msg.find('button.open-modal-view-message').val(data._id);
-    msg.find('button.delete-message').val(data._id);
-    msg.find('span.first_name').text(data.driver.first_name);
-    msg.find('span.last_name').text(data.driver.last_name);
-    msg.find('span.status').text(data.status);
-    var status_at = data.queued_at;
-    switch (data.status) {
-        case 'sent':
-            status_at = data.sent_at;
-            break;
-        case 'delivered':
-            status_at = data.delivered_at;
-            break;
-        case 'received':
-            status_at = data.received_at;
-            break;
-    }
-    msg.find('span.status_at').text(status_at);
-    msg.attr('title', data.message_text);
-    msg.show();
-    setup_select('message');
-    
-}
-
-function update_message_line(data) {
-    var msg = $('#message' + data._id);
-    msg.find('span.status').text(data.status);
-    var status_at = data.queued_at;
-    switch (data.status) {
-        case 'sent':
-            status_at = data.sent_at;
-            break;
-        case 'delivered':
-            status_at = data.delivered_at;
-            break;
-    }
-    msg.find('span.status_at').text(status_at);
-}
-
-
-function jScrollPaneSettings() {
-    var contentWidth = $('messageDriveModal').innerWidth();
-    return {
-        maintainPosition: true,
-        stickToBottom: true,
-        horizontalGutter: 20
-    }
-}
-
-function reset_conversation_scrollPane() {
-
-    var $driverConversation = $('#driver_conversation');
-    var $pane = $driverConversation.find('.conversation_panel');
-    $pane.jScrollPane(jScrollPaneSettings());
-    var api = $pane.data('jsp');
-    api.reinitialise();
-    var $fromPanel = $driverConversation.find('.message_from_panel').first();
-    if (api.getIsScrollableV()){
-        $fromPanel.css('right',35);
-        api.scrollToBottom();
-    } else{
-        $fromPanel.css('right',16);
-    }
-}
-function update_conversation_message(data) {
-    var css = $('#messageDriverModal').css('display');
-    if (css == 'block'){
-        var $conversationContainer = $('#driver_conversation');
-        var $messagesContainer = $conversationContainer.find('.messages_container');
-        var $msg = $messagesContainer.find('#conversation_message' + data._id);
-
-        $msg.find(".message_container")
-            .removeClass('queued sent delivered')
-            .addClass(data.status);
-
-        reset_conversation_scrollPane();
-
-    }
-}
-
-function friendly_datetime(iso8601TimeStr){
-    var date = new Date(iso8601TimeStr);
-    var timeStr = date.toLocaleTimeString();
-    var relDate = relativeDate(date);
-    return timeStr + ' (' + relDate + ")";
-}
-
-
-function add_message_to_conversation($messagesContainer, msgdata) {
-    var $msg = $messagesContainer.find('#conversation_message')
-        .clone(false)
-        .appendTo($messagesContainer)
-        .attr("id", "conversation_message" + msgdata._id);
-    $msg.find(".message_container")
-        .addClass(msgdata.status);
-    $msg.find(".message_text")
-        .text(msgdata.message_text);
-    $msg.find(".datetime")
-        .text(friendly_datetime(msgdata[msgdata.status + '_at']));
-    $msg.show();
-    reset_conversation_scrollPane();
-}
-
-
-function add_conversation_message(data) {
-    var css = $('#messageDriverModal').css('display');
-    if (css == 'block'){
-        var $conversationContainer = $('#driver_conversation');
-        var $messagesContainer = $conversationContainer.find('.messages_container');
-        add_message_to_conversation($messagesContainer, data);
-        reset_conversation_scrollPane();
-    }
-}
-
-var truckerTrackerSse;
-
-function setup_sse(){
-    if (!truckerTrackerSse){
-        if (!organisation_id){
-            console.log('No Organisation ID - No SSE!');
-            return;
-        }
-        truckerTrackerSse = $.SSE('/sub/'+organisation_id, {
-            events: {
-                MessageUpdate: function(e) {
-                    console.log(e);
-                    update_message_line($.parseJSON(e.data));
-                    update_conversation_message($.parseJSON(e.data))
-                    adjust_fluid_columns();
-                },
-                MessageReceived: function(e) {
-                    console.log(e);
-                    add_message_line($.parseJSON(e.data));
-                    add_conversation_message($.parseJSON(e.data))
-                    adjust_fluid_columns();
-                },
-                LocationUpdate: function(e) {
-                    console.log(e);
-                    update_location_line($.parseJSON(e.data));
-                    adjust_fluid_columns();
-                },
-                LocationReceived: function(e) {
-                    console.log(e);
-                    update_location_line($.parseJSON(e.data));
-                    adjust_fluid_columns();
+    findElements: function (settings) {
+        var findSelectors = function (object) {
+            for (var name in object) {
+                if (name == 'selectors') {
+                    for (var elementName in object['selectors']) {
+                        object[elementName] = $(object.selectors[elementName]);
+                    }
+                } else if (object[name] !== null && typeof object[name] === 'object' && 'selectors' in object[name]) {
+                    findSelectors(object[name]);
                 }
             }
+        };
+        findSelectors(settings);
+        return settings;
+    },
+
+    prepForAdd: function (settings,showModal) {
+        settings.submitButton.val('add').text(settings.lang.addButtonLabel);
+        settings.form.trigger('reset');
+        showModal(settings);
+    },
+
+    prepForEdit: function (settings,showModal) {
+        $(settings.lineSelector).first().each(function (i, selected) {
+            var dataId = $(selected).attr('data');
+            Common.ajaxSetup();
+            $.get(settings.url + '/' + dataId, function (data) {
+                Common.handleGetSuccess(data,settings,showModal);
+              }).fail(function (data) {
+                Common.handleServerError(data);
+            });
+        });
+    },
+
+    fillForm: function (data, settings) {
+        for (var key in data) {
+            if (key == '_id') {
+                settings.dataIdHolder.val(data[key]);
+            } else {
+                settings.form.find('[name="' + key + '"]').val(data[key]);
+            }
+        }
+    },
+
+    handleGetSuccess: function (data, settings, showModal) {
+        console.log(data);
+        Common.fillForm(data, settings);
+        settings.submitButton.val("update");
+        showModal(settings);
+    },
+
+    deleteSelection: function (settings) {
+
+        $(settings.lineSelector).each(function (i, selected) {
+            var dataId = $(selected).attr('data');
+            Common.ajaxSetup();
+            $.ajax({
+                type: "DELETE",
+                url: settings.url + '/' + dataId,
+                success: function (data) {
+                    console.log(data);
+                    $("#"+ settings.classPrefix + dataId).remove();
+                    Common.enableDisableControls(settings.classPrefix);
+                },
+                error: function (data) {
+                    Common.handleServerError(data);
+                }
+            });
+        });
+    },
+
+
+    handleServerError: function(data) {
+        document.open("text/html", "replace");
+        document.write(data.responseText);
+        document.close();
+    },
+
+    handlePermissionDenied: function() {
+        window.alert('Permission Denied');
+    },
+
+    handleAjaxError: function(data, settings){
+        console.log('Error:', data);
+        switch (data.status) {
+            case 500:
+                Common.handleServerError(data);
+                break;
+            case 401:
+            case 403:
+                Common.handlePermissionDenied();
+                break;
+            case 422:
+                Common.handleFormError(data, settings);
+        }
+    },
+
+    handleFormError: function (data, settings) {
+        Common.resetErrorDisplay(settings);
+        $.each(data.responseJSON, function (index, value) {
+            settings.form.find('[name="' + index + '"]').each(function (i, input) {
+                $(input)
+                    .after('<span class="help-block"><strong>' + value + '</strong></span>')
+                    .closest('div.form-group').addClass('has-error');
+            });
+        });
+    },
+
+    resetErrorDisplay: function (form) {
+        $(form).find('.help-block').remove();
+        $(form).find('.form-group').removeClass('has-error');
+    },
+
+    ajaxSaveForm: function (setLineText, settings) {
+        Common.ajaxSetup();
+
+        //determine the http verb to use [add=POST], [update=PUT]
+        var type = "POST"; //for creating new resource
+        var url = settings.url;
+        var state = settings.submitButton.val();
+        if (state == "update") {
+            type = "PUT"; //for updating existing resource
+            url += '/' + settings.dataIdHolder.val();
+        }
+
+        var formData = settings.form.serializeFormJSON();
+        console.log(formData);
+
+        $.ajax({
+            type: type,
+            url: url,
+            data: formData,
+            dataType: 'json',
+            success: function (data) {
+                Common.handleSaveSuccess(data, state, settings, setLineText);
+            },
+            error: function (data) {
+                Common.handleAjaxError(data, settings);
+            }
+        });
+    },
+
+
+    handleSaveSuccess: function (data, state, settings, setLineText) {
+        console.log(data);
+        if (state == "add") {
+            settings.submitButton.text(settings.lang.saveButtonLabel);
+            settings.lineTemplate
+                .clone(false)
+                .appendTo('#' + settings.classPrefix + '_list')
+                .attr("id", settings.classPrefix + data._id)
+                .attr("data", data._id)
+                .show();
+            Common.setupSelect(settings.classPrefix, settings.multiSelect);
+
+        }
+        setLineText(settings, data);
+        settings.modal.modal('hide');
+        settings.form.trigger("reset");
+        Common.adjustFluidColumns();
+    },
+
+    prependListLine: function (data, settings, setLineText) {
+        console.log(data);
+
+        var line = settings.lineTemplate
+            .clone(false)
+            .prependTo(settings.list)
+            .attr("id", settings.lineTemplate.selector.substr(1) + data._id)
+            .attr("data", data._id);
+        line = $(settings.lineTemplate.selector + data._id);
+        setLineText(line, data);
+        line.show();
+        line[0].scrollIntoView();
+
+        Common.setupSelect(settings.classPrefix, settings.multiSelect);
+        Common.adjustFluidColumns();
+    },
+
+    setClickableTooltip: function(selector, content){
+        $( selector ).tooltip({
+            show: null, // show immediately
+            position: { my: "right top", at: "left top" },
+            content: content, //from params
+            hide: { effect: "" }, //fadeOut
+            close: function(event, ui){
+                console.log('here');
+                ui.tooltip.hover(
+                    function () {
+                        $(this).stop(true).fadeTo(400, 1);
+                    },
+                    function () {
+                        $(this).fadeOut("400", function(){
+                            $(this).remove();
+                        })
+                    }
+                );
+            }
+        });
+    },
+
+
+    /**
+     *     Adjust width of row elements using the line-fluid-column class.
+     *     For this to work properly there must be only one per line
+     **/
+    removeFluidColumnStyleWidth: function(){
+        $('.row > .line_fluid_column').each(function(){
+            var $fluidCol = $(this);
+            if ($fluidCol.is(':visible')) {
+                $fluidCol.siblings().each(function () {
+                    $(this).css('width', '');
+                });
+                $fluidCol.css('width', '');
+                $fluidCol.children().each(function () {
+                    $(this).css('width', '');
+                });
+            }
+        });
+    },
+
+    adjustFluidColumns: function(){
+        Common.removeFluidColumnStyleWidth();
+        $('.row > .line_fluid_column').each(function(){
+            var $fluidCol = $(this);
+            if ($fluidCol.is(':visible')){
+                var fluidWidth = $fluidCol.closest('.row').width();
+
+                $fluidCol.siblings().each(function(){
+                    var $sib = $(this);
+                    if ($sib.is(':visible')) {
+                        var sibWidth = $sib.width();
+                        $sib.width(sibWidth);
+                        fluidWidth -= sibWidth;
+                    }
+                });
+
+                $fluidCol.width(fluidWidth);
+                var width = 0;
+                var ofWidth = 0;
+                // how wide can we make the overflow_container? will be fluid col width less fixed width col widths
+                // colWidth is fluid col width
+                $fluidCol.children().each(function(){
+                    var $this = $(this);
+                    var w = $this.width();
+                    var pw = parseInt($this.css("padding-right")) + parseInt($this.css("padding-left"));
+                    var mw = parseInt($this.css("margin-right")) + parseInt($this.css("margin-left"));
+                    $this.width(w + pw + mw);
+                    width += w + pw + mw;
+                    if ($this.hasClass('overflow_container')){
+                        ofWidth = 0;
+                        $this.children().each(function(){
+                            var pw = parseInt($(this).css("padding-right")) + parseInt($(this).css("padding-left"));
+                            var mw = parseInt($(this).css("margin-right")) + parseInt($(this).css("margin-left"));
+                            ofWidth += $(this).width() + pw + mw;
+                        });
+                    }
+                });
+                var fixedWidth = width - ofWidth;
+                if (fixedWidth < fluidWidth){
+                    var $overflowContainer = $fluidCol.children('.overflow_container').first();
+                    var ofcWidth = fluidWidth - fixedWidth;
+
+                    $overflowContainer.width(ofcWidth);
+                    if ((ofWidth + 10) > ofcWidth) {
+                        $overflowContainer.children().each(function () {
+                            $(this).addClass('overflow_ellipsis_active');
+                        });
+                    } else {
+                        //$overflowContainer.width('auto');
+                        $fluidCol.find('.overflow_ellipsis_active').removeClass('overflow_ellipsis_active');
+                    }
+
+                }
+
+            }
+        });
+    },
+
+    enableDisableControls: function(classPrefix){
+        var selectedSelector = '.' + classPrefix + '_line' + '.selected';
+        var controlsSelector =
+            '#' + classPrefix + '_controls button.btn-danger, ' +
+            '#' + classPrefix + '_controls button.btn-warning, ' +
+            '#' + classPrefix + '_controls button.btn-detail';
+        if ($(selectedSelector).length) {
+            $(controlsSelector).removeAttr('disabled');
+        } else {
+            $(controlsSelector).attr('disabled', 'disabled')
+        }
+    },
+
+    setupSelect: function(arg1,multiselect){
+        var classPrefix = (typeof arg1 === 'object') ? arg1.classPrefix : arg1;
+        var selectableSelector = '.' + classPrefix + '_line';
+        var selectedSelector = selectableSelector + '.selected';
+        $(selectableSelector).off('click').click(function () {
+            var selected = $(this).hasClass('selected');
+            if(multiselect) {
+                $(this).toggleClass('selected');
+            } else {
+                $(selectedSelector).removeClass('selected');
+                if (!selected)
+                    $(this).addClass('selected');
+             }
+            Common.enableDisableControls(classPrefix);
+        });
+    },
+
+    friendlyDatetime: function(iso8601TimeStr){
+        var date = new Date(iso8601TimeStr);
+        var timeStr = date.toLocaleTimeString();
+        var relDate = relativeDate(date);
+        return timeStr + ' (' + relDate + ')';
+    },
+
+
+
+
+    handleSseMessageUpdate: function (e) {
+        console.log(e);
+        MessageDialogue.updateMessageLine($.parseJSON(e.data));
+        MessageDialogue.updateConversationMessage($.parseJSON(e.data))
+        Common.adjustFluidColumns();
+    },
+
+    handleSseMessageReceived: function (e) {
+        console.log(e);
+        MessageDialogue.addMessageLine($.parseJSON(e.data));
+        MessageDialogue.addConversationMessage($.parseJSON(e.data))
+        Common.adjustFluidColumns();
+    },
+
+    handleSseLocationUpdate: function (e) {
+        console.log(e);
+        LocationDialogue.updateLocationLine($.parseJSON(e.data));
+        Common.adjustFluidColumns();
+    },
+
+    handleSseLocationReceived: function (e) {
+        console.log(e);
+        LocationDialogue.updateLocationLine($.parseJSON(e.data));
+        Common.adjustFluidColumns();
+    },
+
+    setupSse: function(){
+
+        if (!Common.sse){
+            if (!Common.settings.orgId){
+                console.log('Sorry No Organisation ID, No SSE!');
+                return;
+            }
+            Common.sse = $.SSE(Common.settings.sseUrl + '/' + Common.settings.orgId, {
+                events: {
+                    MessageUpdate: function(e) {
+                        Common.handleSseMessageUpdate(e);
+                    },
+                    MessageReceived: function(e) {
+                        Common.handleSseMessageReceived(e);
+                    },
+                    LocationUpdate: function(e) {
+                        Common.handleSseLocationUpdate(e);
+                    },
+                    LocationReceived: function(e) {
+                        Common.handleSseLocationReceived(e);
+                    }
+                }
+            });
+            console.log('SSE starting');
+            Common.sse.start();
+
+        }
+
+    },
+
+
+
+    onUIActions: function (settings) {
+        Common.adjustFluidColumns();
+
+        var resizeTimer;
+        var showTimer;
+        $(window).on('resize',function() {
+            Common.removeFluidColumnStyleWidth();
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                Common.adjustFluidColumns();
+                if ($('#messageDriverModal:visible').length) {
+                    MessageDialogue.resetConversationScrollPanel();
+                }
+            }, 250);
         });
 
-        truckerTrackerSse.start();
+        $('.list_panel_line').on('show', function() {
+
+            Common.removeFluidColumnStyleWidth();
+
+            clearTimeout(showTimer);
+            showTimer = setTimeout(function() {
+                Common.adjustFluidColumns();
+
+            }, 250);
+        });
+
+        if (Common.settings.subscribe_sse){
+            Common.setupSse();
+        }
+
+        $('#locate_vehicles_collapsible,#message_drivers_collapsible')
+            .on('shown.bs.collapse', function(){
+            Common.removeFluidColumnStyleWidth();
+            Common.adjustFluidColumns();
+        });
 
     }
-}
-
-
-/**
- * show hide event
- */
-(function ($) {
-    $.each(['show', 'hide'], function (i, ev) {
-        var el = $.fn[ev];
-        $.fn[ev] = function () {
-            this.trigger(ev);
-            return el.apply(this, arguments);
-        };
-    });
-})(jQuery);
-
-
-$(document).ready(function () {
-    var resizeTimer;
-    var showTimer;
-
-    adjust_fluid_columns();
-
-    $(window).on('resize',function(e) {
-        remove_fluid_column_style_widths();
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
-            adjust_fluid_columns();
-            if ($('#messageDriverModal:visible').length) {
-                reset_conversation_scrollPane();
-            }
-        }, 250);
-    });
-
-    $('.list_panel_line').on('show', function() {
-
-        remove_fluid_column_style_widths();
-
-        clearTimeout(showTimer);
-        showTimer = setTimeout(function() {
-            adjust_fluid_columns();
-
-        }, 250);
-    });
-    
-    if (subscribe_sse){
-        setup_sse();
-    }
-
-    $('#locate_vehicles_collapsible,#message_drivers_collapsible').on('shown.bs.collapse', function(){
-        remove_fluid_column_style_widths();
-        adjust_fluid_columns();
-    })
-
-});
+};

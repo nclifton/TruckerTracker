@@ -5,10 +5,22 @@
     "dev": "gulp watch"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "laravel-elixir": "^5.0.0",
     "bootstrap-sass": "^3.0.0",
-    "selenium-webdriver": "^2.53.2"
+    "gulp": "^3.9.1",
+    "jasmine": "^2.4.1",
+    "jasmine-ajax": "^3.2.0",
+    "karma": "^1.1.1",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-fixture": "^0.2.6",
+    "karma-html2js-preprocessor": "^1.0.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-jasmine-ajax": "^0.1.13",
+    "karma-json-fixtures-preprocessor": "0.0.6",
+    "karma-requirejs": "^1.0.0",
+    "laravel-elixir": "^5.0.0",
+    "requirejs": "^2.2.0",
+    "selenium-webdriver": "^2.53.2",
+    "timemachine": "^0.2.6"
   },
   "dependencies": {
     "relative-date": "*"

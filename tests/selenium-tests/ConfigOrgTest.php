@@ -278,33 +278,6 @@ class ConfigOrgTest extends IntegratedTestCase
     }
 
     /**
-     * duplicate organisation allowed
-     *
-     * @return void
-     *
-     * @test
-     */
-    public function testAddDuplicateorgValidationPass()
-    {
-        // Arrange
-        $org = $this->orgset['test'];
-        $this->dbAddOrg('test');
-
-        // Act
-        $this->login()->addOrg('test');
-
-        // Assert
-        $this->assertCount(2, $this->getMongoConnection()
-            ->collection('organisations')
-            ->find(['name' => $org['name']]), $org['name'] . ' is in organisation');
-        $this->assertCount(1, $this->getMongoConnection()
-            ->collection('users')
-            ->find(['name' => $this->fixtureUserset[0]['name'], 'organisation_id' => ['$exists' => true]]), 'user count');
-
-
-    }
-
-    /**
      * validation all fields
      *
      * @return void
@@ -598,8 +571,8 @@ class ConfigOrgTest extends IntegratedTestCase
         $this->clearType($org['name'], '#org_name');
         if (isset($org['timezone']))
             $this->select('timezone', $org['timezone']);
-        if (isset($org['hour12']))
-            $this->select('hour12', $org['hour12']);
+        if (isset($org['hour12']) && $org['hour12'])
+            $this->check('hour12');
         $this->byId('org-twilio-tab-link')->click();
         if (isset($org['twilio_account_sid']))
             $this->clearType($org['twilio_account_sid'], '#twilio_account_sid');

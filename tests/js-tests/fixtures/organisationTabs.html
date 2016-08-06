@@ -1,0 +1,57 @@
+
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+        <a href="#config" aria-controls="config"
+           role="tab" data-toggle="tab"
+           id="org-config-tab-link"
+           aria-expanded="true">Configuration</a>
+    </li>
+    <li role="presentation" class="">
+        <a href="#twilio" aria-controls="twilio"
+           role="tab" data-toggle="tab"
+           id="org-twilio-tab-link"
+           aria-expanded="false">Twilio</a>
+    </li>
+    <li role="presentation" class="">
+        <a href="#users" aria-controls="users"
+           role="tab" data-toggle="tab"
+           id="org-users-tab-link"
+           aria-expanded="false">Users</a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="config">
+    </div>
+    <div role="tabpanel" class="tab-pane" id="twilio">
+        <form id="orgTwilioForm">
+            <div id="formGrp3" class="form-group has-error">
+                <div>
+                    <input type="text" name="prop3">
+                    <span class="help-block"><strong>some content</strong></span>
+                </div>
+            </div>
+            <div id="formGrp4" class="form-group">
+                <div>
+                    <input type="text" name="prop4">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="users">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="list-panel scroll-panel">
+                    <ul id="user_list" class="user-list container">
+                        <li id="user"
+                            class="row list_panel_line user_line"
+                            data=""
+                            style="display:none">
+                            <span class="name_email"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

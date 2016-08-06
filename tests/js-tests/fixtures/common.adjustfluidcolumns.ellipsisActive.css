@@ -1,0 +1,18 @@
+
+#row {
+    width: 250px;
+}
+
+#sibling1, #sibling2 {
+    width: 50px;
+}
+
+#child1, #child2 {
+    width: 50px;
+}
+
+#child3 {
+    width: 200px;
+}
+
+

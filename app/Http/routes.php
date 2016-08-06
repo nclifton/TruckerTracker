@@ -37,10 +37,10 @@ Route::get('/organisation/{organisation}',      'ConfigController@getOrganisatio
 Route::post('/organisation',                    'ConfigController@addOrganisation');
 Route::put('/organisation/{organisation}',      'ConfigController@updateOrganisation');
 
-Route::post('/organisation/{organisation}/user','ConfigController@addOrganisationUser');
-Route::put('/organisation/user/{user}',         'ConfigController@updateOrganisationUser');
-Route::delete('/organisation/user/{user}',      'ConfigController@deleteOrganisationUser');
-Route::get('/organisation/user/{user}',         'ConfigController@getOrganisationUser');
+Route::post('/user',                            'ConfigController@addUser');
+Route::put('/user/{user}',                      'ConfigController@updateUser');
+Route::delete('/user/{user}',                   'ConfigController@deleteUser');
+Route::get('/user/{user}',                      'ConfigController@getUser');
 
 Route::get('/drivers/{driver}',                 'ConfigController@getDriver');
 Route::post('/drivers',                         'ConfigController@addDriver');

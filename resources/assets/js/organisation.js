@@ -1,175 +1,219 @@
 /**
  * Created by nclifton on 29/05/2016.
  */
+var OrganisationDialogue = {
 
-$(document).ready(function ($) {
-
-    var org_url = "/organisation";
-
-    //display modal form for creating new organisation
-    $('#btn-add-org').click(function () {
-        $('#btn-save-org').val("add");
-        $('#btn-save-org').text('Add Organisation');
-        $('#orgConfigForm').trigger("reset");
-        $('#orgTwilioForm').trigger("reset");
-        $('#orgModal').modal('show');
-    });
-
-    function setup_reset_config_form(){
-        $('#orgConfigForm').on("reset",function(){
-            var $form = $('#orgConfigForm');
-            $form.find('.help-block').remove();
-            $form.find('.form-group').removeClass('has-error');
-        });
-    }
-    setup_reset_config_form();
-
-    function setup_reset_twilio_form(){
-        $('#orgTwilioForm').on("reset",function(){
-            var $form = $('#orgTwilioForm');
-            $form.find('.help-block').remove();
-            $form.find('.form-group').removeClass('has-error');
-        });
-    }
-    setup_reset_twilio_form();
-
-    $('#org-users-tab-link').on('shown.bs.tab', function (e) {
-        adjust_fluid_columns();
-    });
-
-    function setup_org_edit_button(){
-        $('#btn-edit-org').off('click').click(function (e) {
-            e.preventDefault();
-            var org_id = $(this).val();
-            if (!org_id){
-                org_id = $(this).attr('value');
-            }
-            if (!org_id){
-                org_id = $(this).attr('data');
-            }
-
-            $.get(org_url + '/' + org_id, function (data) {
-                //success data
-                console.log(data);
-
-                var $orgConfigForm = $('#orgConfigForm');
-                $orgConfigForm.trigger("reset");
-                var $orgTwilioForm = $('#orgTwilioForm');
-                $orgTwilioForm.trigger("reset");
-                var $orgUsersTabLink = $('#org-users-tab-link');
-                $orgUsersTabLink.parent().removeClass('disabled');
-                $orgUsersTabLink.attr('data-toggle', 'tab');
-
-                for (var i in data) {
-                    if (i == "users") {
-                        var users = data[i];
-                        for (var j in users) {
-                            var user = users[j];
-                            if (!$("#user" + user._id).length) {
-                                var usr = $('#user').clone(false).prependTo('#user_list').attr("id", "user" + user._id);
-                                usr.show();
-                            }
-                            $('user' + user._id + ' span.name').text(user.name);
-                            $('user' + user._id + ' span.email').text(user.email);
-                            $('user' + user._id + ' button.delete-user').val(user._id).show();
-                        }
-                    } else if (i == "_id") {
-                        $('#org_id').val(data[i]);
-                    } else {
-                        $orgConfigForm.find('[name="' + i + '"]').val(data[i]);
-                        $orgTwilioForm.find('[name="' + i + '"]').val(data[i]);
-                    }
-                }
-                var $btn = $('#btn-save-org');
-                $btn.val("update");
-                $btn.text('Save Changes');
-                $('#orgModal').modal('show');
-
-            }).fail(function (data) {
-                var newDoc = document.open("text/html", "replace");
-                newDoc.write(data.responseText);
-                newDoc.close();
-            });
-        });
-    }
-
-    setup_org_edit_button();
-
-
-    //create new organisation 
-
-    $("#btn-save-org").click(function (e) {
-        e.preventDefault();
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-            }
-        });
-        var formData = $('#orgConfigForm').serializeFormJSON();
-        var twilioFormData = $('#orgTwilioForm').serializeFormJSON();
-        for (var key in twilioFormData) {
-            formData[key] = twilioFormData[key];
-        }
-        //used to determine the http verb to use [add=POST], [update=PUT]
-        var state = $('#btn-save-org').val();
-        var type = "POST"; //for creating new resource
-        var org_id = $('#org_id').val();
-        var my_org_url = org_url;
-        if (state == "update") {
-            type = "PUT"; //for updating existing resource
-            my_org_url += '/' + org_id;
-        }
-        console.log(formData);
-        $.ajax({
-            type: type,
-            url: my_org_url,
-            data: formData,
-            dataType: 'json',
-            success: function (data) {
-                console.log(data);
-                $("#heading_org_name").html(data.name);
-
-                $("#btn-add-org").attr('name','btn-edit-org');
-                $("#btn-add-org").attr('data',data._id);
-                $("#btn-add-org").text('Edit Organisation');
-                $("#btn-add-org").attr('id','btn-edit-org');
-
-                $("#btn-save-org").val('update');
-                $("#org_id").val(data._id);
-                $('#btn-add-driver').show();
-                $('#btn-add-vehicle').show();
-                $('#orgModal').modal('hide');
-                $("#btn-save-org").text('Save Changes');
-
-                setup_org_edit_button()
+        settings: {
+            url:                '/organisation',
+            selectors:          {
+                orgId:              '#org_id',
+                addButton:          '#btn-add-org',
+                editButton:         '#btn-edit-org',
+                submitButton:       '#btn-save-org',
+                addDriverButton:    '#btn-add-driver',
+                addVehicleButton:   '#btn-add-vehicle',
+                configForm:         '#orgConfigForm',
+                twilioForm:         '#orgTwilioForm',
+                modal:              '#orgModal',
+                usersTabLink:       '#org-users-tab-link',
+                orgNameHeading:     '#heading_org_name'
             },
-            error: function (data) {
-                handleAjaxError(data);
-                if (data.status == 422) {
-                    $('#orgConfigForm span.help-block').remove();
-                    $('#orgTwilioForm span.help-block').remove();
-                    $.each(data.responseJSON, function (index, value) {
-                        var input = $('#orgConfigForm').find('[name="' + index + '"]');
-                        if (!input.length)
-                            input = $('#orgTwilioForm').find('[name="' + index + '"]');
-                        if (input){
-                            input.after('<span class="help-block"><strong>' + value + '</strong></span>');
-                            input.closest('div.form-group').addClass('has-error');
-                            var panelId = input.closest('div[role="tabpanel"]').attr('id');
-                            $('a[href="#' + panelId + '"][aria-expanded="false"]').click();
+            lang:{
+                addOrg:         'Add Organisation',
+                editOrg:        'Edit Organisation',
+                saveChanges:    'Save Changes'
+            }
+        },
+
+        init: function () {
+            this.settings = Common.findElements(this.settings);
+            OrganisationDialogue.onUIActions(this.settings);
+            if (this.settings.orgId.val() == '')
+                OrganisationDialogue.prepForAdd(this.settings)
+            return this;
+        },
+
+        prepForAdd: function (settings) {
+            settings.submitButton
+                .val("add")
+                .text(settings.lang.addOrg);
+            settings.configForm.trigger("reset");
+            settings.twilioForm.trigger("reset");
+            settings.modal.modal('show');
+        },
+
+        resetErrorDisplay: function (form) {
+            Common.resetErrorDisplay(form);
+        },
+
+        getOrgSuccess: function (data, settings) {
+            console.log(data);
+
+            settings.configForm.trigger("reset");
+            settings.twilioForm.trigger("reset");
+            settings.usersTabLink.parent().removeClass('disabled');
+            settings.usersTabLink.attr('data-toggle', 'tab');
+
+            for (var i in data) {
+                if (i == "users") {
+                    var users = data[i];
+                    for (var j in users) {
+                        var user = users[j];
+                        if (!$("#user" + user._id).length) {
+                            var usr = $('#user')
+                                .clone(false)
+                                .prependTo('#user_list')
+                                .attr("id", "user" + user._id)
+                                .attr('data', user._id)
+                                .show();
                         }
-                    });
+                        $('#user' + user._id + ' span.name_email')
+                            .text(user.name + ' ' + user.email);
+                    }
+                } else if (i == "hour12") {
+                    Common.settings.time_format_hour12 = data[i];
+                } else if (i == "_id") {
+                    settings.orgId.val(data[i]);
+                    Common.settings.orgId = data[i];
+                } else {
+                    settings.configForm.find('[name="' + i + '"]').val(data[i]);
+                    settings.twilioForm.find('[name="' + i + '"]').val(data[i]);
                 }
             }
-        });
-    });
+            settings.submitButton.val("update").text(settings.lang.saveChanges);
+            settings.modal.modal('show');
+        },
 
-    // force display modal form for creating a new organisation
-    if (!$("#org_id").val()) {
-        $('#btn-save-org').val("add");
-        $('#orgConfigForm').trigger("reset");
-        $('#orgTwilioForm').trigger("reset");
-        $('#orgModal').modal('show');
-    }
+        getOrgIdFromElement: function (selector) {
+            var orgId = $(selector).val();
+            if (!orgId) {
+                orgId = $(selector).attr('data');
+            }
+            return orgId;
+        },
 
-});
+        prepForEdit: function (button, settings) {
+            var orgId = OrganisationDialogue.getOrgIdFromElement(button);
+            var url = settings.url + '/' + orgId;
+            $.get(url, function (data) {
+                OrganisationDialogue.getOrgSuccess(data, settings);
+            }).fail(function (data) {
+                Common.handleServerError(data);
+            });
+        },
+
+        handleAjaxError: function (data, settings) {
+            if (data.status == 422) {
+                settings.configForm.trigger('reset');
+                settings.twilioForm.trigger('reset');
+                $.each(data.responseJSON, function (index, value) {
+                    var input = settings.configForm.find('[name="' + index + '"]');
+                    if (!input.length)
+                        input = settings.twilioForm.find('[name="' + index + '"]');
+                    if (input) {
+                        input.after('<span class="help-block"><strong>' + value + '</strong></span>');
+                        input.closest('div.form-group').addClass('has-error');
+                        var panelId = input.closest('div[role="tabpanel"]').attr('id');
+                        $('a[href="#' + panelId + '"][aria-expanded="false"]').click();
+                    }
+                });
+            } else {
+                Common.handleAjaxError(data);
+            }
+        },
+
+        saveOrgSuccess: function (data, settings) {
+            console.log(data);
+            settings.orgNameHeading.html(data.name);
+            Common.settings.time_format_hour12 = data.hour12;
+            settings.orgId.val(data._id);
+            Common.settings.orgId = data._id;
+            Common.setupSse();
+
+            settings.addButton.attr('name', settings.selectors.editButton.substr(1))
+                .attr('data', data._id)
+                .text(settings.lang.editOrg)
+                .attr('id', settings.selectors.editButton.substr(1));
+            settings.editButton = $(settings.selectors.editButton);
+            settings.addButton = $(settings.selectors.addButton);
+            OrganisationDialogue.settings = settings;
+
+            settings.editButton.off('click').click(function (e) {
+                e.preventDefault();
+                OrganisationDialogue.prepForEdit(this, settings);
+            });
+
+            settings.submitButton.val('update')
+                .text(settings.lang.saveChanges);
+            settings.orgId.val(data._id);
+
+            settings.addDriverButton.show();
+            settings.addVehicleButton.show();
+            settings.modal.modal('hide');
+
+
+        },
+
+        saveOrg: function (settings) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+            var formData = $(settings.configForm).serializeFormJSON();
+            var twilioFormData = $(settings.twilioForm).serializeFormJSON();
+            for (var key in twilioFormData) {
+                formData[key] = twilioFormData[key];
+            }
+            //used to determine the http verb to use [add=POST], [update=PUT]
+            var state = settings.submitButton.val();
+            var type = "POST"; //for creating new resource
+            var url = settings.url;
+            if (state == "update") {
+                var orgId = settings.orgId.val();
+                type = "PUT"; //for updating existing resource
+                url += '/' + orgId;
+            }
+            console.log(formData);
+            $.ajax({
+                type: type,
+                url: url,
+                data: formData,
+                dataType: 'json',
+                success: function (data) {
+                    OrganisationDialogue.saveOrgSuccess(data, settings);
+                },
+                error: function (data) {
+                    OrganisationDialogue.handleAjaxError(data, settings);
+                }
+            });
+        },
+
+        onUIActions: function (settings) {
+            settings.addButton.click(function (e) {
+                e.preventDefault();
+                OrganisationDialogue.prepForAdd(settings);
+            });
+            settings.configForm.on('reset', function (e) {
+                Common.resetErrorDisplay(e.target);
+            });
+            settings.twilioForm.on('reset', function (e) {
+                Common.resetErrorDisplay(e.target);
+            });
+            settings.usersTabLink.on('shown.bs.tab', function () {
+                Common.adjustFluidColumns();
+            });
+            settings.editButton.off('click').click(function (e) {
+                e.preventDefault();
+                OrganisationDialogue.prepForEdit(this, settings);
+            });
+            settings.submitButton.click(function (e) {
+                e.preventDefault();
+                OrganisationDialogue.saveOrg(settings);
+            });
+
+
+
+        }
+
+    };

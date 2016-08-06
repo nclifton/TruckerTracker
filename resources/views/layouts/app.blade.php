@@ -36,6 +36,7 @@
     <script src="{{ asset('/js/jquery.mousewheel.js') }}"></script>
     <script src="{{ asset('/js/jquery.jscrollpane.js') }}"></script>
     <script src="{{ asset('/js/relative-date.js') }}"></script>
+    <script src="{{ asset('/js/jquery.extensions.js') }}"></script>
 
 </head>
 <body id="app-layout">
@@ -61,7 +62,7 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     @yield('pageNav')
-                 </ul>
+                </ul>
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
@@ -74,7 +75,6 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
-
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
                             </ul>

@@ -12,12 +12,12 @@ $user = Auth::getUser();
 @if ($user->can('delete-driver') || $user->can('update-driver'))
     @can('delete-driver')
         <button id="btn-delete-driver"
-                class="btn btn-danger btn-xs btn-delete delete-button delete-driver pull-right"
+                class="btn btn-danger btn-xs delete-button delete-driver pull-right"
                 value="" disabled="disabled">Delete</button>
     @endcan
     @can('update-driver')
         <button id="btn-edit-driver"
-                class="btn btn-warning btn-xs btn-detail edit-button pull-right open-modal-driver"
+                class="btn btn-warning btn-xs edit-button pull-right open-modal-driver"
                 value="" disabled="disabled">Edit</button>
     @endcan
 @endif

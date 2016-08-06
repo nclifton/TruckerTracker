@@ -42,7 +42,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
      *
      * @test
      */
-    public function createOrganisationOperationsUser()
+    public function createOperationsUser()
     {
         $user = $this->firstUser();
         $org = $this->orgSet[0];
@@ -51,7 +51,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $password = 'mstgpwd1';
 
         // Act
-        $this->actingAs($user)->json('post', '/organisation/' . $org['_id'] . '/user', [
+        $this->actingAs($user)->json('post', '/user', [
             'name' => $name,
             'email' => $email,
             'password' => $password,
@@ -82,7 +82,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
 
     /**
      *
-     * update an organisation operations user - all fields filled
+     * update an  operations user - all fields filled
      *
      * @test
      */
@@ -96,7 +96,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $password = 'mstgpwd2';
 
         // Act
-        $this->actingAs($fuser)->json('put', '/organisation/user/' . $user->_id,
+        $this->actingAs($fuser)->json('put', '/user/' . $user->_id,
             [
                 'name' => $name,
                 'email' => $email,
@@ -142,7 +142,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $org = $this->orgSet[0];
 
         // Act
-        $this->actingAs($fuser)->json('delete', '/organisation/user/' . $user->_id, []);
+        $this->actingAs($fuser)->json('delete', '/user/' . $user->_id, []);
 
         // Assert some more
         $this->assertResponseOk();
@@ -174,7 +174,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $user = $this->loginUserSet[0];
         
         // Act
-        $this->actingAs($login)->json('post','/organisation/'.$org['_id'].'/user',
+        $this->actingAs($login)->json('post','/user',
             [
                 'name' => '',
                 'email' => $user['email'],
@@ -206,7 +206,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $org = $this->orgSet[0];
 
         // Act
-        $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
+        $this->actingAs($login)->json('put','/user/'.$user->_id,
             [
                 'name' => str_repeat('x',256),
                 'email' => $xUser['email'],
@@ -239,7 +239,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $org = $this->orgSet[0];
 
         // Act
-        $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
+        $this->actingAs($login)->json('put','/user/'.$user->_id,
             [
                 'name' => $xUser['name'],
                 'email' => '',
@@ -272,7 +272,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $org = $this->orgSet[0];
 
         // Act
-        $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
+        $this->actingAs($login)->json('put','/user/'.$user->_id,
             [
                 'name' => $xUser['name'],
                 'email' => 'something that\'s not an email address',
@@ -306,7 +306,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $org = $this->orgSet[0];
 
         // Act
-        $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
+        $this->actingAs($login)->json('put','/user/'.$user->_id,
             [
                 'name' => $xUser['name'],
                 'email' => $login->email,
@@ -339,7 +339,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $org = $this->orgSet[0];
 
         // Act
-        $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
+        $this->actingAs($login)->json('put','/user/'.$user->_id,
             [
                 'name' => $xUser['name'],
                 'email' => $user->email
@@ -352,7 +352,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
     }
     /**
      *
-     * Validate password required
+     * Validate password required for post
      * - supplied blank
      *
      * @test
@@ -367,7 +367,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $org = $this->orgSet[0];
 
         // Act
-        $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
+        $this->actingAs($login)->json('post','/user',
             [
                 'name' => $xUser['name'],
                 'email' => $xUser['email'],
@@ -377,13 +377,41 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
 
         // Assert
         $this->seeStatusCode(422);
-        $data = json_decode($this->response->getContent(), true);
         $this->seeJson(
             [
                 'password' => ['The password field is required.']
             ]
         );
     }
+
+    /**
+     * allow blank password (and confirmation) for put
+     *
+     * @test
+     */
+    public function allow_Blank_Password_and_confirm_For_Update()
+    {
+        //Arrange
+        $login = $this->firstUser();
+        $this->twilioUser();
+        $user = $this->user();
+        $xUser = $this->loginUserSet[0];
+        $org = $this->orgSet[0];
+
+        // Act
+        $this->actingAs($login)->json('put','/user/'.$user->_id,
+            [
+                'name' => $xUser['name'],
+                'email' => $xUser['email'],
+                'password' => '',
+                'password_confirmation' => ''
+            ]);
+
+        // Assert
+        $this->assertResponseOk();
+
+    }
+
     /**
      *
      * Validate password longer than 6
@@ -400,7 +428,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $org = $this->orgSet[0];
 
         // Act
-        $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
+        $this->actingAs($login)->json('put','/user/'.$user->_id,
             [
                 'name' => $xUser['name'],
                 'email' => $xUser['email'],
@@ -433,7 +461,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $org = $this->orgSet[0];
 
         // Act
-        $this->actingAs($login)->json('put','/organisation/user/'.$user->_id,
+        $this->actingAs($login)->json('put','/user/'.$user->_id,
             [
                 'name' => $xUser['name'],
                 'email' => $xUser['email'],
@@ -465,7 +493,7 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
         $org = $this->orgSet[0];
 
         // Act
-        $this->actingAs($login)->json('get','/organisation/user/'.$user->_id);
+        $this->actingAs($login)->json('get','/user/'.$user->_id);
         // Assert
         $this->assertResponseOk();
         $data = json_decode($this->response->getContent(), true);

@@ -1,0 +1,26 @@
+
+#row {
+    margin: 4px;
+    white-space: nowrap;
+}
+
+#child3 {
+    white-space: nowrap;
+}
+
+span {
+    display: inline-block;
+    padding: 0 2px 0 0;
+}
+
+.line_fluid_column {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.overflow_container {
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0 2px 0 2px;
+}
+

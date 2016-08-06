@@ -1,0 +1,53 @@
+<a id="btn-add-driver" name="btn-add-driver" href="#">
+    Add Driver
+</a>
+<button id="btn-messageDriver"
+        class="btn btn-xs btn-detail open-modal-message message-button"
+        value="" disabled="disabled">message</button>
+<button id="btn-delete-driver"
+        class="btn btn-danger btn-xs delete-button delete-driver pull-right"
+        value="" disabled="disabled">Delete</button>
+<button id="btn-edit-driver"
+        class="btn btn-warning btn-xs edit-button pull-right open-modal-driver"
+        value="" disabled="disabled">Edit</button>
+
+<div class="row">
+    <div class="list-panel scroll-panel">
+        <ul id="driver_list" class="driver-list container">
+            <li id="driver" class="row list_panel_line driver_line" style="{{$styleAttr}}"
+                data="">
+                <span class="name"></span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div id="messageDriverModal" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="close">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="hide">close</span>
+                </button>
+                <h4 class="modal-title" id="messageDriverModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+                <form id="messageDriverForm" name="messageDriverForm" class="form-horizontal" novalidate="">
+                    <div class="form-group error">
+                        <div class="col-sm-12">
+                            <textarea class="form-control" id="message_text"
+                                      name="message_text" placeholder="message" value=""></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-save-messageDriver" value="add">
+                    Add Driver
+                </button>
+                <input type="hidden" id="messageDriver_id">
+            </div>
+        </div>
+    </div>
+</div>

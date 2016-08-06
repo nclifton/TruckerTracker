@@ -82,11 +82,11 @@
 <script>
 
     $(document).ready(function () {
-        setClickableTooltip(
+        Common.setClickableTooltip(
                 '[data-clipboard-target="#twilio_inbound_message_request_url"]',
                 'Copy and paste into your <a href="https://www.twilio.com/console/sms/services" ' +
                 'target="_blank">Twilio Messaging Service</a> Inbound Settings Request URL');
-        setClickableTooltip(
+        Common.setClickableTooltip(
                 '[data-clipboard-target="#twilio_outbound_message_status_callback_url"]',
                 'Copy and paste into your <a href="https://www.twilio.com/console/sms/services" ' +
                 'target="_blank">Twilio Messaging Service</a> Outbound Settings Status Callback URL'

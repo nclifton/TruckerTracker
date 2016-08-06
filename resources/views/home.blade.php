@@ -32,16 +32,26 @@
         </div>
     </div>
     <meta name="_token" content="{!! csrf_token() !!}"/>
-    <script>
-        @if($org)
-            subscribe_sse = true;
-            organisation_id = '{{$org->_id}}';
-            time_format_hour12 = '{{$org->hour12}}';
-            default_locale_code = 'en-AU';
-        @else
-            subscribe_sse = false;
-        @endif
-    </script>
     <script src="{{ elixir('js/home.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            @if($org)
+                    Common.settings.subscribe_sse = true;
+            Common.settings.orgId = '{{$org->_id}}';
+            Common.settings.time_format_hour12 = '{{$org->hour12}}';
+            Common.settings.default_locale_code = 'en-AU';
+            @else
+                    Common.settings.subscribe_sse = false;
+            @endif
+            Common.init();
+            OrganisationDialogue.init();
+            UserDialogue.init();
+            DriverDialogue.init();
+            VehicleDialogue.init();
+            MessageDialogue.init();
+            LocationDialogue.init();
+        });
+
+    </script>
 
 @endsection

@@ -62,7 +62,10 @@ elixir(function (mix) {
             'public/css/jquery.jscrollpane.css')
         .copy(
             'node_modules/relative-date/lib/relative-date.js',
-            'public/js/relative-date.js');
+            'public/js/relative-date.js')
+        .copy(
+            'resources/assets/js/jquery.extensions.js',
+            'public/js/jquery.extensions.js');
 
 
 

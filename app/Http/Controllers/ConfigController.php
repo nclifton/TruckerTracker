@@ -78,12 +78,14 @@ class ConfigController extends Controller
      *
      * create and add a new organisation user
      *
-     * @param Organisation $org
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @internal param Organisation $org
      */
-    public function addOrganisationUser(Organisation $org, Request $request)
+    public function addUser(Request $request)
     {
+        $org = User::find(Auth::user()->_id)->organisation;
+
         if (Gate::denies('edit-users', $org)) {
             abort(403);
         }
@@ -133,12 +135,12 @@ class ConfigController extends Controller
 
 
     /**
-     * @param Organisation $org
      * @param User $user
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @internal param Organisation $org
      */
-    public function updateOrganisationUser(User $user, Request $request)
+    public function updateUser(User $user, Request $request)
     {
         if (Gate::denies('edit-users',$user->organisation)) {
             abort(403);
@@ -158,12 +160,11 @@ class ConfigController extends Controller
     }
 
     /**
-     * @param Organisation $org
      * @param User $user
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
+     * @internal param Organisation $org
      */
-    public function deleteOrganisationUser(User $user)
+    public function deleteUser(User $user)
     {
         if (Gate::denies('edit-users', $user->organisation)) {
             abort(403);
@@ -173,11 +174,11 @@ class ConfigController extends Controller
     }
 
     /**
-     * @param Organisation $org
      * @param User $user
      * @return \Illuminate\Http\JsonResponse
+     * @internal param Organisation $org
      */
-    public function getOrganisationUser(User $user)
+    public function getUser(User $user)
     {
         if (Gate::denies('view-organisation', $user->organisation)) {
             abort(403);
@@ -321,7 +322,7 @@ class ConfigController extends Controller
         $this->validate($request,[
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users,email,'.$user->_id.',_id',
-            'password' => 'sometimes|required|min:6|confirmed',
+            'password' => 'sometimes|min:6|confirmed',
         ]);
     }
 

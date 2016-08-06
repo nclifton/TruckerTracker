@@ -1,156 +1,90 @@
-
 /**
  * Created by nclifton on 16/06/2016.
  */
-$(document).ready(function ($) {
 
-    var url_prefix = "/organisation/";
+var UserDialogue = {
+    settings: {
+        url: '/user',
+        lineSelector: '.user_line.selected',
+        classPrefix: 'user',
+        multiSelect: false,
+        selectors: {
+            modal: '#userModal',
+            form: '#userForm',
+            addButton: '#btn-add-user',
+            editButton: '#btn-edit-user',
+            submitButton: '#btn-save-user',
+            dataIdHolder: '#user_id',
+            deleteButton: '#btn-delete-user',
+            lineTemplate: '#user',
+            modalLabel: '#userModalLabel',
+            name: '#user_name',
+            email: '#email',
+            currentPassword: '#current_password',
+        },
 
-    setup_select('user',true);
+        lang: {
+            modalLabelTextRegister: 'Register Organisation User',
+            saveButtonTextRegister: 'Register',
+            modalLabelTextEdit: 'Edit Organisation User',
+            saveButtonTextEdit: 'Save',
+            saveButtonLabel: 'Save Changes'
 
-    // attach an open form action to the button / link used to register a new secondary user that will be linked to the organisation
-    // make sure that the org modal is hidden first
-    function switchModals(e) {
-        e.preventDefault();
-        $('#orgModal').on('hidden.bs.modal', function () {
-            $('#userModal').modal('show');
-        });
-        $('#userModal').on('hidden.bs.modal', function () {
-            $('#orgModal').modal('show');
-            $('#orgModal').off('hidden.bs.modal');
-        });
-        $("#btn-save-org").click();
-    }
-
-    function setup_reset_user_form(){
-        $('#userForm').on("reset",function(){
-            var $form = $('#userForm');
-            $form.find('.help-block').remove();
-            $form.find('.form-group').removeClass('has-error');
-        });
-    }
-    setup_reset_user_form();
-
-    $('#btn-add-user').click(function (e) {
-        $('#userModalLabel').text('Register Organisation User');
-        $('#btn-save-user').text('Register');
-        $('#userForm').trigger('reset');
-        switchModals(e);
-    });
-
-    //display modal form for user editing
-    function setup_edit_user() {
-        $('.open-modal-user').click(function (e) {
-            e.preventDefault();
-            var $user = $('.user_line.selected').first();
-            if ($user.length) {
-                var user_id = $user.attr('data');
-                var org_id = $('#org_id').val();
-                $.get(url_prefix + 'user/' + user_id, function (data) {
-                    //success data
-                    console.log(data);
-                    $('#user_id').val(data._id);
-                    $('#user_name').val(data.name);
-                    $('#email').val(data.email);
-                    $('#btn-save-user').val("update");
-                    $('#current_password').show();
-                    $('#userModalLabel').text('Edit Organisation User');
-                    $('#btn-save-user').text('Save');
-                    switchModals(e);
-                }).fail(function(data){
-                    handleAjaxError(data);
-                });
-            }
-        });
-    }
-    setup_edit_user();
-
-    //delete driver and remove it from list
-    function setup_delete_user() {
-        $('.delete-user').click(function (e) {
-            e.preventDefault();
-            var $user = $('.user_line.selected').first();
-            if ($user.length) {
-                var user_id = $user.attr('data');
-                var org_id = $('#org_id').val();
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    type: "DELETE",
-                    url: url_prefix + 'user/' + user_id,
-                    success: function (data) {
-                        console.log(data);
-                        $("#user" + user_id).remove();
-                    },
-                    error: function (data) {
-                        handleAjaxError(data);
-                    }
-                });
-            }
-        });
-    }
-    setup_delete_user();
-
-    $("#btn-save-user").click(function (e) {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-            }
-        });
-        e.preventDefault();
-        var formData = $('#userForm').serializeFormJSON();
-        //used to determine the http verb to use [add=POST], [update=PUT]
-        var state = $('#btn-save-user').val();
-        var type = "POST"; //for creating new resource
-        var org_id = $('#org_id').val();
-        var user_id = $('#user_id').val();
-        var this_url = url_prefix + org_id + '/user';
-        if (state == "update") {
-            type = "PUT"; //for updating existing resource
-            this_url = url_prefix + 'user/' + user_id;
-            // blank password and confirm means unchanged password when updating user
-            if (formData.password == '' && formData.password_confirmation == ''){
-                delete formData.password;
-                delete formData.password_confirmation;
-            }
         }
-        console.log(formData);
-        $.ajax({
-            type: type,
-            url: this_url,
-            data: formData,
-            dataType: 'json',
-            success: function (data) {
-                console.log(data);
-                if (state == "add") { //if user added a new record
-                    $('#btn-save-user').text("Save Changes");
-                    $('#user')
-                        .clone(false)
-                        .appendTo('#user_list')
-                        .attr("id", "user" + data._id)
-                        .attr('data', data._id)
-                        .show();
-                }
-                $("#user" + data._id + ' span.name_email').text(data.name + ' ' + data.email);
-                $('#userForm').trigger("reset");
-                $('#userModal').modal('hide');
-                setup_select('user',true);
-                adjust_fluid_columns();
-            },
-            error: function (data) {
-                handleAjaxError(data);
-                if (data.status == 422) {
-                    $('#userForm span.help-block').remove();
-                    $.each(data.responseJSON, function (index, value) {
-                        var input = $('#userForm').find('[name="' + index + '"]');
-                        input.after('<span class="help-block"><strong>' + value + '</strong></span>');
-                        input.closest('div.form-group').addClass('has-error');
-                    });
-                }
-            }
+
+    },
+
+    init: function () {
+        this.settings = Common.findElements(this.settings);
+        this.onUIActions(this.settings);
+        return this;
+    },
+
+    switchModals: function (settings) {
+        OrganisationDialogue.settings.modal.on('hidden.bs.modal', function () {
+            settings.modal.modal('show');
         });
-    });
-});
+        settings.modal.off('hidden.bs.modal');
+        settings.modal.on('hidden.bs.modal', function () {
+            OrganisationDialogue.settings.modal.modal('show');
+            OrganisationDialogue.settings.modal.off('hidden.bs.modal');
+        });
+        OrganisationDialogue.settings.submitButton.click();
+    },
+
+    setLineText: function (settings, data) {
+        $(settings.lineTemplate.selector + data._id + ' span.name_email')
+            .text(data.name + ' ' + data.email);
+        settings.modalLabel.text(settings.lang.modalLabelTextEdit);
+
+    },
+
+    onUIActions: function (settings) {
+
+        settings.form.on("reset", function (e) {
+            Common.resetErrorDisplay(e.target);
+        });
+
+        settings.addButton.click(function (e) {
+            e.preventDefault();
+            Common.prepForAdd(settings, UserDialogue.switchModals);
+        });
+
+        settings.editButton.click(function (e) {
+            e.preventDefault();
+            Common.prepForEdit(settings, UserDialogue.switchModals);
+        });
+
+        settings.deleteButton.click(function (e) {
+            e.preventDefault();
+            Common.deleteSelection(settings);
+        });
+
+        settings.submitButton.click(function (e) {
+            e.preventDefault();
+            Common.ajaxSaveForm(UserDialogue.setLineText, settings);
+        });
+
+        Common.setupSelect(settings.classPrefix, settings.multiSelect);
+    }
+};
