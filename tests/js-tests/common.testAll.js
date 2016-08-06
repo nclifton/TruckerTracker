@@ -357,8 +357,8 @@ describe("common functions for all ", function () {
     describe('prependListLine', function () {
         var settings;
         var data;
-        it('should clone the template line and add it to the list at the start/top of the list', function () {
-            fixtures.set('<ul id="thing_list"><li id="thing" style="display:none;"></li></ul>');
+        it('should clone the template line and add it to the list immediately after the template', function () {
+            fixtures.set('<ul id="thing_list"><li id="thing" style="display:none;"></li><li id="thing0987654321" style="">existing visible line</li></ul>');
             settings = {
                 lineTemplate: $('#thing'),
                 list: $('#thing_list'),
@@ -377,7 +377,7 @@ describe("common functions for all ", function () {
 
             var line = $(settings.lineTemplate.selector + data._id);
             expect(line).toExist();
-            expect(settings.list.children().first().attr('id')).toEqual(line.attr('id'));
+            expect($(settings.list.children()[1]).attr('id')).toEqual(line.attr('id'));
             expect(line).toHaveAttr('data', data._id);
             expect(thing.setLineText).toHaveBeenCalled();
             expect(thing.setLineText.calls.mostRecent().args[0]).toEqual(line);
@@ -388,6 +388,8 @@ describe("common functions for all ", function () {
             expect(Common.adjustFluidColumns).toHaveBeenCalled();
 
         });
+
+        //TODO test scroll into view
 
     });
 

@@ -188,12 +188,12 @@ var Common = {
     prependListLine: function (data, settings, setLineText) {
         console.log(data);
 
-        var line = settings.lineTemplate
+        settings.lineTemplate
             .clone(false)
-            .prependTo(settings.list)
+            .insertAfter(settings.lineTemplate)
             .attr("id", settings.lineTemplate.selector.substr(1) + data._id)
             .attr("data", data._id);
-        line = $(settings.lineTemplate.selector + data._id);
+        var line = $(settings.lineTemplate.selector + data._id);
         setLineText(line, data);
         line.show();
         line[0].scrollIntoView();
