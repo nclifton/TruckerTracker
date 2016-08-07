@@ -58,6 +58,7 @@ class Location extends Moloquent
         'updated_at',
         'sid'
     ];
+    protected $primaryKey = '_id';
 
     public function vehicle(){
         return $this->belongsTo(Vehicle::class,'vehicle_id','_id');

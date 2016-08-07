@@ -286,6 +286,7 @@ describe('VehicleDialogue',function () {
                 tracker_imei_number: '123456789012345'
             };
             spyOn($.fn,'modal');
+            spyOnEvent(settings.form,'reset');
 
             Common.handleGetSuccess(data, settings,VehicleDialogue.showModal);
 
@@ -294,6 +295,7 @@ describe('VehicleDialogue',function () {
             expect(settings.form.find('[name="mobile_phone_number"]')).toHaveValue('+61298204732');
             expect(settings.form.find('[name="tracker_imei_number"]')).toHaveValue('123456789012345');
             expect(settings.submitButton).toHaveValue('update');
+            expect('reset').toHaveBeenTriggeredOn(settings.form.selector);
 
             expect($.fn.modal).toHaveBeenCalledWith('show');
             expect($.fn.modal.calls.all()[0].object.selector).toEqual('#vehicleModal');

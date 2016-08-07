@@ -47,6 +47,7 @@ class User extends Moloquent implements
     protected $hidden = [
         'password', 'remember_token','created_at','updated_at'
     ];
+    protected $primaryKey = '_id';
 
     public function organisation(){
         return $this->belongsTo(Organisation::class,'organisation_id','_id');

@@ -18,6 +18,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
 
     /**
      * @var array
+     * @return array
      */
     protected function getFixture()
     {
@@ -68,18 +69,20 @@ class ConfigVehiclesTest extends IntegratedTestCase
      *
      * @test
      */
-    public function add_and_delete_vehicle()
+    public function add_edit_and_delete_vehicle()
     {
         // Arrange
-        $vehicle = $this->vehicleSet[0];
+        $vehicle0 = $this->vehicleSet[0];
+        $vehicle1 = $this->vehicleSet[1];
+
 
         // Act
-        $this->login()->addVehicle($vehicle);
+        $this->login()->addVehicle($vehicle0);
 
         // Assert
         $cursor = $this->getMongoConnection()
             ->collection('vehicles')
-            ->find($this->bind_vehicle($vehicle));
+            ->find($this->bind_vehicle($vehicle0));
         $id = null;
         $cnt = 0;
         foreach ($cursor as $doc){
@@ -100,7 +103,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
             ->assertThat($this
                 ->byCssSelector('#vehicle'.$id.' .registration_number')
                 ->text(),$this
-                ->equalTo($vehicle['registration_number']));
+                ->equalTo($vehicle0['registration_number']));
 
 
         // check added vehicle line selectable
@@ -119,14 +122,18 @@ class ConfigVehiclesTest extends IntegratedTestCase
         $this->wait();
         $this->assertThat($this->byId('vehicleModal')->displayed(), $this->isTrue());
         $this->assertThat($this->byId('vehicle_id')->attribute('value'),$this->equalTo(''.$id));
-        $this->wait();
-        $this->byCssSelector('#vehicleModal button.close')->click();
+
+        $this->clearType($vehicle1['registration_number'], '#registration_number');
+        $this->clearType($vehicle1['mobile_phone_number'], '#vehicle_mobile_phone_number');
+        $this->clearType($vehicle1['tracker_imei_number'], '#tracker_imei_number');
+        $this->clickOnElement('btn-save-vehicle');
+
         $this->wait();
         $this->byId('btn-delete-vehicle')->click();
         $this->wait();
         $cursor = $this->getMongoConnection()
             ->collection('vehicles')
-            ->find($this->bind_vehicle($vehicle));
+            ->find($this->bind_vehicle($vehicle0));
         $this->assertCount(0,$cursor);
         $this->notSeeId('#vehicle'.$id,'vehicle line not deleted');
 

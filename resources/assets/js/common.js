@@ -69,6 +69,7 @@ var Common = {
 
     handleGetSuccess: function (data, settings, showModal) {
         console.log(data);
+        settings.form.trigger('reset');
         Common.fillForm(data, settings);
         settings.submitButton.val("update");
         showModal(settings);
@@ -121,7 +122,7 @@ var Common = {
     },
 
     handleFormError: function (data, settings) {
-        Common.resetErrorDisplay(settings);
+        Common.resetErrorDisplay(settings.form.selector);
         $.each(data.responseJSON, function (index, value) {
             settings.form.find('[name="' + index + '"]').each(function (i, input) {
                 $(input)

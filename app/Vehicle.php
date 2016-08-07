@@ -26,6 +26,7 @@ class Vehicle extends Moloquent
             'changed_at',
             'tracker_password'
     ];
+    protected $primaryKey = '_id';
 
     public function organisation(){
         return $this->belongsTo(Organisation::class,'organisation_id','_id');

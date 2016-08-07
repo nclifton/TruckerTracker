@@ -285,7 +285,7 @@ class ConfigController extends Controller
             abort(403);
         }
         $user = Auth::user();
-        $this->validateVehicle($request, $user);
+        $this->validateVehicle($request, $user, $vehicle->_id);
         $vehicle->update($request->all());
         return Response::json($vehicle);
     }
@@ -416,7 +416,7 @@ class ConfigController extends Controller
      * @param Request $request
      * @param $user
      */
-    private function validateVehicle(Request $request, $user)
+    private function validateVehicle(Request $request, $user, $cid = 'NULL')
     {
         $org_id = $user->organisation_id;
         $this->validate($request,
@@ -425,18 +425,18 @@ class ConfigController extends Controller
                     [
                         'required',
                         'regex:/^(?=.*\d)(?=.*[A-Z])[A-Z\d]{6,7}$/',
-                        'unique:vehicles,registration_number,NULL,_id,organisation_id,' . $org_id
+                        'unique:vehicles,registration_number,'.$cid.',_id,organisation_id,' . $org_id
                     ],
                 'mobile_phone_number' =>
                     [
                         'required',
                         'ausphone',
-                        'unique:vehicles,mobile_phone_number,NULL,_id,organisation_id,' . $org_id
+                        'unique:vehicles,mobile_phone_number,'.$cid.',_id,organisation_id,' . $org_id
                     ],
                 'tracker_imei_number' =>
                     [
                         'imei',
-                        'unique:vehicles,tracker_imei_number,NULL,_id,organisation_id,' . $org_id
+                        'unique:vehicles,tracker_imei_number,'.$cid.',_id,organisation_id,' . $org_id
                     ],
                 'tracker_password' =>
                 [

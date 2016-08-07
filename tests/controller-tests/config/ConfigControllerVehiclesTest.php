@@ -57,7 +57,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         $this->assertResponseOk();
         $this->seeJson($submittedVehicle);
         $this->seeJsonStructure(['_id','registration_number','mobile_phone_number','tracker_imei_number']);
-        $this->seeInDatabase('vehicles', $this->bind_vehicle_Org_id($v));
+        $this->seeInDatabase('vehicles', $this->bind_vehicle_org_id($v));
 
         return $user;
     }
@@ -119,7 +119,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         $this->assertResponseOk();
         $this->seeJson($submitedVehicle);
         $this->seeJsonStructure(['_id','registration_number','mobile_phone_number','tracker_imei_number']);
-        $this->seeInDatabase('vehicles',$this->bind_vehicle_Org_id($v2));
+        $this->seeInDatabase('vehicles',$this->bind_vehicle_org_id($v2));
     }
 
     /**
@@ -661,7 +661,7 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
      * @param $v
      * @return array
      */
-    protected function bind_vehicle_Org_id($v)
+    protected function bind_vehicle_org_id($v)
     {
         return array_merge ($this->bind_vehicle($v),['organisation_id' => $this->orgSet[0]['_id']]);
     }

@@ -47,6 +47,7 @@ class Organisation extends Moloquent
         'first_user',
         'twilio_user'
     ];
+    protected $primaryKey = '_id';
 
     public function firstUser()
     {

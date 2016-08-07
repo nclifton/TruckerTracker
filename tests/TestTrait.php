@@ -145,35 +145,35 @@ Trait TestTrait
 
     protected $fixtureUserSet = [
         [
-            '_id' => '100',
+            '_id' => 'a100',
             'name' => 'FirstUser',
             'email' => 'test1@cliftonwebfoundry.com.au',
             'password' => '$2y$10$NkvhsSZvHX57Bm993h0ddeXdCrHwQ/X4idWV.pojZU9j3hDMmx2RG',
-            'organisation_id' => '10001'
+            'organisation_id' => 'a10001'
         ],
         [
-            '_id' => '101',
+            '_id' => 'a101',
             'name' => 'twilioUser',
             'username' => 'twiliouser',
             'email' => 'test2@cliftonwebfoundry.com.au',
             'password' => '$2y$10$NkvhsSZvHX57Bm993h0ddeXdCrHwQ/X4idWV.pojZU9j3hDMmx2RG',
-            'organisation_id' => '10001'
+            'organisation_id' => 'a10001'
         ],
         [
-            '_id' => '102',
+            '_id' => 'a102',
             'name' => 'OpsUser',
             'email' => 'test3@cliftonwebfoundry.com.au',
             'password' => '$2y$10$NkvhsSZvHX57Bm993h0ddeXdCrHwQ/X4idWV.pojZU9j3hDMmx2RG',
-            'organisation_id' => '10001'
+            'organisation_id' => 'a10001'
         ]
 
     ];
 
     protected $orgSet = [
         [
-            '_id' => '10001',
-            'first_user_id' => '100',
-            'twilio_user_id' => '101',
+            '_id' => 'a10001',
+            'first_user_id' => 'a100',
+            'twilio_user_id' => 'a101',
             'name' => 'McSweeney Transport Group',
             'timezone' => 'Australia/Sydney',
             'hour12' => false,
@@ -183,7 +183,7 @@ Trait TestTrait
             'twilio_user_password' => 'mstgpwd1',
             'auto_reply' => true
         ], [
-            '_id' => '10002',
+            '_id' => 'a10002',
             'name' => 'Some Other Organisation',
             'timezone' => 'Australia/Sydney',
             'hour12' => true,
@@ -197,49 +197,49 @@ Trait TestTrait
 
     protected $driverSet = [
         [
-            '_id' => '110001',
+            '_id' => 'ff110001',
             'first_name' => 'Driver',
             'last_name' => 'One',
             'mobile_phone_number' => '+61419140683',
             'drivers_licence_number' => '9841YG',
-            'organisation_id' => '10001',
+            'organisation_id' => 'a10001',
 
         ],
         [
-            '_id' => '110002',
+            '_id' => 'ff110002',
             'first_name' => 'Driver',
             'last_name' => 'Two',
             'mobile_phone_number' => '0298204732',
             'drivers_licence_number' => '9401HG',
-            'organisation_id' => '10001',
+            'organisation_id' => 'a10001',
 
         ]
     ];
 
     protected $vehicleSet = [
         [
-            '_id' => '120001',
+            '_id' => 'ee120001',
             'registration_number' => 'DD6664',
             'mobile_phone_number' => '+61417673377',
             'tracker_imei_number' => '355054/06/051610/4',
             'tracker_password' => '666666',
-            'organisation_id' => '10001'
+            'organisation_id' => 'a10001'
         ],
         [
-            '_id' => '120002',
+            '_id' => 'ee120002',
             'registration_number' => 'SOY067',
             'mobile_phone_number' => '0298204732',
             'tracker_imei_number' => '1234567890123456',
             'tracker_password' => '666666',
-            'organisation_id' => '10001'
+            'organisation_id' => 'a10001'
         ]
     ];
 
     protected $messageSet = [
         [
-            '_id' => '200001',
-            'organisation_id' => '10001',
-            'driver_id' => '110001',
+            '_id' => 'dd200001',
+            'organisation_id' => 'a10001',
+            'driver_id' => 'ff110001',
             'message_text' => 'hello',
             'queued_at' => '2016-06-09T20:45:10+10:00',
             'sent_at' => '2016-06-09T20:46:10+10:00',
@@ -250,17 +250,17 @@ Trait TestTrait
 
     protected $locationSet = [
         [
-            '_id' => '300001',
-            'organisation_id' => '10001',
-            'vehicle_id' => '120001',
+            '_id' => 'cc300001',
+            'organisation_id' => 'a10001',
+            'vehicle_id' => 'ff120001',
             'queued_at' => '2016-06-09T20:55:10+10:00',
             'sent_at' => '2016-06-09T20:56:10+10:00',
             'status' => 'sent',
             'sid' => '2222222'
         ], [
-            '_id' => '300002',
-            'organisation_id' => '10001',
-            'vehicle_id' => '120001',
+            '_id' => 'cc300002',
+            'organisation_id' => 'a10001',
+            'vehicle_id' => 'ff120001',
             'queued_at' => '2016-06-09T20:55:10+10:00',
             'sent_at' => '2016-06-09T20:56:10+10:00',
             'delivered_at' => '2016-06-09T21:01:10+10:00',
@@ -272,8 +272,8 @@ Trait TestTrait
     protected $viewLocationSetJson = '[
 	{
 		"_id": "577378400d82750b6e1ff331",
-		"organisation_id": "10001",
-		"vehicle_id": "120001",
+		"organisation_id": "a10001",
+		"vehicle_id": "ff120001",
 		"queued_at": "2016-06-29T17:26:57+10:00",
 		"status": "received",
 		"sid": "SM12e90c98cd4f42a494950d28220ae13d",
@@ -289,8 +289,8 @@ Trait TestTrait
 	},
 	{
 		"_id": "5773a58e0d82750c8d2dafa1",
-		"organisation_id": "10001",
-		"vehicle_id": "120001",
+		"organisation_id": "a10001",
+		"vehicle_id": "ff120001",
 		"queued_at": "2016-06-29T20:40:15+10:00",
 		"status": "received",
 		"sid": "SM524040f723af41618cc7b51859949ce4",
@@ -306,8 +306,8 @@ Trait TestTrait
 	},
 	{
 		"_id": "57772ed60d827504676df431",
-		"organisation_id": "10001",
-		"vehicle_id": "120001",
+		"organisation_id": "a10001",
+		"vehicle_id": "ff120001",
 		"queued_at": "2016-07-02T13:02:47+10:00",
 		"status": "received",
 		"sid": "SMca3c9a10f6174bc98b7e6e19e85ca958",
@@ -323,8 +323,8 @@ Trait TestTrait
 	},
 	{
 		"_id": "57772edb0d8275046657d4e1",
-		"organisation_id": "10001",
-		"vehicle_id": "120002",
+		"organisation_id": "a10001",
+		"vehicle_id": "ff120002",
 		"queued_at": "2016-07-02T13:02:52+10:00",
 		"status": "received",
 		"sid": "SM2f3fc762f4514b3d947642c664912f89",
@@ -340,8 +340,8 @@ Trait TestTrait
 	},
 	{
 		"_id": "5779121d0d8275046657d4e2",
-		"organisation_id": "10001",
-		"vehicle_id": "120001",
+		"organisation_id": "a10001",
+		"vehicle_id": "ff120001",
 		"queued_at": "2016-07-03T23:24:46+10:00",
 		"status": "received",
 		"sid": "SMd873136b738647baa47ce88b0dd68536",
@@ -357,8 +357,8 @@ Trait TestTrait
 	},
 	{
 		"_id": "577a0d7a0d8275046657d4e4",
-		"organisation_id": "10001",
-		"vehicle_id": "120001",
+		"organisation_id": "a10001",
+		"vehicle_id": "ff120001",
 		"queued_at": "2016-07-04T17:17:16+10:00",
 		"status": "received",
 		"sid": "SMda71ee93ee034c43b95b956fd469822f",
@@ -374,8 +374,8 @@ Trait TestTrait
 	},
 	{
 		"_id": "577a17390d8275046657d4e5",
-		"organisation_id": "10001",
-		"vehicle_id": "120001",
+		"organisation_id": "a10001",
+		"vehicle_id": "ff120001",
 		"queued_at": "2016-07-04T17:58:50+10:00",
 		"status": "received",
 		"sid": "SMf85318ba2db7436db38036e1d4ac26b3",

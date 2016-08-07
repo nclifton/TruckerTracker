@@ -49,6 +49,7 @@ class Message extends Moloquent
         'updated_at',
         'sid'
     ];
+    protected $primaryKey = '_id';
 
     protected $dates = ['queued_at','sent_at','delivered_at','received_at'];
 

@@ -52,10 +52,12 @@ class ConfigDriversTest extends IntegratedTestCase
      *
      * @test
      */
-    public function adds_driver()
+    public function adds_edits_and_deletes_driver()
     {
         // Arrange
         $driver = $this->driverSet[0];
+        $driver2 = $this->driverSet[1];
+
 
         // Act
         $this->login()->addDriver($driver);
@@ -98,7 +100,14 @@ class ConfigDriversTest extends IntegratedTestCase
         $this->byId('btn-edit-driver')->click();
         $this->wait();
         $this->assertThat($this->byId('driverModal')->displayed(), $this->isTrue());
-        $this->byCssSelector('#driverModal button.close')->click();
+
+        $this->cleartype($driver2['first_name'], '#first_name');
+        $this->cleartype($driver2['last_name'], '#last_name');
+        $this->cleartype($driver2['mobile_phone_number'], '#driver_mobile_phone_number');
+        $this->cleartype($driver2['drivers_licence_number'], '#drivers_licence_number');
+        $this->clickOnElement('btn-save-driver');
+
+        //$this->byCssSelector('#driverModal button.close')->click();
         $this->wait();
         $this->byId('btn-delete-driver')->click();
         $this->wait();

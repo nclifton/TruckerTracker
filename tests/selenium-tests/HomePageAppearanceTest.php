@@ -10,13 +10,13 @@ class HomePageAppearanceTest extends IntegratedTestCase
     protected function getFixture()
     {
         return [
-            'users' => $this->fixtureUserSet,
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => $this->driverSet,
-            'vehicles' => $this->vehicleSet,
-            'messages' => $this->messageSet,
-            'locations' => $this->locationSet
+            'users'             => $this->fixtureUserSet,
+            'password_resets'   => [],
+            'organisations'     => $this->orgSet,
+            'drivers'           => $this->driverSet,
+            'vehicles'          => $this->vehicleSet,
+            'messages'          => $this->messageSet,
+            'locations'         => $this->locationSet
         ];
     }
 

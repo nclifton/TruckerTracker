@@ -85,7 +85,6 @@ var MessageDialogue ={
         settings.toHeader
             .empty()
             .text(data.first_name + ' ' + data.last_name);
-
         settings.messages.children(':visible').remove();
         $.each(data.messages, function () {
             MessageDialogue.addMessageToConversation(this);
