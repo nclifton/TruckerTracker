@@ -23,7 +23,7 @@ if ($location) {
     }
 }
 ?>
-<li id="location{{$id}}" class="row list_panel_line location_line" style="{{$styleAttr}}"
+<li id="location{{$id}}" class="row list_panel_line location_line cursor-pointer" style="{{$styleAttr}}"
     data="{{$id}}">
     <span class="line_fluid_column">
         <span class="registration_number">{!! $registration_number !!}</span>

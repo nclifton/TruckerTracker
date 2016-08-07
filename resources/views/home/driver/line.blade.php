@@ -1,4 +1,4 @@
-<li id="driver{{$driver?$driver->id:''}}" class="row list_panel_line driver_line" style="{{$styleAttr}}"
+<li id="driver{{$driver?$driver->id:''}}" class="row list_panel_line driver_line cursor-pointer" style="{{$styleAttr}}"
         data="{{$driver?$driver->id:''}}">
     <span class="line_fluid_column">
         <span class="overflow_container">

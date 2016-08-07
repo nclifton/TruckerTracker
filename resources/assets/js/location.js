@@ -10,7 +10,7 @@ var LocationDialogue = {
         classPrefix:    'location',
         url:            '/vehicle/location',
         lineSelector:   '.location_line.selected',
-
+        multiSelect:    true,
         selectors: {
             viewButton:                 '#btn-view-locations',
             deleteButton:               '#btn-delete-locations',
@@ -188,7 +188,7 @@ var LocationDialogue = {
 
     onUIActions: function(settings){
 
-        Common.setupSelect(settings.classPrefix,true);
+        Common.setupSelect(settings.classPrefix,settings.multiSelect);
 
         settings.viewButton.click(function (e) {
             e.preventDefault();

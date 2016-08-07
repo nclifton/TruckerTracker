@@ -32,7 +32,7 @@ if ($message){
     $message_text_title = ' title="'. $message->message_text.'"';
 }
 ?>
-<li id="message{{$id}}" class="row list_panel_line message_line" style="{{$styleAttr}}"{!! $message_text_title !!}
+<li id="message{{$id}}" class="row list_panel_line message_line cursor-pointer" style="{{$styleAttr}}"{!! $message_text_title !!}
     data="{{$id}}">
     <span class="line_fluid_column">
         <span class="name">

@@ -1,4 +1,4 @@
-<li id="vehicle{{$vehicle?$vehicle->id:''}}" class="row list_panel_line vehicle_line" style="{{$styleAttr}}"
+<li id="vehicle{{$vehicle?$vehicle->id:''}}" class="row list_panel_line vehicle_line cursor-pointer" style="{{$styleAttr}}"
         data="{{$vehicle?$vehicle->id:''}}">
     <span class="line_fluid_column">
         <span class="overflow_container">

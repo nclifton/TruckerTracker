@@ -316,13 +316,13 @@ var Common = {
         }
     },
 
-    setupSelect: function(arg1,multiselect){
+    setupSelect: function(arg1,multiSelect){
         var classPrefix = (typeof arg1 === 'object') ? arg1.classPrefix : arg1;
         var selectableSelector = '.' + classPrefix + '_line';
         var selectedSelector = selectableSelector + '.selected';
         $(selectableSelector).off('click').click(function () {
             var selected = $(this).hasClass('selected');
-            if(multiselect) {
+            if(multiSelect) {
                 $(this).toggleClass('selected');
             } else {
                 $(selectedSelector).removeClass('selected');

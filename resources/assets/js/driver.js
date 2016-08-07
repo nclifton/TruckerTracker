@@ -75,7 +75,7 @@ DriverDialogue = {
             Common.ajaxSaveForm(DriverDialogue.setLineText, settings);
         });
 
-        Common.setupSelect(settings.classPrefix, true);
+        Common.setupSelect(settings.classPrefix, settings.multiSelect);
     }
 
 };

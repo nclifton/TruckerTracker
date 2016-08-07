@@ -1,5 +1,5 @@
 <li id="user{{$user?$user->id:''}}"
-    class="row list_panel_line user_line"
+    class="row list_panel_line user_line cursor-pointer"
     data="{{$user?$user->id:''}}"
     style="{{$styleAttr}}">
     <span class="line_fluid_column">
