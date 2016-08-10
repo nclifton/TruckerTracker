@@ -1,5 +1,5 @@
 {
-  "baseUrl": "http://homestead.app",
+  "baseUrl": "http://local.truckertracker.services",
   "selenium":
         {
           "browser": "chrome"

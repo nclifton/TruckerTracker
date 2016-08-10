@@ -3,7 +3,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2016-07-14.
+    * Generated on 2016-08-09.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -124,6 +124,7 @@ namespace PHPSTORM_META {
             'blade.compiler' instanceof \Illuminate\View\Compilers\BladeCompiler,
             'html' instanceof \Collective\Html\HtmlBuilder,
             'form' instanceof \Collective\Html\FormBuilder,
+            'bootstrap_form' instanceof \Watson\BootstrapForm\BootstrapForm,
             'sse' instanceof \Sse\SSE,
         ],
         \Illuminate\Contracts\Container\Container::make('') => [
@@ -241,6 +242,7 @@ namespace PHPSTORM_META {
             'blade.compiler' instanceof \Illuminate\View\Compilers\BladeCompiler,
             'html' instanceof \Collective\Html\HtmlBuilder,
             'form' instanceof \Collective\Html\FormBuilder,
+            'bootstrap_form' instanceof \Watson\BootstrapForm\BootstrapForm,
             'sse' instanceof \Sse\SSE,
         ],
         \App::make('') => [
@@ -358,6 +360,7 @@ namespace PHPSTORM_META {
             'blade.compiler' instanceof \Illuminate\View\Compilers\BladeCompiler,
             'html' instanceof \Collective\Html\HtmlBuilder,
             'form' instanceof \Collective\Html\FormBuilder,
+            'bootstrap_form' instanceof \Watson\BootstrapForm\BootstrapForm,
             'sse' instanceof \Sse\SSE,
         ],
         app('') => [
@@ -475,6 +478,7 @@ namespace PHPSTORM_META {
             'blade.compiler' instanceof \Illuminate\View\Compilers\BladeCompiler,
             'html' instanceof \Collective\Html\HtmlBuilder,
             'form' instanceof \Collective\Html\FormBuilder,
+            'bootstrap_form' instanceof \Watson\BootstrapForm\BootstrapForm,
             'sse' instanceof \Sse\SSE,
         ],
     ];

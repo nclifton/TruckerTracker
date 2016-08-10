@@ -121,7 +121,7 @@
 #driver_conversation {
   padding: 0;
 
-  .message_to_panel, .message_from_panel, .conversation_panel {
+  .message_left_panel, .message_right_panel, .conversation_panel {
     display: block;
   }
   .conversation_panel {
@@ -145,20 +145,20 @@
     }
 
   }
-  .message_from_panel {
+  .message_right_panel {
     right: 16px;
   }
-  .message_from_panel, .delivered, .queued, .sent {
+  .message_right_panel, .delivered, .queued, .sent {
     background-color: lightblue;
   }
-  .message_to_panel, .received  {
+  .message_left_panel, .received  {
     background-color: palegoldenrod;
   }
-  .message_container, .message_to_panel, .message_from_panel {
+  .message_container, .message_left_panel, .message_right_panel {
     border-radius: 4px;
     margin: 5px;
   }
-  .message_to_panel, .message_from_panel {
+  .message_left_panel, .message_right_panel {
     width: 25px;
     position: fixed;
     height: 300px;
@@ -171,7 +171,7 @@
         transform: rotate(270deg);
         white-space: nowrap;
         transform-origin: left top;
-        top: 150px;
+        top: 280px;
       }
     }
   }
@@ -183,15 +183,18 @@
       padding: 5px 10px;
       position:relative
     }
-    .datetime{
+    .message_metadata{
       font-size: 0.8em;
       border-radius: 0.8em;
-      background-color: lightgrey;
+      background-color: whitesmoke;
       padding:0 0.8em;
+    }
+    .status, .driver_name, .datetime {
+      display:inline-block
     }
     .received{
       float: left;
-      .datetime{
+      .message_metadata{
         float: left;
       }
       &:before{
@@ -205,10 +208,10 @@
         border-width: 4px 8px;
         border-color: transparent palegoldenrod transparent transparent;
       }
-    }
+     }
     .delivered, .queued, .sent {
       float: right;
-      .datetime{
+      .message_metadata{
         float: right;
       }
       &:after {
@@ -222,6 +225,7 @@
         border-width: 4px 8px;
         border-color: transparent transparent transparent lightblue;
       }
+
     }
     .queued{
       background-color: white;

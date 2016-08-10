@@ -286,7 +286,7 @@ class ConfigDriversTest extends IntegratedTestCase
             $ids[] = $driver['_id'];
         }
 
-        // select first driver then select second driver, first driver should be de-selected
+        // select first driver then select second driver, first driver should still be selected
         $this->byCssSelector('a[href="#message_drivers_collapsible"]')->click();
         $this->wait();
         $this->byId('driver'.$ids[0])->click();
@@ -295,12 +295,12 @@ class ConfigDriversTest extends IntegratedTestCase
         $this->byId('driver'.$ids[1])->click();
         $this->wait();
         $this->byIdHasClass('driver'.$ids[1],'selected');
-        $this->byIdNotHasClass('driver'.$ids[0],'selected');
+        $this->byIdHasClass('driver'.$ids[0],'selected');
 
         // select the selected driver and should de-select
         $this->byId('driver'.$ids[1])->click();
         $this->byIdNotHasClass('driver'.$ids[1],'selected');
-        $this->byIdNotHasClass('driver'.$ids[0],'selected');
+        $this->byIdHasClass('driver'.$ids[0],'selected');
 
 
 

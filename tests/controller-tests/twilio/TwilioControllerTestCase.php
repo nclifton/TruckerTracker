@@ -32,7 +32,7 @@ class TwilioControllerTestCase extends TestCase
     {
         parent::setUp();
         $this->user = $this->user();
-        Config::set('url','http://homestead.app');
+        Config::set('url','http://local.truckertracker.services');
     }
 
     protected $twilio_cwf = [

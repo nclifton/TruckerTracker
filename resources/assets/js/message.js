@@ -23,15 +23,23 @@ var MessageDialogue ={
             selectors: {
                 container:          '#driver_conversation',
                 messages:           '#driver_conversation .messages_container',
-                toHeader:           '#driver_conversation .message_to_panel .header_text',
+                leftPanelHeader:    '#driver_conversation .message_left_panel .header_text',
+                rightPanelHeader:   '#driver_conversation .message_right_panel .header_text',
                 pane:               '#driver_conversation .conversation_panel',
-                fromPanel:          '#driver_conversation .message_from_panel',
+                rightPanel:         '#driver_conversation .message_right_panel',
                 lineTemplate:       '#conversation_message'
             },
             jScrollPaneSettings: {
-                maintainPosition: true,
-                stickToBottom: true,
-                horizontalGutter: 20
+                maintainPosition:   true,
+                stickToBottom:      true,
+                horizontalGutter:   20
+            },
+            lang:{
+                leftPanelHeaderText:    'Drivers',
+                queuedStatusText:      'Queued for',
+                sentStatusText:        'Sent to',
+                deliveredStatusText:   'Delivered to',
+                receivedStatusText:    'Received from'
             }
         },
     },
@@ -42,11 +50,11 @@ var MessageDialogue ={
         return this;
     },
 
-    prepForMessage: function (driverId){
+    prepForMessage: function (driverIds){
         var settings = MessageDialogue.settings;
         settings.form.trigger('reset');
         settings.submitButton.val("send");
-        settings.dataIdHolder.val(driverId);
+        settings.dataIdHolder.val(JSON.stringify(driverIds));
         settings.modal.modal('show');
     },
 
@@ -57,10 +65,10 @@ var MessageDialogue ={
         var api = element.data('jsp');
         api.reinitialise();
         if (api.getIsScrollableV()){
-            settings.fromPanel.css('right',35);
+            settings.rightPanel.css('right',35);
             api.scrollToBottom();
         } else{
-            settings.fromPanel.css('right',16);
+            settings.rightPanel.css('right',16);
         }
     },
 
@@ -72,6 +80,10 @@ var MessageDialogue ={
             .attr("id", "conversation_message" + message._id);
         $msg.find(".message_container")
             .addClass(message.status);
+        $msg.find(".status")
+            .text(settings.lang[message.status + 'StatusText']);
+        $msg.find(".driver_name")
+            .text(message.driver.first_name + ' ' + message.driver.last_name);
         $msg.find(".message_text")
             .text(message.message_text);
         $msg.find(".datetime")
@@ -82,27 +94,28 @@ var MessageDialogue ={
 
     requestConversationSuccess: function (data) {
         var settings = MessageDialogue.settings.conversation;
-        settings.toHeader
+        settings.rightPanelHeader
             .empty()
-            .text(data.first_name + ' ' + data.last_name);
+            .text(OrganisationDialogue.settings.orgNameHeading.text());
+
+        settings.leftPanelHeader
+            .empty()
+            .text(settings.lang.leftPanelHeaderText);
         settings.messages.children(':visible').remove();
-        $.each(data.messages, function () {
+        $.each(data, function () {
             MessageDialogue.addMessageToConversation(this);
         });
     },
 
     requestConversation: function (settings) {
         Common.ajaxSetup();
-
-        var driver_id = settings.dataIdHolder.val();
-
-        $.get('/driver/' + driver_id + '/conversation', function (data) {
-            //success data
+        var driverIds = JSON.parse(settings.dataIdHolder.val());
+        $.post('/conversation',driverIds, function (data) {
             console.log(data);
             MessageDialogue.requestConversationSuccess(data);
-
-        }).fail(function (data) {
-            Common.handleAjaxError(data,settings);
+        })
+            .fail(function (data) {
+                Common.handleAjaxError(data,settings);
         });
     },
 
@@ -164,26 +177,31 @@ var MessageDialogue ={
     },
 
     sendMessage: function (settings) {
-        Common.ajaxSetup();
+        var driverIds = JSON.parse(settings.dataIdHolder.val());
+        $.each(driverIds,function (key, driverId) {
 
-        var formData = settings.form.serializeFormJSON();
+            Common.ajaxSetup();
 
-        var driver_id = settings.dataIdHolder.val();
-        console.log(formData);
+            var formData = settings.form.serializeFormJSON();
 
-        $.ajax({
+            console.log(formData);
 
-            type: "POST",
-            url: '/driver/' + driver_id + '/message/',
-            data: formData,
-            dataType: 'json',
-            success: function (data) {
-                MessageDialogue.sendMessageSuccess(data,settings);
-            },
-            error: function (data) {
-                Common.handleAjaxError(data, settings);
-            }
+            $.ajax({
+
+                type: "POST",
+                url: '/driver/' + driverId + '/message/',
+                data: formData,
+                dataType: 'json',
+                success: function (data) {
+                    MessageDialogue.sendMessageSuccess(data,settings);
+                },
+                error: function (data) {
+                    Common.handleAjaxError(data, settings);
+                }
+            });
+
         });
+
     },
 
     onUIActions: function(settings){

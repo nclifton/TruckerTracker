@@ -78,14 +78,13 @@ PHP_IS_INSTALLED=$?
 
 if [ $PHP_IS_INSTALLED -eq 0 ]; then
 
-    # install dependencies
-    sudo apt-get -y install php7.0-fpm php7.0-mysql php7.0-curl php7.0-mcrypt php7.0-cli php7.0-dev php-pear libsasl2-dev
+    echo "Fixing the pecl errors list";
+    sudo sed -i -e 's/-C -n -q/-C -q/g' `which pecl`;
 
-    sudo mkdir -p /usr/local/openssl/include/openssl/ && \
-    sudo ln -s /usr/include/openssl/evp.h /usr/local/openssl/include/openssl/evp.h && \
-    sudo mkdir -p /usr/local/openssl/lib/ && \
-    sudo ln -s /usr/lib/x86_64-linux-gnu/libssl.a /usr/local/openssl/lib/libssl.a && \
-    sudo ln -s /usr/lib/x86_64-linux-gnu/libssl.so /usr/local/openssl/lib/
+    echo "Installing OpenSSl Libraries";
+    sudo apt-get install -y autoconf g++ make openssl libssl-dev libcurl4-openssl-dev;
+    sudo apt-get install -y libcurl4-openssl-dev pkg-config;
+    sudo apt-get install -y libsasl2-dev;
 
     # install php extension
     echo "no" > answers.txt
@@ -98,6 +97,7 @@ if [ $PHP_IS_INSTALLED -eq 0 ]; then
     echo 'extension=mongodb.so' | sudo tee /etc/php/7.0/cli/conf.d/20-mongodb.ini && \
     echo 'extension=mongodb.so' | sudo tee /etc/php/7.0/mods-available/mongodb.ini
 
-    sudo service php7.0-fpm restart
+    echo "restarting The nginx server";
+    sudo service nginx restart && sudo service php7.0-fpm restart
 fi
 

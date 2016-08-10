@@ -22,7 +22,7 @@ Trait TestTrait
     protected $database = 'trucker_tracker';
     protected $db_username = 'trucker_tracker';
     protected $db_password = '6iSgcH2eNE';
-    protected $db_host = 'homestead.app';
+    protected $db_host = 'local.truckertracker.services';
     protected $db_port = 27017;
 
 
@@ -59,8 +59,8 @@ Trait TestTrait
             [
                 [
                     '_id' => 'ffffffffff01',
-                    'organisation_id' => '10001',
-                    'driver_id' => '110001',
+                    'organisation_id' => 'a10001',
+                    'driver_id' => 'ff110001',
                     'message_text' => 'hello',
                     'queued_at' => $dateTime->format('c'),
                     'sent_at' => $dateTime->modify('+1 minute')->format('c'),
@@ -70,8 +70,8 @@ Trait TestTrait
                 ],
                 [
                     '_id' => 'ffffffffff02',
-                    'organisation_id' => '10001',
-                    'driver_id' => '110001',
+                    'organisation_id' => 'a10001',
+                    'driver_id' => 'ff110001',
                     'message_text' => 'Good morning',
                     'received_at' => $dateTime->modify('+1 minute')->format('c'),
                     'status' => 'received',
@@ -79,8 +79,8 @@ Trait TestTrait
                 ],
                 [
                     '_id' => 'ffffffffff03',
-                    'organisation_id' => '10001',
-                    'driver_id' => '110001',
+                    'organisation_id' => 'a10001',
+                    'driver_id' => 'ff110001',
                     'message_text' => 'busy day today. Please proceed to point A and collect box X and drop off to address Y',
                     'queued_at' => $dateTime->modify('+1 minute')->format('c'),
                     'sent_at' => $dateTime->modify('+1 minute')->format('c'),
@@ -90,8 +90,8 @@ Trait TestTrait
                 ],
                 [
                     '_id' => 'ffffffffff04',
-                    'organisation_id' => '10001',
-                    'driver_id' => '110001',
+                    'organisation_id' => 'a10001',
+                    'driver_id' => 'ff110001',
                     'message_text' => 'TRAVELLING',
                     'received_at' => $dateTime->modify('+10 minute')->format('c'),
                     'status' => 'received',
@@ -99,8 +99,8 @@ Trait TestTrait
                 ],
                 [
                     '_id' => 'ffffffffff05',
-                    'organisation_id' => '10001',
-                    'driver_id' => '110002',
+                    'organisation_id' => 'a10001',
+                    'driver_id' => 'ff110002',
                     'message_text' => 'Having a break',
                     'received_at' => $dateTime->modify('+10 minute')->format('c'),
                     'status' => 'received',
@@ -108,8 +108,8 @@ Trait TestTrait
                 ],
                 [
                     '_id' => 'ffffffffff06',
-                    'organisation_id' => '10001',
-                    'driver_id' => '110001',
+                    'organisation_id' => 'a10001',
+                    'driver_id' => 'ff110001',
                     'message_text' => 'THERE',
                     'received_at' => $dateTime->modify('+10 minute')->format('c'),
                     'status' => 'received',
@@ -117,8 +117,8 @@ Trait TestTrait
                 ],
                 [
                     '_id' => 'ffffffffff07',
-                    'organisation_id' => '10001',
-                    'driver_id' => '110001',
+                    'organisation_id' => 'a10001',
+                    'driver_id' => 'ff110001',
                     'message_text' => "Great, now when you're done there please proceed to point B and collect box Y and drop off to address Z",
                     'queued_at' => $dateTime->modify('+1 minute')->format('c'),
                     'sent_at' => $dateTime->modify('+1 minute')->format('c'),
@@ -128,8 +128,8 @@ Trait TestTrait
                 ],
                 [
                     '_id' => 'ffffffffff08',
-                    'organisation_id' => '10001',
-                    'driver_id' => '110001',
+                    'organisation_id' => 'a10001',
+                    'driver_id' => 'ff110001',
                     'message_text' => "?",
                     'queued_at' => $dateTime->modify('+1 minute')->format('c'),
                     'sent_at' => $dateTime->modify('+1 minute')->format('c'),
@@ -209,7 +209,7 @@ Trait TestTrait
             '_id' => 'ff110002',
             'first_name' => 'Driver',
             'last_name' => 'Two',
-            'mobile_phone_number' => '0298204732',
+            'mobile_phone_number' => '+61298204732',
             'drivers_licence_number' => '9401HG',
             'organisation_id' => 'a10001',
 
@@ -228,7 +228,7 @@ Trait TestTrait
         [
             '_id' => 'ee120002',
             'registration_number' => 'SOY067',
-            'mobile_phone_number' => '0298204732',
+            'mobile_phone_number' => '+61298204732',
             'tracker_imei_number' => '1234567890123456',
             'tracker_password' => '666666',
             'organisation_id' => 'a10001'

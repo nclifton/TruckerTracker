@@ -8,7 +8,7 @@ DriverDialogue = {
         url:            '/drivers',
         classPrefix:    'driver',
         lineSelector:   '.driver_line.selected',
-        multiSelect:    false,
+        multiSelect:    true,
         selectors: {
             form:           '#driverForm',
             messageButton:  '#btn-messageDriver',
@@ -33,10 +33,12 @@ DriverDialogue = {
     },
 
     prepForMessage: function (settings) {
+        var dataIds = {};
         $(settings.lineSelector).each(function (i, selected) {
             var dataId = $(selected).attr('data');
-            MessageDialogue.prepForMessage(dataId);
+            dataIds[i] = dataId;
         });
+        MessageDialogue.prepForMessage(dataIds);
     },
 
     setLineText: function (settings, data) {

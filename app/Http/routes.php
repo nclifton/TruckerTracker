@@ -62,4 +62,4 @@ Route::delete('/vehicle/location/{location}',   'LocationController@deleteLocati
 Route::get('/driver/message/{message}',         'MessageController@getMessage');
 Route::delete('/driver/message/{message}',      'MessageController@deleteMessage');
 
-Route::get('/driver/{driver}/conversation',     'MessageController@getConversation');
+Route::post('/conversation',                    'MessageController@getConversation');

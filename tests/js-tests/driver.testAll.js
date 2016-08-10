@@ -127,7 +127,7 @@ describe('DriverDialogue', function () {
             });
 
             it('should have delegated to the function to setup the selectable lines', function () {
-                expect(Common.setupSelect).toHaveBeenCalledWith(settings.classPrefix, true);
+                expect(Common.setupSelect).toHaveBeenCalledWith(settings.classPrefix, settings.multiSelect);
             });
 
         });
@@ -143,16 +143,20 @@ describe('DriverDialogue', function () {
 
         describe('prepForMessage', function () {
 
-            it('should prepare and show the message dialogue with the ' +
-                'properties from the selected driver line', function () {
+            it('should prepare and show the message/conversation dialogue with the ' +
+                'messages from the selected driver lines', function () {
                 $('#driver_list')
                     .append('<li id="driver0987654321" ' +
                         'class="row list_panel_line driver_line selected" ' +
                         'data="0987654321"><span class="name"></span></li>');
+                $('#driver_list')
+                    .append('<li id="driver1234567890" ' +
+                        'class="row list_panel_line driver_line selected" ' +
+                        'data="1234567890"><span class="name"></span></li>');
 
                 DriverDialogue.prepForMessage(settings);
 
-                expect(MessageDialogue.prepForMessage).toHaveBeenCalledWith('0987654321');
+                expect(MessageDialogue.prepForMessage).toHaveBeenCalledWith({0:'0987654321',1:'1234567890'});
 
               })
         });
@@ -167,11 +171,15 @@ describe('DriverDialogue', function () {
                 .append('<li id="driver0987654321" ' +
                     'class="row list_panel_line driver_line selected" ' +
                     'data="0987654321"><span class="name"></span></li>');
+            $('#driver_list')
+                .append('<li id="driver1234567890" ' +
+                    'class="row list_panel_line driver_line selected" ' +
+                    'data="1234567890"><span class="name"></span></li>');
         });
 
         describe('Common.prepForEdit', function () {
 
-            it('should use jquery get to get the details for driver with id from selected line', function () {
+            it('should use jquery get to get the details for driver with id from first selected line', function () {
                 var data = {status: 200};
 
                 spyOn($, 'ajaxSetup');
@@ -184,6 +192,8 @@ describe('DriverDialogue', function () {
                 spyOn(Common, 'handleGetSuccess');
 
                 Common.prepForEdit(settings);
+
+                expect($.ajaxSetup).toHaveBeenCalledTimes(1);
 
                 expect($.ajaxSetup).toHaveBeenCalledWith(ajaxSetupParams);
                 expect($.get.calls.mostRecent().args[0]).toEqual(settings.url + '/0987654321');
@@ -218,22 +228,37 @@ describe('DriverDialogue', function () {
 
             it("should use jquery ajax to request server to delete driver and " +
                 "on success call deleteLine to remove the line from the list on the screen ", function () {
-                var data = {
-                    status: 200,
-                    responseText: {
-                        _id: '0987654321'
+                var data = [
+                    {
+                        status: 200,
+                        responseText:
+                            {
+                                _id: '0987654321'
+                            }
+                    },
+                    {
+                        status: 200,
+                        responseText:
+                            {
+                                _id: '1234567890'
+                            }
                     }
-                };
+                ];
+                var cnt = 0;
                 spyOn($, 'ajaxSetup');
                 spyOn($, 'ajax').and.callFake(function (options) {
-                    options.success(data)
+                    options.success(data[cnt++]);
                 });
 
                 Common.deleteSelection(settings);
 
+                expect($.ajaxSetup).toHaveBeenCalledTimes(2);
                 expect($.ajaxSetup).toHaveBeenCalledWith(ajaxSetupParams);
-                expect(console.log).toHaveBeenCalledWith(data);
+                expect(console.log).toHaveBeenCalledWith(data[0]);
+                expect(console.log).toHaveBeenCalledWith(data[1]);
+
                 expect($("#driver0987654321")).not.toExist();
+                expect($("#driver1234567890")).not.toExist();
 
 
             });

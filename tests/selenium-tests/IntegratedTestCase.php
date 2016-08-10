@@ -34,7 +34,7 @@ abstract class IntegratedTestCase extends \Laracasts\Integrated\Extensions\Selen
      *
      * @var string
      */
-    protected $baseUrl = 'http://homestead.app';
+    protected $baseUrl = 'http://local.truckertracker.services';
 
     /**
      * @var \Illuminate\Foundation\Application

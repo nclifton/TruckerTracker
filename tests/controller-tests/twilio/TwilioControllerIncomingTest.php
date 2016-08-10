@@ -75,7 +75,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $message = $this->messageSet[0];
         $driver = $this->driverSet[0];
         $org = $this->orgSet[0];
-        $expectedUrl = 'http://homestead.app/pub/'.$org['_id'];
+        $expectedUrl = 'http://local.truckertracker.services/pub/'.$org['_id'];
         $expectedMessage = $message;
         $expectedMessage['status']='delivered';
         unset($expectedMessage['organisation_id']);
@@ -136,7 +136,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         $vehicle = $this->vehicleSet[0];
         $org = $this->orgSet[0];
 
-        $expectedUrl = 'http://homestead.app/pub/'.$org['_id'];
+        $expectedUrl = 'http://local.truckertracker.services/pub/'.$org['_id'];
         $expectedLocation = $location;
         $expectedLocation['status']='delivered';
         unset($expectedLocation['organisation_id']);
@@ -243,7 +243,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             'NumMedia' => '0'
         ];
 
-        $expectedUrl = 'http://homestead.app/pub/'.$org['_id'];
+        $expectedUrl = 'http://local.truckertracker.services/pub/'.$org['_id'];
 
         $expectedMessage['_id'] = '*';
         $expectedMessage['message_text'] = $message['Body'];
@@ -355,7 +355,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             'NumMedia' => '0'
         ];
 
-        $expectedUrl = 'http://homestead.app/pub/'.$org['_id'];
+        $expectedUrl = 'http://local.truckertracker.services/pub/'.$org['_id'];
 
         $expectedMessage['_id'] = '*';
         $expectedMessage['message_text'] = $message['Body'];
@@ -443,7 +443,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             ];
 
 
-        $expectedUrl = 'http://homestead.app/pub/'.$org['_id'];
+        $expectedUrl = 'http://local.truckertracker.services/pub/'.$org['_id'];
         $expectedData = $expectedLocationDb;
         unset($expectedData['sid_response']);
         unset($expectedData['vehicle_id']);

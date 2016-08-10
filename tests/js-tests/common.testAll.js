@@ -260,7 +260,7 @@ describe("common functions for all ", function () {
 
         })
 
-        it('should create a click handler on lines that will select only one line', function () {
+        it('should create a click handler on lines that will select one or more lines', function () {
 
             expect($('#test1')).not.toHaveClass('selected');
             expect($('#test2')).not.toHaveClass('selected');

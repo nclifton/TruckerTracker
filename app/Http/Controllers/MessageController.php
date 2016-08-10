@@ -2,8 +2,10 @@
 
 namespace TruckerTracker\Http\Controllers;
 
+use Auth;
 use Gate;
 use Illuminate\Http\Request;
+use Log;
 
 use TruckerTracker\Driver;
 use TruckerTracker\Message;
@@ -31,18 +33,27 @@ class MessageController extends Controller
     }
 
     /**
-     * @param Driver $driver
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @internal param Driver $driver
      */
-    public function getConversation(Driver $driver)
+    public function getConversation(Request $request)
     {
-        if (Gate::denies('view-message', $driver->organisation)) {
+        Log::debug( json_encode($request->all()));
+
+        $user = Auth::getUser();
+        if (Gate::denies('view-message', $user->organisation)) {
             abort(403);
         }
-        $driver->load(['messages'=> function($query){
-            $query->orderBy('created_at');
-        }]);
-        $jsonResponse = Response::json($driver);
+        $driverIds = $request->all();
+
+        $messages = Message::with(['driver'=>function($query){
+            $query->select('first_name','last_name');
+        }])
+            ->whereIn('driver_id',$driverIds)
+            ->get();
+
+        $jsonResponse = Response::json($messages);
         return $jsonResponse;
     }
 

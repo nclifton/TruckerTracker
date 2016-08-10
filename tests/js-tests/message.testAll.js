@@ -7,6 +7,8 @@ describe('message.js test all', function () {
     var modalShowEvent;
     var formResetEvent;
     var ajaxSetupParams;
+    var responseData;
+
 
     beforeAll(function () {
         fixtures.fixturesPath = 'base/tests/js-tests/fixtures/';
@@ -29,22 +31,47 @@ describe('message.js test all', function () {
             }
         };
 
-        spyOn(console,'log');
-
+        spyOn(console, 'log');
+        responseData = [
+            {
+                message_text: 'message one',
+                driver:{
+                    _id: '0987654321'
+                }
+            },
+            {
+                message_text: 'message two',
+                driver:{
+                    _id: '1234567890'
+                }
+            },
+            {
+                message_text: 'message three',
+                driver:{
+                    _id: '0987654321'
+                }
+            },
+            {
+                message_text: 'message four',
+                driver:{
+                    _id: '1234567890'
+                }
+            }
+        ];
     });
     afterEach(function () {
         $('.modal-backdrop').remove();
     });
 
-    describe('init functions',function () {
+    describe('init functions', function () {
 
         beforeEach(function () {
             settings = Common.findElements(MessageDialogue.settings);
         });
 
-        describe('Common.findElements',function () {
+        describe('Common.findElements', function () {
 
-            it('should resolve all the selectors including nested',function () {
+            it('should resolve all the selectors including nested', function () {
 
                 expect(settings.deleteButton).toEqual($(settings.selectors.deleteButton));
                 expect(settings.form).toEqual($(settings.selectors.form));
@@ -63,9 +90,9 @@ describe('message.js test all', function () {
                 modalShowEvent = $.Event('shown.bs.modal');
                 formResetEvent = $.Event('reset');
                 spyOn(click, 'preventDefault');
-                spyOn(MessageDialogue,'requestConversation');
+                spyOn(MessageDialogue, 'requestConversation');
                 spyOn(Common, 'resetErrorDisplay');
-                spyOn(MessageDialogue,'sendMessage');
+                spyOn(MessageDialogue, 'sendMessage');
 
                 MessageDialogue.onUIActions(settings);
             });
@@ -100,167 +127,166 @@ describe('message.js test all', function () {
 
     });
 
-    describe('initialised Message Dialogue',function () {
-
+    describe('initialised Message Dialogue', function () {
+        var type;
         beforeEach(function () {
             settings = MessageDialogue.init().settings;
+            type = 'json';
         });
 
         describe('requestConversation', function () {
-            var data;
+            var requestData;
+            var requestDataString;
             beforeEach(function () {
-                spyOn(Common,'ajaxSetup');
-                settings.dataIdHolder.val('0987654321');
-                data = {
-                    messages:[
-                        {
-                            message_text:'message one'
-                        },
-                        {
-                            message_text:'message two'
-                        }
-                    ]
-                }
+                spyOn(Common, 'ajaxSetup');
+                requestData = {0:"0987654321",1:"1234567890"};
+                requestDataString = '{"0":"0987654321","1":"1234567890"}';
+                settings.dataIdHolder.val(requestDataString);
 
             });
 
             describe('successful', function () {
-
                 beforeEach(function () {
-
-                    spyOn($,'get').and.callFake(function (url, fn) {
+                    spyOn($, 'post').and.callFake(function (arg1, arg2, fn, arg4) {
                         var d = $.Deferred();
-                        d.resolve(data);
-                        fn(data, settings);
+                        d.resolve();
+                        fn(responseData, settings);
                         return d.promise();
                     });
-                    spyOn(MessageDialogue,'requestConversationSuccess');
+                    spyOn(MessageDialogue, 'requestConversationSuccess');
 
                     MessageDialogue.requestConversation(settings);
 
                 });
-                it('should use jquery.get to request all messages sent to and received from the selected driver', function () {
+                it('should use jquery.post to request all messages sent to and received from the selected drivers', function () {
                     expect(Common.ajaxSetup).toHaveBeenCalled();
-                    expect($.get.calls.mostRecent().args[0]).toEqual('/driver/0987654321/conversation');
+                    expect($.post.calls.mostRecent().args[0]).toEqual('/conversation');
+                    expect($.post.calls.mostRecent().args[1]).toEqual(requestData);
+                    // expect($.post.calls.mostRecent().args[3]).toEqual('json');
                 });
 
                 it('should, if request is successful, call method to handle success', function () {
-                    expect(console.log).toHaveBeenCalledWith(data);
-                    expect(MessageDialogue.requestConversationSuccess).toHaveBeenCalledWith(data);
+                    expect(console.log).toHaveBeenCalledWith(responseData);
+                    expect(MessageDialogue.requestConversationSuccess).toHaveBeenCalledWith(responseData);
                 });
             });
 
             describe('fails', function () {
-
+                var error;
                 beforeEach(function () {
-
-                    spyOn($,'get').and.callFake(function (url, fn) {
+                    error = {status:500};
+                    spyOn($, 'post').and.callFake(function () {
                         var d = $.Deferred();
-                        d.reject(data);
+                        d.reject(error);
                         return d.promise();
                     });
-                    spyOn(Common,'handleAjaxError');
+                    spyOn(Common, 'handleAjaxError');
 
                     MessageDialogue.requestConversation(settings);
 
                 });
 
-                it('should, if request is successful, call method to handle success', function () {
-                    expect(Common.handleAjaxError).toHaveBeenCalledWith(data,settings);
+                it('should, if request fails, call method to handle error', function () {
+                    expect(Common.handleAjaxError).toHaveBeenCalledWith(error, settings);
                 });
             });
 
         });
 
-        describe('requestConversationSuccess',function () {
-            var data;
+        describe('requestConversationSuccess', function () {
+            var orgSettings;
             beforeEach(function () {
-                data = {
-                    first_name: 'Driver',
-                    last_name: 'One',
-                    messages:[
-                        {
-                            _id:            'msg0987654321',
-                            message_text:   'message one'
-                        },
-                        {
-                            _id:            'msg1234567890',
-                            message_text:   'message two'
-                        }
-                    ]
-                }
-
+                orgSettings = OrganisationDialogue.init().settings;
+                orgSettings.orgNameHeading.empty().text('organisationName')
             });
             it('should setup the conversation panel', function () {
 
-                spyOn(MessageDialogue,'addMessageToConversation');
+                spyOn(MessageDialogue, 'addMessageToConversation');
 
-                expect(settings.conversation.toHeader).toHaveText('some text');
                 expect($('#conversation_messageX1')).toExist();
 
-                MessageDialogue.requestConversationSuccess(data);
+                MessageDialogue.requestConversationSuccess(responseData);
 
-                expect(settings.conversation.toHeader).toHaveText('Driver One');
+                expect(settings.conversation.leftPanelHeader).toHaveText(settings.conversation.lang.leftPanelHeaderText);
+                expect(settings.conversation.rightPanelHeader).toHaveText(orgSettings.orgNameHeading.text());
                 expect($('#conversation_messageX1')).not.toExist();
-                expect(MessageDialogue.addMessageToConversation).toHaveBeenCalledTimes(2);
+                expect(MessageDialogue.addMessageToConversation).toHaveBeenCalledTimes(4);
                 expect(MessageDialogue.addMessageToConversation.calls.argsFor(0)[0])
-                    .toEqual(data.messages[0]);
+                    .toEqual(responseData[0]);
                 expect(MessageDialogue.addMessageToConversation.calls.argsFor(1)[0])
-                    .toEqual(data.messages[1]);
+                    .toEqual(responseData[1]);
+                expect(MessageDialogue.addMessageToConversation.calls.argsFor(2)[0])
+                    .toEqual(responseData[2]);
+                expect(MessageDialogue.addMessageToConversation.calls.argsFor(3)[0])
+                    .toEqual(responseData[3]);
 
             });
 
 
         });
 
-        describe('sendMessage', function () {
+        describe('sendMessage to two drivers', function () {
 
             var data;
             var responseData;
 
             beforeEach(function () {
-                spyOn(Common,'ajaxSetup');
+                spyOn(Common, 'ajaxSetup');
                 data = {
                     message_text: 'hello'
                 };
-                spyOn(settings.form,'serializeFormJSON').and.returnValue(data);
-                settings.dataIdHolder.val('0987654321');
+                spyOn(settings.form, 'serializeFormJSON').and.returnValue(data);
+                settings.dataIdHolder.val('{"0":"0987654321","1":"1234567890"}');
             });
 
             describe('jquery ajax success', function () {
+                var i;
                 beforeEach(function () {
-                    responseData = {
+                    responseData = [{
+                        _id: '0987654321',
+                        message_text: 'hello'
+                    },{
                         _id: '1234567890',
                         message_text: 'hello'
-                    };
-                    spyOn($,'ajax').and.callFake(function (options) {
-                        options.success(responseData);
+                    }];
+                    i = 0;
+                    spyOn($, 'ajax').and.callFake(function (options) {
+                        options.success(responseData[i++]);
                     });
-                    spyOn(MessageDialogue,'sendMessageSuccess');
+                    spyOn(MessageDialogue, 'sendMessageSuccess');
                     MessageDialogue.sendMessage(settings);
                 });
 
                 it('should setup jquery ajax', function () {
-                    expect(Common.ajaxSetup).toHaveBeenCalled();
+                    expect(Common.ajaxSetup).toHaveBeenCalledTimes(2);
                 });
 
                 it('should have called the serialise form data into JSON jquery extension', function () {
-                    expect(settings.form.serializeFormJSON).toHaveBeenCalled();
+                    expect(settings.form.serializeFormJSON).toHaveBeenCalledTimes(2);
                 });
 
                 it('should have logged the form data', function () {
+                    expect(console.log).toHaveBeenCalledTimes(2);
                     expect(console.log).toHaveBeenCalledWith(data);
                 });
 
                 it('should provide the correct parameters for the ajax call', function () {
+                    expect($.ajax).toHaveBeenCalledTimes(2)
+                    expect($.ajax.calls.first().args[0].type).toEqual('POST');
+                    expect($.ajax.calls.first().args[0].url).toEqual('/driver/0987654321/message/');
+                    expect($.ajax.calls.first().args[0].data).toEqual(data);
+                    expect($.ajax.calls.first().args[0].dataType).toEqual('json');
                     expect($.ajax.calls.mostRecent().args[0].type).toEqual('POST');
-                    expect($.ajax.calls.mostRecent().args[0].url).toEqual('/driver/0987654321/message/');
+                    expect($.ajax.calls.mostRecent().args[0].url).toEqual('/driver/1234567890/message/');
                     expect($.ajax.calls.mostRecent().args[0].data).toEqual(data);
                     expect($.ajax.calls.mostRecent().args[0].dataType).toEqual('json');
                 });
                 it('should have called the success method', function () {
+                    expect(MessageDialogue.sendMessageSuccess).toHaveBeenCalledTimes(2)
                     expect(MessageDialogue.sendMessageSuccess)
-                        .toHaveBeenCalledWith(responseData,settings);
+                        .toHaveBeenCalledWith(responseData[0], settings);
+                    expect(MessageDialogue.sendMessageSuccess)
+                        .toHaveBeenCalledWith(responseData[1], settings);
                 });
 
             });
@@ -268,20 +294,20 @@ describe('message.js test all', function () {
 
             it('should call the error method', function () {
                 responseData = 'error';
-                spyOn($,'ajax').and.callFake(function (options) {
+                spyOn($, 'ajax').and.callFake(function (options) {
                     options.error(responseData);
                 });
-                spyOn(Common,'handleAjaxError');
+                spyOn(Common, 'handleAjaxError');
 
                 MessageDialogue.sendMessage(settings);
 
-                expect(Common.handleAjaxError).toHaveBeenCalledWith(responseData,settings);
+                expect(Common.handleAjaxError).toHaveBeenCalledWith(responseData, settings);
 
             });
 
         });
 
-        describe('handle driver message data returned from server', function () {
+        describe('handle message to driver data returned from server', function () {
             var data;
             beforeEach(function () {
 
@@ -303,11 +329,11 @@ describe('message.js test all', function () {
                 var formResetEvent;
                 beforeEach(function () {
 
-                    spyOn(MessageDialogue,'addMessageLine');
-                    spyOn(MessageDialogue,'addConversationMessage');
-                    formResetEvent = spyOnEvent(settings.form,'reset');
+                    spyOn(MessageDialogue, 'addMessageLine');
+                    spyOn(MessageDialogue, 'addConversationMessage');
+                    formResetEvent = spyOnEvent(settings.form, 'reset');
 
-                    MessageDialogue.sendMessageSuccess(data,settings);
+                    MessageDialogue.sendMessageSuccess(data, settings);
                 });
                 it('should log the response', function () {
                     expect(console.log).toHaveBeenCalledWith(data);
@@ -330,9 +356,9 @@ describe('message.js test all', function () {
             describe('addConversationMessage', function () {
                 beforeEach(function () {
 
-                    spyOn(MessageDialogue,'addMessageToConversation');
-                    spyOn(MessageDialogue,'resetConversationScrollPanel');
-                    spyOn(settings.modal,'css');
+                    spyOn(MessageDialogue, 'addMessageToConversation');
+                    spyOn(MessageDialogue, 'resetConversationScrollPanel');
+                    spyOn(settings.modal, 'css');
                 });
 
                 it('should if conversation panel is displayed, add the message to the conversation and reset the scroll panel', function () {
@@ -360,8 +386,8 @@ describe('message.js test all', function () {
             describe('addMessageToConversation', function () {
                 beforeEach(function () {
 
-                    spyOn(MessageDialogue,'resetConversationScrollPanel');
-                    spyOn(Common,'friendlyDatetime').and.returnValue('a-friendly-datetime');
+                    spyOn(MessageDialogue, 'resetConversationScrollPanel');
+                    spyOn(Common, 'friendlyDatetime').and.returnValue('a-friendly-datetime');
 
                     MessageDialogue.addMessageToConversation(data)
                 });
@@ -372,20 +398,27 @@ describe('message.js test all', function () {
 
                 it('added message should be the last element in the messages container', function () {
                     expect($(settings.conversation.messages).children().last())
-                        .toHaveId(settings.conversation.lineTemplate.selector.substr(1) + '1234567890' );
+                        .toHaveId(settings.conversation.lineTemplate.selector.substr(1) + '1234567890');
                 });
 
-                it('added message container have class for the status of the message', function () {
+                it('added message container should have class that is  the status of the message', function () {
                     expect($(settings.conversation.lineTemplate.selector + '1234567890 .message_container'))
                         .toHaveClass(data.status);
                 });
 
-                it('added message text should the  message text', function () {
+                it('added message from text should be the driver name preceded with a label indicating the message status', function () {
+                    expect($(settings.conversation.lineTemplate.selector + '1234567890 .status'))
+                        .toHaveText(settings.conversation.lang[data.status + 'StatusText']);
+                    expect($(settings.conversation.lineTemplate.selector + '1234567890 .driver_name'))
+                        .toHaveText(data.driver.first_name + ' ' + data.driver.last_name);
+                });
+
+                it('added message text should be the message text', function () {
                     expect($(settings.conversation.lineTemplate.selector + '1234567890 .message_text'))
                         .toHaveText(data.message_text);
                 });
 
-                it('added message date should the message status at date time using the friendly date time format', function () {
+                it('added message date should be the "status at" date time using the friendly date time format', function () {
                     expect(Common.friendlyDatetime).toHaveBeenCalledWith(data.queued_at);
                     expect($(settings.conversation.lineTemplate.selector + '1234567890 .datetime'))
                         .toHaveText('a-friendly-datetime');
@@ -400,9 +433,9 @@ describe('message.js test all', function () {
             describe('addMessageLine', function () {
 
                 beforeEach(function () {
-                    spyOn(MessageDialogue,'updateMessageLine');
-                    spyOn(MessageDialogue,'setLineText');
-                    spyOn(Common,'prependListLine').and.callFake(function (data,settings,fn) {
+                    spyOn(MessageDialogue, 'updateMessageLine');
+                    spyOn(MessageDialogue, 'setLineText');
+                    spyOn(Common, 'prependListLine').and.callFake(function (data, settings, fn) {
                         fn();
                     });
 
@@ -447,13 +480,13 @@ describe('message.js test all', function () {
                     var line = $(settings.lineTemplate.selector + '1234567890');
                     expect(line).toExist();
 
-                    MessageDialogue.setLineText(line,data);
+                    MessageDialogue.setLineText(line, data);
 
                     expect(line.find('.first_name')).toHaveText(data.driver.first_name);
                     expect(line.find('.last_name')).toHaveText(data.driver.last_name);
                     expect(line.find('.status')).toHaveText(data.status);
-                    expect(line.find('.status_at')).toHaveText(data[data.status+'_at']);
-                    expect(line).toHaveAttr('title',data.message_text);
+                    expect(line.find('.status_at')).toHaveText(data[data.status + '_at']);
+                    expect(line).toHaveAttr('title', data.message_text);
 
                 });
 
@@ -491,9 +524,9 @@ describe('message.js test all', function () {
             });
             describe('updateConversationMessage', function () {
                 beforeEach(function () {
-                    spyOn(settings.modal,'css');
-                    spyOn(MessageDialogue,'resetConversationScrollPanel');
-                    spyOn(Common,'friendlyDatetime').and.returnValue('another-friendly-datetime');
+                    spyOn(settings.modal, 'css');
+                    spyOn(MessageDialogue, 'resetConversationScrollPanel');
+                    spyOn(Common, 'friendlyDatetime').and.returnValue('another-friendly-datetime');
                 });
                 it('should if the conversation modal is currently displayed, ' +
                     'find and update the message status and datetime', function () {
@@ -545,7 +578,7 @@ describe('message.js test all', function () {
 
                     MessageDialogue.updateMessageLine(data);
 
-                    var line =  $(settings.lineTemplate.selector + data._id );
+                    var line = $(settings.lineTemplate.selector + data._id);
                     expect(line.find('.status')).toHaveText(data.status);
                     expect(line.find('.status_at')).toHaveText(data[data.status + '_at']);
 
@@ -559,11 +592,11 @@ describe('message.js test all', function () {
             var jspapi;
             var element;
             beforeEach(function () {
-                jspapi = jasmine.createSpyObj('jspapi',['reinitialise','getIsScrollableV','scrollToBottom']);
-                element = jasmine.createSpyObj('element',['data']);
+                jspapi = jasmine.createSpyObj('jspapi', ['reinitialise', 'getIsScrollableV', 'scrollToBottom']);
+                element = jasmine.createSpyObj('element', ['data']);
                 element.data.and.returnValue(jspapi);
-                spyOn(settings.conversation.pane,'jScrollPane').and.returnValue(element);
-                spyOn(settings.conversation.fromPanel,'css');
+                spyOn(settings.conversation.pane, 'jScrollPane').and.returnValue(element);
+                spyOn(settings.conversation.rightPanel, 'css');
             });
 
             it('should initialise jScrollPane on the conversation messages panel', function () {
@@ -580,7 +613,7 @@ describe('message.js test all', function () {
 
                 MessageDialogue.resetConversationScrollPanel();
 
-                expect(settings.conversation.fromPanel.css).toHaveBeenCalledWith('right',35);
+                expect(settings.conversation.rightPanel.css).toHaveBeenCalledWith('right', 35);
                 expect(jspapi.scrollToBottom).toHaveBeenCalled();
             });
             it('should adjust width to compensate for hidden scroll bar if the pane is not scrollable', function () {
@@ -588,7 +621,7 @@ describe('message.js test all', function () {
 
                 MessageDialogue.resetConversationScrollPanel();
 
-                expect(settings.conversation.fromPanel.css).toHaveBeenCalledWith('right',16);
+                expect(settings.conversation.rightPanel.css).toHaveBeenCalledWith('right', 16);
             });
 
         });
@@ -596,7 +629,7 @@ describe('message.js test all', function () {
         describe('show message driver dialogue action', function () {
             var formResetEvent;
             beforeEach(function () {
-                formResetEvent = spyOnEvent(settings.form.selector,'reset');
+                formResetEvent = spyOnEvent(settings.form.selector, 'reset');
                 spyOn($.fn, 'modal');
             });
 
@@ -605,11 +638,11 @@ describe('message.js test all', function () {
                 it('should prepare and show the message dialogue with the ' +
                     'properties from the selected driver line', function () {
 
-                    MessageDialogue.prepForMessage('0987654321');
+                    MessageDialogue.prepForMessage(['0987654321', '1234567890']);
 
                     expect(formResetEvent).toHaveBeenTriggered();
                     expect(settings.submitButton).toHaveValue('send');
-                    expect(settings.dataIdHolder).toHaveValue('0987654321');
+                    expect(settings.dataIdHolder.val()).toEqual('["0987654321","1234567890"]');
                     expect($.fn.modal).toHaveBeenCalledWith('show');
                     expect($.fn.modal.calls.all()[0].object.selector)
                         .toEqual(settings.modal.selector);

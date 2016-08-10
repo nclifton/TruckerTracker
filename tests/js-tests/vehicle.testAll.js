@@ -137,7 +137,7 @@ describe('VehicleDialogue',function () {
             });
 
             it('should have delegated to the function to setup the selectable lines', function () {
-                expect(Common.setupSelect).toHaveBeenCalledWith(settings.classPrefix, true);
+                expect(Common.setupSelect).toHaveBeenCalledWith(settings.classPrefix, settings.multiSelect);
             });
 
         });
