@@ -252,7 +252,7 @@ Trait TestTrait
         [
             '_id' => 'cc300001',
             'organisation_id' => 'a10001',
-            'vehicle_id' => 'ff120001',
+            'vehicle_id' => 'ee120001',
             'queued_at' => '2016-06-09T20:55:10+10:00',
             'sent_at' => '2016-06-09T20:56:10+10:00',
             'status' => 'sent',
@@ -260,7 +260,7 @@ Trait TestTrait
         ], [
             '_id' => 'cc300002',
             'organisation_id' => 'a10001',
-            'vehicle_id' => 'ff120001',
+            'vehicle_id' => 'ee120001',
             'queued_at' => '2016-06-09T20:55:10+10:00',
             'sent_at' => '2016-06-09T20:56:10+10:00',
             'delivered_at' => '2016-06-09T21:01:10+10:00',

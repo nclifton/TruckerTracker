@@ -271,7 +271,7 @@ describe('message.js test all', function () {
                 });
 
                 it('should provide the correct parameters for the ajax call', function () {
-                    expect($.ajax).toHaveBeenCalledTimes(2)
+                    expect($.ajax).toHaveBeenCalledTimes(2);
                     expect($.ajax.calls.first().args[0].type).toEqual('POST');
                     expect($.ajax.calls.first().args[0].url).toEqual('/driver/0987654321/message/');
                     expect($.ajax.calls.first().args[0].data).toEqual(data);
@@ -282,7 +282,7 @@ describe('message.js test all', function () {
                     expect($.ajax.calls.mostRecent().args[0].dataType).toEqual('json');
                 });
                 it('should have called the success method', function () {
-                    expect(MessageDialogue.sendMessageSuccess).toHaveBeenCalledTimes(2)
+                    expect(MessageDialogue.sendMessageSuccess).toHaveBeenCalledTimes(2);
                     expect(MessageDialogue.sendMessageSuccess)
                         .toHaveBeenCalledWith(responseData[0], settings);
                     expect(MessageDialogue.sendMessageSuccess)
@@ -371,7 +371,7 @@ describe('message.js test all', function () {
 
                 });
 
-                it('should do not call the methods if the conversation panel is not currently displayed', function () {
+                it('should not call the methods if the conversation panel is not currently displayed', function () {
                     settings.modal.css.and.returnValue('none');
                     MessageDialogue.addConversationMessage(data);
 
@@ -401,7 +401,7 @@ describe('message.js test all', function () {
                         .toHaveId(settings.conversation.lineTemplate.selector.substr(1) + '1234567890');
                 });
 
-                it('added message container should have class that is  the status of the message', function () {
+                it('added message container should have class that is the status of the message', function () {
                     expect($(settings.conversation.lineTemplate.selector + '1234567890 .message_container'))
                         .toHaveClass(data.status);
                 });
@@ -501,10 +501,12 @@ describe('message.js test all', function () {
                     'class="container_row" ' +
                     'style="">' +
                     '<div class="message_container queued">' +
-                    '<div class="message_text">Hello</div>' +
-                    '<div class="datetime_container">' +
-                    '<div class="datetime">a-friendly-datetime</div>' +
-                    '</div>' +
+                    '   <div class="message_text">Hello</div>' +
+                    '   <div class="message_metadata">' +
+                    '       <div class="status">received</div>' +
+                    '       <div class="driver_name">a driver</div>' +
+                    '       <div class="datetime">a-friendly-datetime</div>' +
+                    '   </div>' +
                     '</div>' +
                     '</div>');
 
@@ -532,7 +534,7 @@ describe('message.js test all', function () {
                     'find and update the message status and datetime', function () {
                     settings.modal.css.and.returnValue('block');
 
-                    MessageDialogue.updateConversationMessage(data)
+                    MessageDialogue.updateConversationMessage(data);
 
                     var container = $(settings.conversation.lineTemplate.selector + data._id + ' .message_container');
                     expect(container).not.toHaveClass('queued');
@@ -540,7 +542,8 @@ describe('message.js test all', function () {
                     expect(container).not.toHaveClass('received');
                     expect(container).toHaveClass('sent');
                     expect(Common.friendlyDatetime).toHaveBeenCalledWith(data.sent_at);
-                    expect(container.find('.datetime')).toHaveText('another-friendly-datetime')
+                    expect(container.find('.status').text()).toEqual(settings.conversation.lang.sentStatusText);
+                    expect(container.find('.datetime')).toHaveText('another-friendly-datetime');
 
                     expect(MessageDialogue.resetConversationScrollPanel).toHaveBeenCalled();
 
@@ -548,7 +551,7 @@ describe('message.js test all', function () {
 
                 it('should do none of this if the conversation display is hidden', function () {
                     settings.modal.css.and.returnValue('none');
-                    MessageDialogue.updateConversationMessage(data)
+                    MessageDialogue.updateConversationMessage(data);
 
                     var container = $(settings.conversation.lineTemplate.selector + data._id + ' .message_container');
                     expect(container).toHaveClass('queued');

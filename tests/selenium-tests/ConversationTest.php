@@ -63,29 +63,40 @@ class ConversationTest extends IntegratedTestCase
         // Assert that message modal stays open
         $this->assertTrue($this->byId("messageDriverModal")->displayed());
 
-        $dbMsg = $this->waitForDbUpdate($driver1, $org, $message_text, Message::STATUS_QUEUED);
-        $id = $dbMsg['_id'];
+        $dbMsg1 = $this->waitForDbUpdate($driver1, $org, $message_text, Message::STATUS_QUEUED);
+        $id1 = $dbMsg1['_id'];
+        $dbMsg2 = $this->waitForDbUpdate($driver2, $org, $message_text, Message::STATUS_QUEUED);
+        $id2 = $dbMsg2['_id'];
 
         // Assert that the queued message is displayed in the message modal with status queued
-        $this->assertMessageSeenOnMessageModal($dbMsg);
+        $this->assertMessageSeenOnMessageModal($dbMsg1);
+        $this->assertMessageSeenOnMessageModal($dbMsg2);
 
-        $sid = $dbMsg['sid'];
 
-        $this->wait();
-
-        $this->postStatusUpdate($twilioUser, $dbOrg, $sid, Message::STATUS_SENT, $driver1['mobile_phone_number']);
-        $dbMsg = $this->waitForDbUpdate($driver1, $org, $message_text, Message::STATUS_SENT);
+        $sid1 = $dbMsg1['sid'];
+        $sid2 = $dbMsg2['sid'];
 
         $this->wait();
 
-        $this->assertMessageSeenOnMessageModal($dbMsg);
-
-        $this->postStatusUpdate($twilioUser, $dbOrg, $sid, Message::STATUS_DELIVERED, $driver1['mobile_phone_number']);
-        $dbMsg = $this->waitForDbUpdate($driver1, $org, $message_text, Message::STATUS_DELIVERED);
+        $this->postStatusUpdate($twilioUser, $dbOrg, $sid1, Message::STATUS_SENT, $driver1['mobile_phone_number']);
+        $dbMsg1 = $this->waitForDbUpdate($driver1, $org, $message_text, Message::STATUS_SENT);
+        $this->postStatusUpdate($twilioUser, $dbOrg, $sid2, Message::STATUS_SENT, $driver2['mobile_phone_number']);
+        $dbMsg2 = $this->waitForDbUpdate($driver2, $org, $message_text, Message::STATUS_SENT);
 
         $this->wait();
 
-        $this->assertMessageSeenOnMessageModal($dbMsg);
+        $this->assertMessageSeenOnMessageModal($dbMsg1);
+        $this->assertMessageSeenOnMessageModal($dbMsg2);
+
+        $this->postStatusUpdate($twilioUser, $dbOrg, $sid1, Message::STATUS_DELIVERED, $driver1['mobile_phone_number']);
+        $dbMsg1 = $this->waitForDbUpdate($driver1, $org, $message_text, Message::STATUS_DELIVERED);
+        $this->postStatusUpdate($twilioUser, $dbOrg, $sid2, Message::STATUS_DELIVERED, $driver2['mobile_phone_number']);
+        $dbMsg2 = $this->waitForDbUpdate($driver2, $org, $message_text, Message::STATUS_DELIVERED);
+
+        $this->wait();
+
+        $this->assertMessageSeenOnMessageModal($dbMsg1);
+        $this->assertMessageSeenOnMessageModal($dbMsg2);
 
         $this->postMessageToIncomingController(
             $twilioUser,
@@ -93,23 +104,35 @@ class ConversationTest extends IntegratedTestCase
             $org,
             $driver1['mobile_phone_number'],
             $reply_message_text);
+        $this->postMessageToIncomingController(
+            $twilioUser,
+            $dbOrg,
+            $org,
+            $driver2['mobile_phone_number'],
+            $reply_message_text);
 
-        $dbMsg = $this->waitForDbUpdate($driver1, $org, $reply_message_text, Message::STATUS_RECEIVED);
+        $dbMsg1 = $this->waitForDbUpdate($driver1, $org, $reply_message_text, Message::STATUS_RECEIVED);
+        $dbMsg2 = $this->waitForDbUpdate($driver2, $org, $reply_message_text, Message::STATUS_RECEIVED);
 
         $this->wait();
 
-        $this->assertMessageSeenOnMessageModal($dbMsg);
+        $this->assertMessageSeenOnMessageModal($dbMsg1);
+        $this->assertMessageSeenOnMessageModal($dbMsg2);
 
         $this->wait();
         $this->byCssSelector('#messageDriverModal .modal-header button.close')->click();
         $this->wait();
 
-        $this->byId('message' . $id )->click();
+        $this->byId('message' . $id1 )->click();
+        $this->byId('message' . $id2 )->click();
+
         $this->wait();
 
-        $id = $dbMsg['_id'];
+        $id1 = $dbMsg1['_id'];
+        $id2 = $dbMsg2['_id'];
 
-        $this->byId('message' . $id )->click();
+        $this->byId('message' . $id1 )->click();
+        $this->byId('message' . $id2 )->click();
         
         $this->byId('btn-delete-messages')->click();
         $this->wait();
@@ -150,6 +173,7 @@ class ConversationTest extends IntegratedTestCase
      */
     protected function assertMessageSeenOnMessageModal($message)
     {
+        $statusText = ['queued'=>'Queued for','sent'=>'Sent to','delivered'=>'Delivered to','received'=>'Received from'];
 
         $actual = $this
             ->byCssSelector('#conversation_message' . $message['_id'] . ' .message_text')->text();
@@ -162,6 +186,12 @@ class ConversationTest extends IntegratedTestCase
                 ->byCssSelector('#conversation_message' . $message['_id'] . ' .message_container')
                 ->attribute('class')), $this
                 ->contains($message['status']),'status css class');
+        $this
+            ->assertThat($this
+                ->byCssSelector('#conversation_message' . $message['_id'] . ' .status')
+                ->text(),$this
+                ->equalTo($statusText[$message['status']]));
+
         // assert that a date is shown
         $this
             ->assertThat($this

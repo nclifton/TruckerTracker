@@ -35,7 +35,7 @@ var MessageDialogue ={
                 horizontalGutter:   20
             },
             lang:{
-                leftPanelHeaderText:    'Drivers',
+                leftPanelHeaderText:   'Drivers',
                 queuedStatusText:      'Queued for',
                 sentStatusText:        'Sent to',
                 deliveredStatusText:   'Delivered to',
@@ -161,6 +161,7 @@ var MessageDialogue ={
             line.find(".message_container")
                 .removeClass('queued sent delivered')
                 .addClass(data.status);
+            line.find(".status").text(settings.conversation.lang[data.status+'StatusText']);
             line.find(".datetime").text(Common.friendlyDatetime(data[data.status+'_at']));
 
             MessageDialogue.resetConversationScrollPanel();

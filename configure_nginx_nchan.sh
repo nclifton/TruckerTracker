@@ -10,6 +10,7 @@ sudo sed -i -e 's/worker_processes auto;/worker_processes 5;/g' /etc/nginx/nginx
 
 #sudo cp /etc/nginx/sites-available/homestead.app /etc/nginx/sites-available/homestead.app.orig
 sudo cp /vagrant/nginx/local.truckertracker.com.au /etc/nginx/sites-available/
+sudo rm /etc/nginx/sites-enabled/local.truckertracker.com.au
 sudo ln -s /etc/nginx/sites-available/local.truckertracker.com.au /etc/nginx/sites-enabled/local.truckertracker.com.au
 
 sudo mkdir -p /var/cache/nginx/client_temp
