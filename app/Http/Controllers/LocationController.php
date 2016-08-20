@@ -78,9 +78,11 @@ class LocationController extends Controller
             }
         } else {
             $array = $loc->toArray();
-            $array['vehicle'] = array_filter($array['vehicle'], function($key){
-                return in_array($key,['_id','registration_number']);
-            },ARRAY_FILTER_USE_KEY );
+            if (!is_null($array['vehicle'])){
+                $array['vehicle'] = array_filter($array['vehicle'], function($key){
+                    return !is_null($key) && in_array($key,['_id','registration_number']);
+                },ARRAY_FILTER_USE_KEY );
+            }
         }
         return $array;
     }

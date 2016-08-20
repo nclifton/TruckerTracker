@@ -88,7 +88,7 @@ if [ $PHP_IS_INSTALLED -eq 0 ]; then
 
     # install php extension
     echo "no" > answers.txt
-    sudo pecl install mongodb < answers.txt
+    sudo pecl install mongodb-1.2.0alpha1 < answers.txt
     rm answers.txt
 
     # add extension file and restart service

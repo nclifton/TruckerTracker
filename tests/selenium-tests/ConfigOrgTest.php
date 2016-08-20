@@ -3,13 +3,15 @@
 namespace TruckerTracker;
 
 
+use Artisan;
+use DB;
+
 include_once 'IntegratedTestCase.php';
 
 class ConfigOrgTest extends IntegratedTestCase
 {
 
-
-    protected $orgset = [
+    protected $configOrgTestOrgSet = [
         'test' => [
             'name' => 'McSweeney Transport Group',
             'timezone' => 'Australia/Sydney',
@@ -38,44 +40,24 @@ class ConfigOrgTest extends IntegratedTestCase
         ]
 
     ];
-    protected $fixtureUserset = [
-        [
-            '_id' => '100',
-            'name' => 'firstUser',
-            'email' => 'test1@cliftonwebfoundry.com.au',
-            'password' => '$2y$10$NkvhsSZvHX57Bm993h0ddeXdCrHwQ/X4idWV.pojZU9j3hDMmx2RG'
-        ],
 
-    ];
     protected $newUserLogin = [
         'name' => 'op1User',
         'email' => 'op1User@mcsweeneytg.com.au',
         'password' => 'mstgpwd1'
     ];
 
-    protected function getFixture()
-    {
-        $userset = $this->fixtureUserset;
-        foreach ($userset as $key => $user) {
-            unset($userset[$key]['organisation_id']);
-        }
-        return [
-            'users' => $this->fixtureUserset,
-            'password_resets' => [],
-            'drivers' => [],
-            'organisations' => [],
-            'vehicles' => [],
-            'messages' => []
-        ];
-    }
-
-    /*
+    /**
      * @before
      */
     public function setUp()
     {
         parent::setUp();
+    }
 
+    protected function artisanSeedDb()
+    {
+        Artisan::call('db:seed', ['--class' => 'ConfigOrgTestDbSeeder']);
     }
 
     /**
@@ -125,7 +107,7 @@ class ConfigOrgTest extends IntegratedTestCase
     public function testAddsOrg()
     {
         // Arrange
-        $org = $this->orgset['test'];
+        $org = $this->configOrgTestOrgSet['test'];
 
 
         // Act
@@ -239,16 +221,14 @@ class ConfigOrgTest extends IntegratedTestCase
                 ->attribute('disabled'), $this
                 ->isNull());
 
-        $this->assertCount(1, $this
-            ->getMongoConnection()
-            ->collection('users')
-            ->find([
-                'name' => $this->fixtureUserset[0]['name'],
+        $this->assertCount(1, DB::collection('users')
+            ->where([
+                'name' => $this->fixtureUserSetNoOrg[0]['name'],
                 'organisation_id' => ['$exists' => true]
-            ]));
+            ])->get());
 
         $this
-            ->seeInDatabase('organisations', $this->orgset['test']);
+            ->seeInDatabase('organisations', $this->configOrgTestOrgSet['test']);
 
 
     }
@@ -359,9 +339,9 @@ class ConfigOrgTest extends IntegratedTestCase
 
         // Assert some more
         $this->assertThat($this->byId('heading_org_name')->text(),
-            $this->equalTo($this->orgset['other']['name']));
+            $this->equalTo($this->configOrgTestOrgSet['other']['name']));
 
-        $this->seeInDatabase('organisations', $this->orgset['other']);
+        $this->seeInDatabase('organisations', $this->configOrgTestOrgSet['other']);
 
     }
 
@@ -404,14 +384,13 @@ class ConfigOrgTest extends IntegratedTestCase
 
         // Assert
         $vehicle = $this->vehicleSet[0];
-        $this->assertCount(1, $this->getMongoConnection()
-            ->collection('vehicles')
-            ->find([
+        $this->assertCount(1, DB::collection('vehicles')
+            ->where([
                 'registration_number' => $vehicle['registration_number'],
                 'mobile_phone_number' => $vehicle['mobile_phone_number'],
                 'tracker_imei_number' => $vehicle['tracker_imei_number'],
                 'organisation_id' => ['$exists' => true]
-            ]));
+            ])->get());
 
         $this->assertThat($this->byId('vehicleModalLabel')->displayed(), $this->isFalse());
 
@@ -451,7 +430,7 @@ class ConfigOrgTest extends IntegratedTestCase
         // Arrange
         $this->login()->addOrg()->addOrgUser();
 
-        $results = $this->connection->collection('users')->find(['email'=>$this->newUserLogin['email']]);
+        $results = DB::collection('users')->where(['email'=>$this->newUserLogin['email']])->get();
         $id ='';
         foreach ($results as $item) {
             $id = $item['_id'];
@@ -489,7 +468,7 @@ class ConfigOrgTest extends IntegratedTestCase
         // Arrange
         $this->login()->addOrg()->addOrgUser();
 
-        $results = $this->connection->collection('users')->find(['email'=>$this->newUserLogin['email']]);
+        $results = DB::collection('users')->where(['email'=>$this->newUserLogin['email']])->get();
         $id ='';
         foreach ($results as $item) {
             $id = $item['_id'];
@@ -520,7 +499,7 @@ class ConfigOrgTest extends IntegratedTestCase
 
         // Act
 
-        $org = $this->orgset['blank'];
+        $org = $this->configOrgTestOrgSet['blank'];
 
         $this->clearType($org['name'], '#org_name');
 
@@ -566,7 +545,7 @@ class ConfigOrgTest extends IntegratedTestCase
      */
     protected function addOrg($orgkey = 'test')
     {
-        $org = $this->orgset[$orgkey];
+        $org = $this->configOrgTestOrgSet[$orgkey];
 
         $this->clearType($org['name'], '#org_name');
         if (isset($org['timezone']))
@@ -607,7 +586,7 @@ class ConfigOrgTest extends IntegratedTestCase
     private function dbAddOrg($orgkey = 'test')
     {
 
-        $this->getMongoConnection()->collection('organisations')->insert($this->orgset[$orgkey]);
+        $this->getMongoConnection()->collection('organisations')->insert($this->configOrgTestOrgSet[$orgkey]);
         return $this;
     }
 

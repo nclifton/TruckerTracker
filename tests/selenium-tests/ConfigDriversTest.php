@@ -11,6 +11,8 @@
 
 namespace TruckerTracker;
 
+use Artisan;
+use DB;
 use PHPUnit_Framework_Exception;
 
 include_once 'IntegratedTestCase.php';
@@ -19,31 +21,18 @@ include_once 'IntegratedTestCase.php';
 class ConfigDriversTest extends IntegratedTestCase
 {
 
-    
-    protected function getFixture()
-    {
-        return [
-            'users' => $this->fixtureUserSet,
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => [],
-            'vehicles' => [],
-            'messages' => [],
-            'locations' => []
-        ];
-    }
-
-
     /**
     * @before
     */
     public function setUp()
     {
-
         parent::setUp();
-
     }
 
+    protected function artisanSeedDb()
+    {
+        Artisan::call('db:seed', ['--class' => 'ConfigDriversTestDbSeeder']);
+    }
 
     /**
      * Can Add a driver and can delete driver
@@ -66,11 +55,10 @@ class ConfigDriversTest extends IntegratedTestCase
 
         $this->seeInDatabase('drivers',$this->bind_driver($driver));
 
-        $cursor = $this->getMongoConnection()
-            ->collection('drivers')
-            ->find(array_merge($this->bind_driver($driver),[
+        $cursor = DB::collection('drivers')
+            ->where(array_merge($this->bind_driver($driver),[
                 'organisation_id' => ['$exists' => true]]
-            ));
+            ))->get();
         $id = null;
         foreach ($cursor as $doc){
             $id = $doc['_id'];
@@ -111,9 +99,8 @@ class ConfigDriversTest extends IntegratedTestCase
         $this->wait();
         $this->byId('btn-delete-driver')->click();
         $this->wait();
-        $cursor = $this->getMongoConnection()
-            ->collection('drivers')
-            ->find($this->bind_driver($driver));
+        $cursor = DB::collection('drivers')
+            ->where($this->bind_driver($driver))->get();
         $this->assertCount(0,$cursor);
         $this->notSeeId('#driver' . $id, 'driver line not deleted');
 
@@ -269,18 +256,16 @@ class ConfigDriversTest extends IntegratedTestCase
 
         // Assert
 
-        $this->assertCount(1, $this->getMongoConnection()
-            ->collection('drivers')
-            ->find(array_merge($this->bind_driver($driver2),[
-                'organisation_id' => ['$exists' => true]])
-            ));
+        $cursor = DB::collection('drivers')
+            ->where(array_merge($this->bind_driver($driver2), [
+                    'organisation_id' => ['$exists' => true]])
+            )->get();
+        $this->assertCount(1, $cursor);
 
         $this->assertThat($this->byId('driverModalLabel')->displayed(), $this->isFalse());
 
-        $driverSet = $this
-            ->getMongoConnection()
-            ->collection('drivers')
-            ->find(['organisation_id' => $driver1['organisation_id']]);
+        $driverSet = DB::collection('drivers')
+            ->where(['organisation_id' => $driver1['organisation_id']])->get();
         $ids = [];
         foreach ($driverSet as $driver){
             $ids[] = $driver['_id'];

@@ -2,6 +2,7 @@
 namespace TruckerTracker;
 require_once __DIR__ . '/TwilioControllerTestCase.php';
 
+use Artisan;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -19,20 +20,9 @@ class TwilioControllerLocationTest extends TwilioControllerTestCase
         parent::setUp();
     }
 
-    protected function getFixture()
+    protected function artisanSeedDb()
     {
-
-        //$this->orgset[0] = array_merge($this->orgset[0],$this->twilio_cwf);
-
-        return [
-            'users' => [],
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => $this->driverSet,
-            'vehicles' => $this->vehicleSet,
-            'messages' => [],
-            'locations' => $this->locationSet
-        ];
+        Artisan::call('db:seed', ['--class' => 'TwilioControllerLocationTestDbSeeder']);
     }
     /**
      * Post location request message.

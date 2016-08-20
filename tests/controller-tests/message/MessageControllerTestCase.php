@@ -11,6 +11,8 @@
  **/
 namespace TruckerTracker;
 
+use Artisan;
+
 require_once __DIR__ . '/../../TestTrait.php';
 
 class MessageControllerTestCase extends TestCase
@@ -28,20 +30,9 @@ class MessageControllerTestCase extends TestCase
         $this->user = $this->user();
     }
 
-
-
-    protected function getFixture()
+    protected function artisanSeedDb()
     {
-
-        return [
-            'users' => [],
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => $this->driverSet,
-            'vehicles' => [],
-            'messages' => $this->messageSet,
-            'locations' => []
-        ];
+        Artisan::call('db:seed', ['--class' => 'MessageControllerTestCaseDbSeeder']);
     }
 
 

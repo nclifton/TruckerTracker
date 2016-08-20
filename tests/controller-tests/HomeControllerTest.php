@@ -2,6 +2,8 @@
 
 namespace TruckerTracker;
 
+use Artisan;
+
 require_once __DIR__ . '/../TestTrait.php';
 require_once __DIR__ . '/../TestCase.php';
 
@@ -9,19 +11,7 @@ class HomeControllerTest extends TestCase {
 
     use TestTrait;
 
-    protected function getFixture()
-    {
 
-        return [
-            'users' => [],
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => $this->driverSet,
-            'vehicles' => $this->vehicleSet,
-            'messages' => $this->messageSet,
-            'locations' => $this->locationSet
-        ];
-    }
 
     /**
      * @before
@@ -29,6 +19,11 @@ class HomeControllerTest extends TestCase {
     public function setUp()
     {
         parent::setUp();
+    }
+
+    protected function artisanSeedDb()
+    {
+        Artisan::call('db:seed', ['--class' => 'HomeControllerTestDbSeeder']);
     }
 
     /**

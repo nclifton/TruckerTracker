@@ -2,32 +2,16 @@
 
 namespace TruckerTracker;
 
+use Artisan;
+
 require_once __DIR__ . '/IntegratedTestCase.php';
 
 class LoginPermissionsTest extends IntegratedTestCase
 {
 
-
-    protected function getFixture()
+    protected function artisanSeedDb()
     {
-        return [
-            'users' => $this->fixtureUserSet,
-            'password_resets' => [],
-            'drivers' => $this->driverSet,
-            'organisations' => $this->orgSet,
-            'vehicles' => $this->vehicleSet,
-            'messages' => $this->messageSet,
-            'locations' => $this->locationSet
-        ];
-    }
-
-    /*
-     * @before
-     */
-    public function setUp()
-    {
-        parent::setUp();
-
+        Artisan::call('db:seed', ['--class' => 'LoginPermissionsTestDbSeeder']);
     }
 
     /**

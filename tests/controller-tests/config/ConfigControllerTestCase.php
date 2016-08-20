@@ -10,6 +10,8 @@
  **/
 namespace TruckerTracker;
 
+use Artisan;
+
 require_once __DIR__ . '/../../TestTrait.php';
 require_once __DIR__ . '/../../TestCase.php';
 
@@ -18,27 +20,17 @@ abstract class ConfigControllerTestCase extends TestCase
 
     use TestTrait;
 
-    protected function refreshApplication()
-    {
-        putenv('APP_ENV=testing');
-
-        if (env('APP_ENV') != 'testing'){
-            throw new \Exception("environment not set to testing");
-        }
-
-        $this->app = $this->createApplication();
-    }
-
     /**
      * @before
      */
     public function setUp()
     {
-
         parent::setUp();
-
-
     }
 
+    protected function artisanSeedDb()
+    {
+        Artisan::call('db:seed', ['--class' => 'ConfigControllerTestCaseDbSeeder']);
+    }
 
 }

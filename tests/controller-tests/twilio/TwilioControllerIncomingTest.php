@@ -10,9 +10,11 @@
  **/
 namespace TruckerTracker;
 
+use Artisan;
 use DB;
 use Faker\Provider\DateTime;
 use Guzzle;
+use GuzzleHttp\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use TruckerTracker\Events\LocationUpdate;
 use TruckerTracker\Http\Controllers\LocationController;
@@ -32,17 +34,9 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
         parent::setUp();
     }
 
-    protected function getFixture()
+    protected function artisanSeedDb()
     {
-        return [
-            'users' => [],
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => $this->driverSet,
-            'vehicles' => $this->vehicleSet,
-            'messages' => $this->messageSet,
-            'locations' => $this->locationSet
-        ];
+        Artisan::call('db:seed', ['--class' => 'TwilioControllerIncomingTestDbSeeder']);
     }
 
     /**
@@ -93,7 +87,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             ],
             'json' => $expectedMessage
         ];
-        $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
+        $mockResponse = \Mockery::mock(ResponseInterface::class);
         $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
 
         Guzzle::shouldReceive('post')->once()->with($expectedUrl,\Mockery::on(function($arg) use ($expectedPostData){
@@ -155,7 +149,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             ],
             'json' => $expectedLocation
         ];
-        $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
+        $mockResponse = \Mockery::mock(ResponseInterface::class);
         $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
 
         Guzzle::shouldReceive('post')->once()->with($expectedUrl,\Mockery::on(function($arg) use ($expectedPostData){
@@ -260,7 +254,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             ],
             'json' => $expectedMessage
         ];
-        $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
+        $mockResponse = \Mockery::mock(ResponseInterface::class);
         $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
 
         Guzzle::shouldReceive('post')->once()->with($expectedUrl,\Mockery::on(function($arg) use ($expectedPostData){
@@ -372,7 +366,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             ],
             'json' => $expectedMessage
         ];
-        $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
+        $mockResponse = \Mockery::mock(ResponseInterface::class);
         $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
 
         Guzzle::shouldReceive('post')->once()->with($expectedUrl,\Mockery::on(function($arg) use ($expectedPostData){
@@ -461,7 +455,7 @@ class TwilioControllerIncomingTest extends TwilioControllerTestCase
             ],
             'json' => $expectedData
         ];
-        $mockResponse = \Mockery::mock(\GuzzleHttp\Message\ResponseInterface::class);
+        $mockResponse = \Mockery::mock(ResponseInterface::class);
         $mockResponse->shouldReceive('getStatusCode')->once()->andReturn(201);
 
         Guzzle::shouldReceive('post')->once()->with($expectedUrl,\Mockery::on(function($arg) use ($expectedPostData){

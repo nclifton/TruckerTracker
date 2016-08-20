@@ -2,12 +2,18 @@
 
 namespace TruckerTracker;
 
+use Artisan;
+use DB;
+
 Require_once __DIR__ . '/IntegratedTestCase.php';
 
 
 class MessageTest extends IntegratedTestCase
 {
-
+    protected function artisanSeedDb()
+    {
+        Artisan::call('db:seed', ['--class' => 'MessageTestDbSeeder']);
+    }
     /**
      * @test
      */
@@ -18,8 +24,8 @@ class MessageTest extends IntegratedTestCase
         $driver = $this->driverSet[0];
         $org = $this->orgSet[0];
 
-        $dbOrg = $this->connection->collection('organisations')->findOne(['_id' => $org['_id']]);
-        $twilioUser = $this->connection->collection('users')->findOne(['_id' => $dbOrg['twilio_user_id']]);
+        $dbOrg = DB::collection('organisations')->where(['_id' => $org['_id']])->first();
+        $twilioUser = DB::collection('users')->where(['_id' => $dbOrg['twilio_user_id']])->first();
         $message_text = 'Hello';
         $reply_message_text = 'Ahoy hoy!';
 
@@ -166,18 +172,7 @@ class MessageTest extends IntegratedTestCase
                 ->equalTo($expectedTimeStamp, 10));
     }
 
-    protected function getFixture()
-    {
-        return [
-            'users' => $this->fixtureUserSet,
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => $this->driverSet,
-            'vehicles' => $this->vehicleSet,
-            'messages' => [],
-            'locations' => []
-        ];
-    }
+
 
     /**
      * @param $driver
@@ -191,13 +186,13 @@ class MessageTest extends IntegratedTestCase
         $maxCnt = 10;
         $dbMsg = null;
         while ($maxCnt > 0) {
-            $dbMsg = $this->getMongoConnection()->collection('messages')->findOne(
+            $dbMsg = DB::collection('messages')->where(
                 [
                     'driver_id' => $driver['_id'],
                     'organisation_id' => $org['_id'],
                     'message_text' => $message_text,
                     'status' => $status
-                ]);
+                ])->first();
             if (!is_null($dbMsg)) {
                 break;
             }

@@ -13,6 +13,7 @@ namespace TruckerTracker;
 
 require_once __DIR__ . '/../../TestTrait.php';
 
+use Artisan;
 use Config;
 use \Mockery as m;
 use TruckerTracker\Twilio\TwilioInterface;
@@ -35,27 +36,19 @@ class TwilioControllerTestCase extends TestCase
         Config::set('url','http://local.truckertracker.services');
     }
 
+
+    protected function artisanSeedDb()
+    {
+        Artisan::call('db:seed', ['--class' => 'TwilioControllerTestCaseDbSeeder']);
+    }
+
     protected $twilio_cwf = [
         'twilio_account_sid' => 'AC44ff302474a347b508260e099573d042',
         'twilio_auth_token' => '01afd52146771821a2a4b4fc864230ab',
         'twilio_phone_number' => '+61481072148'
     ];
 
-    protected function getFixture()
-    {
 
-        //$this->orgset[0] = array_merge($this->orgset[0],$this->twilio_cwf);
-
-        return [
-            'users' => [],
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => $this->driverSet,
-            'vehicles' => $this->vehicleSet,
-            'messages' => [],
-            'locations' => []
-        ];
-    }
 
     /**
      * @after

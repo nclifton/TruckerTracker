@@ -12,9 +12,7 @@ class UsersSeeder extends Seeder
     public function run()
     {
         
-        Schema::drop('organisations');
-        Schema::drop('password_resets');
-        Schema::drop('users');
+
 
     }
 }

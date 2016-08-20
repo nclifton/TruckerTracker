@@ -16,15 +16,16 @@ include_once __DIR__ . '/../TestTrait.php';
 use Closure;
 use Guzzle;
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Support\Facades\Artisan;
 use InvalidArgumentException;
 use Laracasts\Integrated\Emulator;
+use Laracasts\Integrated\Extensions\Selenium;
 use Laracasts\Integrated\JavaScriptAwareEmulator;
-use Symfony\Component\Process\Process;
 use WebDriver\Exception\ElementNotVisible;
 use WebDriver\Exception\NoSuchElement;
 use WebDriver\WebDriver;
 
-abstract class IntegratedTestCase extends \Laracasts\Integrated\Extensions\Selenium implements Emulator, JavaScriptAwareEmulator
+abstract class IntegratedTestCase extends Selenium implements Emulator, JavaScriptAwareEmulator
 {
 
     use TestTrait;
@@ -65,10 +66,34 @@ abstract class IntegratedTestCase extends \Laracasts\Integrated\Extensions\Selen
      */
     public function setUp()
     {
-        if (!$this->app) {
-            $this->app = $this->createApplication();
+        parent::setUp();
+
+        if (! $this->app) {
+            $this->refreshApplication();
         }
 
+        Artisan::call('migrate');
+        $this->artisanSeedDb();
+
+    }
+
+
+    public function tearDown()
+    {
+        Artisan::call('migrate:rollback');
+        parent::tearDown();
+    }
+
+    /**
+     * Refresh the application instance.
+     *
+     * @return void
+     */
+    protected function refreshApplication()
+    {
+        putenv('APP_ENV=testing');
+
+        $this->app = $this->createApplication();
     }
 
     /**

@@ -25,6 +25,7 @@
         <env name="APP_ENV" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
+        <env name="DB_CONNECTION" value="mongodb"/>
         <env name="QUEUE_DRIVER" value="sync"/>
         <const name="PHPUNIT_TESTSUITE" value="true"/>
         <const name="PHPUNIT_TESTSUITE_EXTENSION_SELENIUM_HOST" value="127.0.0.1"/>

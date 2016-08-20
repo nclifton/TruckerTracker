@@ -11,33 +11,26 @@
 
 namespace TruckerTracker;
 
+use Artisan;
+use DB;
+
 include_once 'IntegratedTestCase.php';
 
 class ConfigVehiclesTest extends IntegratedTestCase
 {
 
-    /**
-     * @var array
-     * @return array
-     */
-    protected function getFixture()
-    {
-        return [
-            'users' => $this->fixtureUserSet,
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => [],
-            'vehicles' => []
-        ];
-    }
 
-    /*
-  * @before
-  */
+    /**
+     * @before
+     */
     public function setUp()
     {
         parent::setUp();
+    }
 
+    protected function artisanSeedDb()
+    {
+        Artisan::call('db:seed', ['--class' => 'ConfigVehiclesTestDbSeeder']);
     }
 
     /**
@@ -50,11 +43,10 @@ class ConfigVehiclesTest extends IntegratedTestCase
     {
         // Arrange
 
-
         // Act
         $this->login();
         $this->clickOnElement('btn-add-vehicle');
-        sleep(2); // wait for animation
+        $this->wait(); // wait for animation
 
         // Assert
         $this->assertThat($this->byId('vehicleModalLabel')->displayed(), $this->isTrue());
@@ -80,12 +72,11 @@ class ConfigVehiclesTest extends IntegratedTestCase
         $this->login()->addVehicle($vehicle0);
 
         // Assert
-        $cursor = $this->getMongoConnection()
-            ->collection('vehicles')
-            ->find($this->bind_vehicle($vehicle0));
+        $cursor = DB::collection('vehicles')
+            ->where($this->bind_vehicle($vehicle0))->get();
         $id = null;
         $cnt = 0;
-        foreach ($cursor as $doc){
+        foreach ($cursor as $doc) {
             $id = $doc['_id'];
             $cnt++;
         }
@@ -96,13 +87,13 @@ class ConfigVehiclesTest extends IntegratedTestCase
         $this->assertThat($this->byId('vehicleModalLabel')->displayed(), $this->isFalse());
         $this->byCssSelector('a[href="#locate_vehicles_collapsible"]')->click();
         $this->wait();
-        $this->assertThat($this->byId('vehicle'.$id)->displayed(), $this->isTrue());
+        $this->assertThat($this->byId('vehicle' . $id)->displayed(), $this->isTrue());
 
         // check vehicle info displayed
         $this
             ->assertThat($this
-                ->byCssSelector('#vehicle'.$id.' .registration_number')
-                ->text(),$this
+                ->byCssSelector('#vehicle' . $id . ' .registration_number')
+                ->text(), $this
                 ->equalTo($vehicle0['registration_number']));
 
 
@@ -110,18 +101,18 @@ class ConfigVehiclesTest extends IntegratedTestCase
 
         $this->byId('#vehicle' . $id)->click();
         $this->wait();
-        $this->assertThat($this->byId('btn-locateVehicle')->attribute('disabled'),$this->isNull());
+        $this->assertThat($this->byId('btn-locateVehicle')->attribute('disabled'), $this->isNull());
         $this->byId('btn-locateVehicle')->click();
         $this->wait();
         $this->assertThat($this->byId('locateVehicleModal')->displayed(), $this->isTrue());
-        $this->assertThat($this->byId('locateVehicle_id')->attribute('value'),$this->equalTo(''.$id));
+        $this->assertThat($this->byId('locateVehicle_id')->attribute('value'), $this->equalTo('' . $id));
         $this->byCssSelector('#locateVehicleModal button.close')->click();
         $this->wait();
-        $this->assertThat($this->byId('btn-edit-vehicle')->attribute('disabled'),$this->isNull());
+        $this->assertThat($this->byId('btn-edit-vehicle')->attribute('disabled'), $this->isNull());
         $this->byId('btn-edit-vehicle')->click();
         $this->wait();
         $this->assertThat($this->byId('vehicleModal')->displayed(), $this->isTrue());
-        $this->assertThat($this->byId('vehicle_id')->attribute('value'),$this->equalTo(''.$id));
+        $this->assertThat($this->byId('vehicle_id')->attribute('value'), $this->equalTo('' . $id));
 
         $this->clearType($vehicle1['registration_number'], '#registration_number');
         $this->clearType($vehicle1['mobile_phone_number'], '#vehicle_mobile_phone_number');
@@ -131,11 +122,10 @@ class ConfigVehiclesTest extends IntegratedTestCase
         $this->wait();
         $this->byId('btn-delete-vehicle')->click();
         $this->wait();
-        $cursor = $this->getMongoConnection()
-            ->collection('vehicles')
-            ->find($this->bind_vehicle($vehicle0));
-        $this->assertCount(0,$cursor);
-        $this->notSeeId('#vehicle'.$id,'vehicle line not deleted');
+        $cursor = DB::collection('vehicles')
+            ->where($this->bind_vehicle($vehicle0))->get();
+        $this->assertCount(0, $cursor);
+        $this->notSeeId('#vehicle' . $id, 'vehicle line not deleted');
 
 
     }
@@ -171,9 +161,8 @@ class ConfigVehiclesTest extends IntegratedTestCase
             $this->logicalNot($this->contains('has-error')));
 
 
-
-
     }
+
     /**
      * display validation message registration number
      *
@@ -190,13 +179,13 @@ class ConfigVehiclesTest extends IntegratedTestCase
 
         $v['registration_number'] = 'AAC993';
         // Assert
-        $this->assertCount(1, $this->getMongoConnection()
-            ->collection('vehicles')
-            ->find($this->bind_vehicle($v)));
+        $this->assertCount(1, DB::collection('vehicles')
+            ->where($this->bind_vehicle($v))->get());
 
         $this->assertThat($this->byId('vehicleModalLabel')->displayed(), $this->isFalse());
 
     }
+
     /**
      * validation phone number is displayed
      *
@@ -220,6 +209,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
             $this->equalTo('That doesn\'t look like an australian phone number, it needs to have 10 digits and start with a 0 or start with +61 and have 11 digits'));
 
     }
+
     /**
      * validation phone number is displayed
      *
@@ -257,6 +247,7 @@ class ConfigVehiclesTest extends IntegratedTestCase
             'organisation_id' => ['$exists' => true]
         ];
     }
+
     protected function addVehicle($vehicle)
     {
         $this->clickOnElement('btn-add-vehicle');

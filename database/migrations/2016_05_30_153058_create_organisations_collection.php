@@ -5,6 +5,8 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateOrganisationsCollection extends Migration
 {
+    const COLLECTION_NAME = 'organisations';
+
     /**
      * Run the migrations.
      *
@@ -12,11 +14,8 @@ class CreateOrganisationsCollection extends Migration
      */
     public function up()
     {
-        Schema::create('organisations', function (Blueprint $collection) {
-//            $collection->increments('id');
-//            $collection->string('name')->index();
+        Schema::create(self::COLLECTION_NAME, function (Blueprint $collection) {
             $collection->index('name');
-//            $collection->timestamps();
         });
     }
 
@@ -27,6 +26,6 @@ class CreateOrganisationsCollection extends Migration
      */
     public function down()
     {
-        Schema::drop('organisations');
+        Schema::drop(self::COLLECTION_NAME);
     }
 }

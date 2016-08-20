@@ -2,11 +2,6 @@
 namespace TruckerTracker;
 require_once __DIR__ . '/LocationControllerTestCase.php';
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use TruckerTracker\Twilio\TwilioInterface;
-
 class LocationControllerDeleteLocationTest extends LocationControllerTestCase
 {
 

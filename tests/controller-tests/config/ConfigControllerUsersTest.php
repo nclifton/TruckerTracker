@@ -22,18 +22,6 @@ class ConfigControllerUsersTest extends ConfigControllerTestCase
     public function setUp()
     {
         parent::setUp();
-
-    }
-
-    protected function getFixture()
-    {
-        return [
-            'users' => [],
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => [],
-            'vehicles' => []
-        ];
     }
 
     /**

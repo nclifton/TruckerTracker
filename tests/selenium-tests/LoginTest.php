@@ -2,21 +2,17 @@
 
 namespace TruckerTracker;
 
+use Artisan;
+use DB;
+
 require_once __DIR__ . '/IntegratedTestCase.php';
 
 class LoginTest extends IntegratedTestCase
 {
 
-
-    protected function getFixture()
+    protected function artisanSeedDb()
     {
-        return [
-            'users' => [],
-            'password_resets' => [],
-            'drivers' => [],
-            'organisations' => [],
-            'vehicles' => []
-        ];
+        Artisan::call('db:seed', ['--class' => 'LoginTestDbSeeder']);
     }
 
     /*
@@ -25,7 +21,6 @@ class LoginTest extends IntegratedTestCase
     public function setUp()
     {
         parent::setUp();
-
     }
 
     /**
@@ -64,11 +59,10 @@ class LoginTest extends IntegratedTestCase
 
         // Assert
 
-        $this->assertCount(1, $this->getMongoConnection()
-            ->collection('users')
-            ->find(['name' => $user['name'],
+        $this->assertCount(1, DB::collection('users')
+            ->where(['name' => $user['name'],
                 'email' => $user['email'],
-                'organisation_id' => ['$exists' => false]]));
+                'organisation_id' => ['$exists' => false]])->get());
 
     }
 

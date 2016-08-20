@@ -3,7 +3,6 @@
 namespace TruckerTracker;
 
 use DB;
-use TruckerTracker\Twilio\TwilioHelper;
 
 require_once __DIR__ . '/ConfigControllerTestCase.php';
 
@@ -19,16 +18,6 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         parent::setUp();
     }
 
-    protected function getFixture()
-    {
-        return [
-            'users' => [],
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => [],
-            'vehicles' => []
-        ];
-    }
 
     /**
      * "GET" organisation as first user.
@@ -276,8 +265,8 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         $twilio_outbound_message_status_callback_url = http_build_url('',$urlParts);
 
         $org = $this->orgSet[0];
-        $this->getMongoConnection()->collection('organisations')
-            ->remove(['_id' => $org['_id']]);
+        DB::collection('organisations')
+            ->delete(['_id' => $org['_id']]);
 
         // Act
 
@@ -718,8 +707,8 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         $org = $this->orgSet[0];
         $value = $value ?: $org[$propertyName];
         $storedValue = $storedValue ?: $value;
-        $this->getMongoConnection()->collection('organisations')
-            ->remove(['_id' => $org['_id']]);
+        DB::collection('organisations')
+            ->delete(['_id' => $org['_id']]);
         $twilioPassword = bin2hex(random_bytes(16));
         $twilioUsername = bin2hex(random_bytes(16));
         
@@ -762,8 +751,8 @@ class ConfigControllerOrganisationsTest extends ConfigControllerTestCase
         // Arrange
         $user = $this->user();
         $org = $this->orgSet[0];
-        $this->getMongoConnection()->collection('organisations')
-            ->remove(['_id' => $org['_id']]);
+        DB::collection('organisations')
+            ->delete(['_id' => $org['_id']]);
         $twilioPassword = bin2hex(random_bytes(16));
         $twilioUsername = bin2hex(random_bytes(16));
 

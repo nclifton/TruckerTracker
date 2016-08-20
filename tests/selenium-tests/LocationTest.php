@@ -1,6 +1,7 @@
 <?php
 namespace TruckerTracker;
 
+use Artisan;
 use DB;
 use Faker\Provider\DateTime;
 use Guzzle;
@@ -14,18 +15,20 @@ Require_once __DIR__.'/IntegratedTestCase.php';
 class LocationTest extends \TruckerTracker\IntegratedTestCase
 {
 
-    protected function getFixture()
+    /**
+     * @before
+     */
+    public function setUp()
     {
-         return [
-            'users' => $this->fixtureUserSet,
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => [],
-            'vehicles' => $this->vehicleSet,
-            'messages' => [],
-            'locations' => []
-        ];
+        parent::setUp();
     }
+
+    protected function artisanSeedDb()
+    {
+        Artisan::call('db:seed', ['--class' => 'LocationTestDbSeeder']);
+    }
+
+
 
     /**
      * @test
@@ -53,12 +56,12 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
         $dbLoc = null;
         while ($count > 0 && !($dbLoc)){
             --$count;
-            $dbLoc = $this->getMongoConnection()->collection('locations')->findOne(
+            $dbLoc = DB::collection('locations')->where(
                 [
                     'vehicle_id' => $vehicle['_id'],
                     'organisation_id' => $org['_id'],
                     'status' => 'queued'
-                ]);
+                ])->first();
             $this->wait();
         }
         $this->assertNotNull($dbLoc);
@@ -71,8 +74,8 @@ class LocationTest extends \TruckerTracker\IntegratedTestCase
 
         $this->assert_location_line($id, $vehicle, 'queued', $queued_at);
 
-        $dbOrg = $this->connection->collection('organisations')->findOne(['_id'=>$org['_id']]);
-        $twilioUser = $this->connection->collection('users')->findOne(['_id'=>$dbOrg['twilio_user_id']]);
+        $dbOrg = DB::collection('organisations')->where(['_id'=>$org['_id']])->first();
+        $twilioUser = DB::collection('users')->where(['_id'=>$dbOrg['twilio_user_id']])->first();
 
         $this->wait();
 

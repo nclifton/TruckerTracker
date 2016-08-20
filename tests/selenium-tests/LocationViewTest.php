@@ -4,6 +4,7 @@ namespace TruckerTracker;
 
 require_once __DIR__.'/IntegratedTestCase.php';
 
+use Artisan;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -12,18 +13,11 @@ class LocationViewTest extends IntegratedTestCase
 {
 
 
-    protected function getFixture()
+    protected function artisanSeedDb()
     {
-        return [
-            'users' => $this->fixtureUserSet,
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => $this->driverSet,
-            'vehicles' => $this->vehicleSet,
-            'messages' => $this->messageSet,
-            'locations' => json_decode($this->viewLocationSetJson,true)
-        ];
+        Artisan::call('db:seed', ['--class' => 'LocationViewTestDbSeeder']);
     }
+
 
     /**
      * A basic test example.

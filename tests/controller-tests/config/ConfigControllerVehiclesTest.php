@@ -25,17 +25,6 @@ class ConfigControllerVehiclesTest extends ConfigControllerTestCase
         parent::setUp();
     }
 
-    protected function getFixture()
-    {
-        return [
-            'users' => [],
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => [],
-            'vehicles' => []
-        ];
-    }
-
     /**
      * test post vehicle as first user
      * - back-end adds the tracker password

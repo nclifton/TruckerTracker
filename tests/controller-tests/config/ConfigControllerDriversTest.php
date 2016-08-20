@@ -22,20 +22,7 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
     public function setUp()
     {
         parent::setUp();
-
     }
-
-    protected function getFixture()
-    {
-        return [
-            'users' => [],
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => [],
-            'vehicles' => []
-        ];
-    }
-
 
     /**
      * test post driver
@@ -751,5 +738,6 @@ class ConfigControllerDriversTest extends ConfigControllerTestCase
             'drivers_licence_number' => $d['drivers_licence_number']
         ];
     }
+
 
 }

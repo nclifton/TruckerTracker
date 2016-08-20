@@ -11,6 +11,7 @@
 
 
 namespace TruckerTracker;
+use Artisan;
 use Faker\Provider\DateTime;
 
 require_once __DIR__ . '/MessageControllerTestCase.php';
@@ -22,22 +23,15 @@ class MessageControllerDriverConversationTest extends MessageControllerTestCase
 
     protected $conversationSet;
 
-    /**
-     * @return array
-     */
-    protected function getFixture()
+
+
+    protected function artisanSeedDb()
     {
+        Artisan::call('db:seed', ['--class' => 'MessageControllerDriverConversationTestDbSeeder']);
         $this->conversationSet = $this->conversationSet();
-        return [
-            'users' =>              [],
-            'password_resets' =>    [],
-            'organisations' =>      $this->orgSet,
-            'drivers' =>            $this->driverSet,
-            'vehicles' =>           [],
-            'messages' =>           $this->conversationSet,
-            'locations' =>          []
-        ];
+
     }
+
 
     /**
      *

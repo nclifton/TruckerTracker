@@ -25,10 +25,8 @@
         "mockery/mockery": "0.9.*",
         "symfony/css-selector": "2.8.*",
         "phpunit/php-file-iterator": "~1.4",
-        "alcaeus/mongo-php-adapter": "^1.0",
 	    "phpunit/phpunit": "4.8.26",
 	    "phpunit/phpunit-selenium": "2.x-dev",
-	    "zumba/mongounit": "~2.0",
         "laracasts/integrated": "~0.15.6",
         "laravel/homestead": "^3.0"
     },

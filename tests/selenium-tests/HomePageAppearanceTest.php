@@ -2,22 +2,18 @@
 
 namespace TruckerTracker;
 
+use Artisan;
+use DB;
+
 require_once __DIR__ . '/IntegratedTestCase.php';
 
 class HomePageAppearanceTest extends IntegratedTestCase
 {
 
-    protected function getFixture()
+
+    protected function artisanSeedDb()
     {
-        return [
-            'users'             => $this->fixtureUserSet,
-            'password_resets'   => [],
-            'organisations'     => $this->orgSet,
-            'drivers'           => $this->driverSet,
-            'vehicles'          => $this->vehicleSet,
-            'messages'          => $this->messageSet,
-            'locations'         => $this->locationSet
-        ];
+        Artisan::call('db:seed', ['--class' => 'HomePageAppearanceTestDbSeeder']);
     }
 
     /**
@@ -35,11 +31,11 @@ class HomePageAppearanceTest extends IntegratedTestCase
 
         // Assert
 
-        $results = $this->getMongoConnection()->collection('locations')->find(
+        $results = DB::collection('locations')->where(
             [
                 'organisation_id' => $this->orgSet[0]['_id'],
                 'status' => 'sent'
-            ]);
+            ])->get();
         $id = null;
         foreach ($results as $doc) {
             $id = $doc['_id'];

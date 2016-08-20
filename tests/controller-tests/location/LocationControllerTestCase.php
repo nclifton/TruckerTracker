@@ -11,9 +11,11 @@
  **/
 namespace TruckerTracker;
 
+use Artisan;
+
 require_once __DIR__ . '/../../TestTrait.php';
 
-class LocationControllerTestCase extends TestCase
+abstract class LocationControllerTestCase extends TestCase
 {
     use TestTrait;
     protected $user;
@@ -28,20 +30,9 @@ class LocationControllerTestCase extends TestCase
         $this->user = $this->user();
     }
 
-
-
-    protected function getFixture()
+    protected function artisanSeedDb()
     {
-
-        return [
-            'users' => [],
-            'password_resets' => [],
-            'organisations' => $this->orgSet,
-            'drivers' => [],
-            'vehicles' => $this->vehicleSet,
-            'messages' => [],
-            'locations' => json_decode($this->viewLocationSetJson,true)
-        ];
+        Artisan::call('db:seed', ['--class' => 'LocationControllerTestCaseDbSeeder']);
     }
 
 

@@ -3,7 +3,7 @@
 use Jenssegers\Mongodb\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateUsersCollection extends Migration
 {
 
     /**
@@ -21,15 +21,7 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $collection) {
-            //$collection->increments('id');
-            //$collection->string('name');
-            //$collection->string('email')->unique();
             $collection->unique('email');
-            //$collection->string('password');
-            //$collection->string('organisation_id');
-            //$collection->rememberToken();
-            //$collection->timestamps();
-            //$collection->foreign(['organisation_id']);
         });
     }
 
