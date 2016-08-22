@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    'from' => ['address' => 'support@mg.truckertracker.services', 'name' => 'Trucker Tracker Support'],
 
     /*
     |--------------------------------------------------------------------------
