@@ -20,3 +20,6 @@ Homestead.json
 /resources/assets/bower/
 /nginx/
 /storage/framework/dbbackups/
+/.env.production
+/tests/phantomjsdriver.log
+/tests/tests/
