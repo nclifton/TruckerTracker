@@ -2,8 +2,8 @@
 
 namespace TruckerTracker\Providers;
 
-use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 use TruckerTracker\Driver;
 use TruckerTracker\Location;
 use TruckerTracker\Message;
@@ -24,50 +24,86 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route model bindings, pattern filters, etc.
      *
-     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
-    public function boot(Router $router)
+    public function boot()
     {
         //
 
-        parent::boot($router);
+        parent::boot();
 
-        $router->model('driver', Driver::class);
-        $router->model('vehicle', Vehicle::class);
-        $router->model('organisation', Organisation::class);
-        $router->model('location', Location::class);
-        $router->model('message', Message::class);
+        Route::model('driver', Driver::class);
+        Route::model('vehicle', Vehicle::class);
+        Route::model('organisation', Organisation::class);
+        Route::model('location', Location::class);
+        Route::model('message', Message::class);
 
     }
 
     /**
      * Define the routes for the application.
      *
-     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
-    public function map(Router $router)
+    public function map()
     {
-        $this->mapWebRoutes($router);
+        $this->mapPublicWebRoutes();
+
+        $this->mapAuthenticatedWebRoutes();
+
+        $this->mapApiRoutes();
 
         //
     }
 
     /**
-     * Define the "web" routes for the application.
+     * Define the "public web" routes for the application.
      *
      * These routes all receive session state, CSRF protection, etc.
      *
-     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
-    protected function mapWebRoutes(Router $router)
+    protected function mapPublicWebRoutes()
     {
-        $router->group([
-            'namespace' => $this->namespace, 'middleware' => 'web',
+        Route::group([
+            'middleware' => ['web'],
+            'namespace' => $this->namespace,
         ], function ($router) {
-            require app_path('Http/routes.php');
+            require base_path('routes/public.php');
+        });
+    }
+
+    /**
+     * Define the "authenticated web" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapAuthenticatedWebRoutes()
+    {
+        Route::group([
+            'middleware' => ['web','auth'],
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/web.php');
+        });
+    }
+
+    /**
+     * Define the "api" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapApiRoutes()
+    {
+        Route::group([
+            'middleware' => ['api','auth.basic'],
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/api.php');
         });
     }
 }

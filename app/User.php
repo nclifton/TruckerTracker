@@ -8,8 +8,11 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Notifications\Notifiable;
 use Moloquent;
 use MongoDB\BSON\ObjectID;
+use TruckerTracker\Notifications\ResetPassword as ResetPasswordNotification;
+
 
 /**
  * Class User
@@ -28,7 +31,7 @@ class User extends Moloquent implements
     AuthorizableContract,
     CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword;
+    use Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -59,4 +62,17 @@ class User extends Moloquent implements
     public function twilioUserOrganisation(){
         return $this->hasOne(Organisation::class,'twilio_user_id','_id');
     }
+
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token,$this));
+    }
+
 }

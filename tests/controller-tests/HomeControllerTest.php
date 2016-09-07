@@ -26,6 +26,27 @@ class HomeControllerTest extends TestCase {
         Artisan::call('db:seed', ['--class' => 'HomeControllerTestDbSeeder']);
     }
 
+
+    /**
+     * initial site access - not logged in
+     *
+     * @return void
+     *
+     * @test
+     */
+    public function welcomePageShown()
+    {
+        // Arrange
+
+        // Act
+        $this->get('/');
+
+        // Assert
+        $this->assertResponseOk();
+        $this->seeText('Trucker');
+
+    }
+
     /**
      * First user login
      *

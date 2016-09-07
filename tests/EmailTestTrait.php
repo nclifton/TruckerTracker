@@ -28,6 +28,7 @@ trait EmailTestTrait
      * @before
      */
     public function setupMailCatcher(){
+
         $this->mailcatcher = new Client(['base_url' => 'http://local.truckertracker.services:1080']);
 
         // clean emails between tests

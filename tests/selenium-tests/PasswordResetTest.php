@@ -43,12 +43,12 @@ class PasswordResetTest extends IntegratedTestCase
 
         $this->assertEmailIsSent();
         $email = $this->getLastMessage();
-        $this->assertEmailSubjectContains('Your Password Reset Link',$email);
+        $this->assertEmailSubjectContains('Your TruckerTracker Password Reset Link',$email);
         $this->assertEmailHtmlContains('href="http://local.truckertracker.services/password/reset',$email);
 
         $links = $this->getLinksInEmailHtml($email);
-        $this->assertThat(array_column($links,'text'),$this->contains('Reset your password'));
-        $this->visit($links[array_search('Reset your password', array_column($links,'text'))]['href']);
+        $this->assertThat(array_column($links,'text'),$this->contains('Reset Your Password'));
+        $this->visit($links[array_search('Reset Your Password', array_column($links,'text'))]['href']);
 
         $this->assertThat($this->byCssSelector('.panel-heading')->text(), $this->equalTo('Reset Password'));
 
