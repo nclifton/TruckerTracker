@@ -4,7 +4,7 @@ Support tools for the road freight business. Tracking and communication, and eve
 
 ## Official Documentation
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+Documentation for TruckerTracker will eventually be available on the [TruckerTracker.services web site](http://truckertracker.services).
 
 ## Contributing
 
