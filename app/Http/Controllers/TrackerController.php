@@ -17,7 +17,6 @@ class TrackerController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('none');
     }
 
     public function storeLocation(Request $request){

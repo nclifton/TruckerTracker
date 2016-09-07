@@ -32,7 +32,6 @@ class TwilioIncomingController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('api');
     }
 
 
@@ -139,7 +138,7 @@ class TwilioIncomingController extends Controller
      * @param $driver
      * @return static
      */
-    protected function storeMessageFromDriver(Request $request, $org, $driver)
+    protected function storeMessageFromDriver(Request $request, Organisation $org, Driver $driver)
     {
         $message = Message::create([
             'sid' => $request->MessageSid,
@@ -157,7 +156,7 @@ class TwilioIncomingController extends Controller
      * @param $request
      * @param $vehicle
      */
-    private function updateVehicleLocation($request, $vehicle)
+    private function updateVehicleLocation(Request $request, Vehicle $vehicle)
     {
 
         $location = $vehicle->locations()->where('status', '<>', 'received')->orderby('changed_at', 'asc')->first();

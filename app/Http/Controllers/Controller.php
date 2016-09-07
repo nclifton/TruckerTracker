@@ -11,7 +11,7 @@ use MongoDB\BSON\UTCDatetime;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
      * @return UTCDatetime

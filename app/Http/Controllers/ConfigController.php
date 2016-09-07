@@ -3,13 +3,10 @@
 namespace TruckerTracker\Http\Controllers;
 
 use Gate;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Response;
 use TruckerTracker\Driver;
-use TruckerTracker\Http\Requests;
 use TruckerTracker\Organisation;
 use TruckerTracker\Twilio\TwilioHelper;
 use TruckerTracker\User;
@@ -18,8 +15,6 @@ use TruckerTracker\Vehicle;
 class ConfigController extends Controller
 {
 
-    use AuthenticatesAndRegistersUsers;
-    
     public $restful = true;
 
     /**
@@ -27,14 +22,13 @@ class ConfigController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
     }
 
     /**
      * @param Organisation $org
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getOrganisation($org)
+    public function getOrganisation(Organisation $org)
     {
         if (Gate::denies('view-organisation', $org)) {
             abort(403);
@@ -190,7 +184,7 @@ class ConfigController extends Controller
      * @param $driver
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getDriver($driver)
+    public function getDriver(Driver $driver)
     {
         if (Gate::denies('view-driver', $driver->organisation)) {
             abort(403);
@@ -220,7 +214,7 @@ class ConfigController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateDriver($driver, Request $request)
+    public function updateDriver(Driver $driver, Request $request)
     {
         if (Gate::denies('update-driver', $driver->organisation)) {
             abort(403);
@@ -235,7 +229,7 @@ class ConfigController extends Controller
      * @param $driver
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteDriver($driver)
+    public function deleteDriver(Driver $driver)
     {
         if (Gate::denies('delete-driver', $driver->organisation)) {
             abort(403);
@@ -249,7 +243,7 @@ class ConfigController extends Controller
      * @param $vehicle
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getVehicle($vehicle)
+    public function getVehicle(Vehicle $vehicle)
     {
         if (Gate::denies('view-driver', $vehicle->organisation)) {
             abort(403);
@@ -279,7 +273,7 @@ class ConfigController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateVehicle($vehicle, Request $request)
+    public function updateVehicle(Vehicle $vehicle, Request $request)
     {
         if (Gate::denies('update-vehicle', $vehicle->organisation)) {
             abort(403);
@@ -294,7 +288,7 @@ class ConfigController extends Controller
      * @param $vehicle
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteVehicle($vehicle)
+    public function deleteVehicle(Vehicle $vehicle)
     {
         if (Gate::denies('delete-vehicle', $vehicle->organisation)) {
             abort(403);
@@ -369,10 +363,10 @@ class ConfigController extends Controller
 
     /**
      * @param Request $request
-     * @param $user
+     * @param User $user
      * @param string $cid
      */
-    private function validateDriver(Request $request, $user, $cid = 'NULL')
+    private function validateDriver(Request $request, User $user, $cid = 'NULL')
     {
         $org_id = $user->organisation_id;
         $ln = $request->last_name;
@@ -414,9 +408,9 @@ class ConfigController extends Controller
 
     /**
      * @param Request $request
-     * @param $user
+     * @param User $user
      */
-    private function validateVehicle(Request $request, $user, $cid = 'NULL')
+    private function validateVehicle(Request $request, User $user, $cid = 'NULL')
     {
         $org_id = $user->organisation_id;
         $this->validate($request,

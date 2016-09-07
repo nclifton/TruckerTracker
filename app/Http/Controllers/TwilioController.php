@@ -36,7 +36,6 @@ class TwilioController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
     }
 
     /**
@@ -143,7 +142,7 @@ class TwilioController extends Controller
      * @param $org
      * @return string
      */
-    protected function sent_at($org)
+    protected function sent_at(Organisation $org)
     {
         $timezone = $org->timezone ?: 'Australia/Sydney';
         $datetime_format = $org->datetime_format ?: 'd/m/y H:i:s';
